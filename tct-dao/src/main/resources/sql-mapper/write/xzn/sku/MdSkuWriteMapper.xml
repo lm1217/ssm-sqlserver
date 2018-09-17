@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.sku.MdSkuWriteDao">
+	<resultMap id="MdSkuResult" type="com.iyeed.core.entity.sku.MdSku">
+			<result property="id" column="id" />
+			<result property="skuCode" column="sku_code" />
+			<result property="skuName" column="sku_name" />
+			<result property="brandNo" column="brand_no" />
+			<result property="brandName" column="brand_name" />
+			<result property="updateUserNo" column="update_user_no" />
+			<result property="inputDate" column="input_date" />
+	</resultMap>
+
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		<where>
+			<if test="queryMap.brandNo != null and queryMap.brandNo !=''"  > and brand_no= #{queryMap.brandNo}</if>
+		</where>
+	</sql>
+	
+	<select id="get" parameterType="Integer" resultMap="MdSkuResult">
+		select
+		   *
+		from md_sku
+		where id = #{id}
+	</select>
+
+	<select id="getSkuList" parameterType="java.util.Map" resultMap="MdSkuResult">
+		select
+		   *
+		from md_sku
+		<include refid="whereConditions"/>
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.sku.MdSku">
+        update md_sku
+    	<set>
+			
+			<if test="skuCode != null">sku_code= #{skuCode},</if>
+			<if test="skuName != null">sku_name= #{skuName},</if>
+			<if test="brandNo != null">brand_no= #{brandNo},</if>
+			<if test="brandName != null">brand_name= #{brandName},</if>
+			<if test="updateUserNo != null">update_user_no= #{updateUserNo},</if>
+			<if test="inputDate != null">input_date= #{inputDate}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.sku.MdSku" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		md_sku
+		(
+			
+			sku_code,
+			sku_name,
+			brand_no,
+			brand_name,
+			update_user_no
+		)
+		values
+		(
+			
+			#{skuCode},
+			#{skuName},
+			#{brandNo},
+			#{brandName},
+			#{updateUserNo}
+		)
+	</insert>
+	
+</mapper>

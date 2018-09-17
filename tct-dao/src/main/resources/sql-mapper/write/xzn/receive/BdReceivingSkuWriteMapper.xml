@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.receive.BdReceivingSkuWriteDao">
+	<resultMap id="BdReceivingSkuResult" type="com.iyeed.core.entity.receive.BdReceivingSku">
+			<result property="id" column="id" />
+			<result property="erpNo" column="erp_no" />
+			<result property="skuCode" column="sku_code" />
+			<result property="skuName" column="sku_name" />
+			<result property="sendTotal" column="send_total" />
+			<result property="actSendTotal" column="act_send_total" />
+			<result property="inputDate" column="input_date" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="BdReceivingSkuResult">
+		select
+		   *
+		from bd_receiving_sku
+		where id = #{id}
+	</select>
+
+	<select id="getBdReceivingSkuListByErpNo" parameterType="String" resultMap="BdReceivingSkuResult">
+		select
+		*
+		from bd_receiving_sku
+		where erp_no = #{erpNo}
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.receive.BdReceivingSku">
+        update bd_receiving_sku
+    	<set>
+			<if test="erpNo != null">erp_no= #{erpNo},</if>
+			<if test="skuCode != null">sku_code= #{skuCode},</if>
+			<if test="skuName != null">sku_name= #{skuName},</if>
+			<if test="sendTotal != null">send_total= #{sendTotal},</if>
+			<if test="actSendTotal != null">act_send_total= #{actSendTotal},</if>
+			<if test="inputDate != null">input_date= #{inputDate}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.receive.BdReceivingSku" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		bd_receiving_sku
+		(
+			
+			erp_no,
+			sku_code,
+			sku_name,
+			send_total,
+			act_send_total
+		)
+		values
+		(
+			
+			#{erpNo},
+			#{skuCode},
+			#{skuName},
+			#{sendTotal},
+			#{actSendTotal}
+		)
+	</insert>
+	
+</mapper>

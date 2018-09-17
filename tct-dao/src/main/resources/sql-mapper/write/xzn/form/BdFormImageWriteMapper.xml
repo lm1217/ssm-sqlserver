@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.form.BdFormImageWriteDao">
+	<resultMap id="BdFormImageResult" type="com.iyeed.core.entity.form.BdFormImage">
+			<result property="id" column="id" />
+			<result property="applyNo" column="apply_no" />
+			<result property="imageUrl" column="image_url" />
+			<result property="inputDate" column="input_date" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="BdFormImageResult">
+		select
+		   *
+		from bd_form_image
+		where id = #{id}
+	</select>
+
+	<select id="getFormImageList" parameterType="String" resultMap="BdFormImageResult">
+		select
+		*
+		from bd_form_image
+		where apply_no = #{applyNo}
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.form.BdFormImage">
+        update bd_form_image
+    	<set>
+			
+			<if test="applyNo != null">apply_no= #{applyNo},</if>
+			<if test="imageUrl != null">image_url= #{imageUrl},</if>
+			<if test="inputDate != null">input_date= #{inputDate}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.form.BdFormImage" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		bd_form_image
+		(
+			
+			apply_no,
+			image_url
+		)
+		values
+		(
+			
+			#{applyNo},
+			#{imageUrl}
+		)
+	</insert>
+	
+</mapper>

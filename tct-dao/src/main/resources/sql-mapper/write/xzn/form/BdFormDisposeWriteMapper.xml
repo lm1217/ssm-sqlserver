@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.form.BdFormDisposeWriteDao">
+	<resultMap id="BdFormDisposeResult" type="com.iyeed.core.entity.form.BdFormDispose">
+			<result property="id" column="id" />
+			<result property="applyNo" column="apply_no" />
+			<result property="storeNo" column="store_no" />
+			<result property="storeName" column="store_name" />
+			<result property="disposeUserNo" column="dispose_user_no" />
+			<result property="disposeUserName" column="dispose_user_name" />
+			<result property="disposeStatus" column="dispose_status" />
+			<result property="disposeType" column="dispose_type" />
+			<result property="remark" column="remark" />
+			<result property="disposeDate" column="dispose_date" />
+			<result property="inputDate" column="input_date" />
+	</resultMap>
+
+	<resultMap id="GetDisposeListBeanResult" type="com.iyeed.core.entity.form.vo.GetDisposeListBean">
+		<result property="applyNo" column="apply_no" />
+		<result property="disposeUserName" column="dispose_user_name" />
+		<result property="disposeStatus" column="dispose_status" />
+		<result property="disposeType" column="dispose_type" />
+		<result property="remark" column="remark" />
+		<result property="disposeDate" column="dispose_date" />
+		<result property="inputDate" column="input_date" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="BdFormDisposeResult">
+		select
+		   *
+		from bd_form_dispose
+		where id = #{id}
+	</select>
+
+	<select id="getDisposeListByApplyNo" parameterType="String" resultMap="GetDisposeListBeanResult">
+		select
+		*
+		from bd_form_dispose
+		where apply_no = #{applyNo}
+	</select>
+
+	<select id="getDispose" parameterType="String" resultMap="BdFormDisposeResult">
+		select
+		*
+		from bd_form_dispose
+		where apply_no = #{applyNo}
+		and dispose_user_no = #{userNo}
+		and store_no = #{storeNo}
+		and dispose_date is null
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.form.BdFormDispose">
+        update bd_form_dispose
+    	<set>
+			
+			<if test="applyNo != null">apply_no= #{applyNo},</if>
+			<if test="storeNo != null">store_no= #{storeNo},</if>
+			<if test="storeName != null">store_name= #{storeName},</if>
+			<if test="disposeUserNo != null">dispose_user_no= #{disposeUserNo},</if>
+			<if test="disposeUserName != null">dispose_user_name= #{disposeUserName},</if>
+			<if test="disposeStatus != null">dispose_status= #{disposeStatus},</if>
+			<if test="disposeType != null">dispose_type= #{disposeType},</if>
+			<if test="remark != null">remark= #{remark},</if>
+			<if test="disposeDate != null">dispose_date= #{disposeDate},</if>
+			<if test="inputDate != null">input_date= #{inputDate}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.form.BdFormDispose" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		bd_form_dispose
+		(
+			
+			apply_no,
+			store_no,
+			store_name,
+			dispose_user_no,
+			dispose_user_name,
+			dispose_status,
+			dispose_type,
+			dispose_date,
+			remark
+		)
+		values
+		(
+			
+			#{applyNo},
+			#{storeNo},
+			#{storeName},
+			#{disposeUserNo},
+			#{disposeUserName},
+			#{disposeStatus},
+			#{disposeType},
+			#{disposeDate},
+			#{remark}
+		)
+	</insert>
+	
+</mapper>

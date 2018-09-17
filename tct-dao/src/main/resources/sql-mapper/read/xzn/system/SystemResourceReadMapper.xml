@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.read.xzn.system.SystemResourceReadDao">
+	<resultMap id="SystemResourceResult" type="com.iyeed.core.entity.system.SystemResource">
+		<result property="id" column="id" />
+		<result property="pid" column="pid" />
+		<result property="url" column="url" />
+		<result property="content" column="content" />
+		<result property="createTime" column="create_time" />
+		<result property="type" column="type" />
+		<result property="status" column="status" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SystemResourceResult">
+		select
+		   *
+		from system_resource
+		where id = #{id}
+	</select>
+	
+	<select id="getByPId" parameterType="Integer" resultMap="SystemResourceResult">
+		select
+		   *
+		from system_resource
+		where pid = #{pid}
+	</select>
+	
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from system_resource t1
+		<include refid="whereConditions" />
+	</select>
+	
+	
+	<select id="page" resultType="com.iyeed.core.entity.system.SystemResource">
+		select * from system_resource t1
+		<include refid="whereConditions" />
+		order by id
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="list" resultType="com.iyeed.core.entity.system.SystemResource">
+		select 
+		CASE WHEN (
+		SELECT
+			COUNT (1)
+		FROM
+			system_resource
+		WHERE
+			pid = t1.id
+		AND status = 1) = 0 THEN 'open' ELSE 'closed' END AS state,
+		id,
+		pid,
+		url,
+		content,
+		create_time,
+		type,
+		status
+		from system_resource t1
+		where pid = #{pid} and status = 1
+		order by id
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="id != null and id !=''"  > and id= #{id}</if>
+			<if test="pid != null and pid !=''"  > and pid= #{pid}</if>
+			<if test="url != null and url !=''"  > and url= #{url}</if>
+			<if test="content != null and content !=''"  > and content= #{content}</if>
+			<if test="createTime != null and createTime !=''"  > and create_time= #{createTime}</if>
+			<if test="type != null and type !=''"  > and type= #{type}</if>
+			<if test="status != null and status !=''"  > and status= #{status}</if>
+		</trim>
+	</sql>
+	
+	
+</mapper>

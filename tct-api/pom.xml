@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <name>tct-api Maven Webapp</name>
+    <parent>
+        <artifactId>tct</artifactId>
+        <groupId>com.iyeed</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>tct-api</artifactId>
+    <packaging>war</packaging>
+    <version>${version-iyeed}</version>
+    <dependencies>
+        <!-- tct -->
+        <dependency>
+            <groupId>com.iyeed</groupId>
+            <artifactId>tct-core</artifactId>
+            <version>${version-iyeed}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.iyeed</groupId>
+            <artifactId>tct-service</artifactId>
+            <version>${version-iyeed}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.iyeed</groupId>
+            <artifactId>tct-model</artifactId>
+            <version>${version-iyeed}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.iyeed</groupId>
+            <artifactId>tct-dao</artifactId>
+            <version>${version-iyeed}</version>
+        </dependency>
+
+        <!--fast-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${version-fastjson}</version>
+        </dependency>
+
+        <!--fileupload-->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>${version-commons-fileupload}</version>
+        </dependency>
+
+        <!-- db -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${version-mybatis}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>${version-mybatis-spring}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>${version-druid}</version>
+        </dependency>
+        <!--mysql-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${version-mysql-connector}</version>
+        </dependency>
+        <!--sqlserver-->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <version>${version-microsoft-sqlserver}</version>
+        </dependency>
+
+        <!-- Redis begin -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${version-jedis}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>${version-spring-data-redis}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-tx</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-aop</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Redis end -->
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${version-servlet-api}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>tct-api</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>${version-maven-tomcat7-plugin}</version>
+                <configuration>
+                    <path>/tct-api</path>
+                    <port>8090</port>
+                    <uriEncoding>UTF-8</uriEncoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <properties>
+                <xzn.system.env>local</xzn.system.env>
+
+                <xzn.write.url>jdbc:mysql://localhost:3306/tct</xzn.write.url>
+                <xzn.write.username>root</xzn.write.username>
+                <xzn.write.password>123456</xzn.write.password>
+
+                <xzn.read.url>jdbc:mysql://localhost:3306/tct</xzn.read.url>
+                <xzn.read.username>root</xzn.read.username>
+                <xzn.read.password>123456</xzn.read.password>
+
+                <xzn.redis.host>192.168.1.47</xzn.redis.host>
+                <xzn.redis.port>6379</xzn.redis.port>
+                <xzn.redis.password>redis@cnjnb</xzn.redis.password>
+                <xzn.redis.custom.db>3</xzn.redis.custom.db>
+                <xzn.redis.springcache.db>4</xzn.redis.springcache.db>
+                <xzn.redis.shiro.session.db>5</xzn.redis.shiro.session.db>
+
+                <log.moduleName>tct-api</log.moduleName>
+                <log.base>logs</log.base>
+                <log.other.level>DEBUG</log.other.level>
+                <log.root.level>DEBUG</log.root.level>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>dev</id>
+            <properties>
+                <xzn.system.env>dev</xzn.system.env>
+
+                <xzn.write.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCT</xzn.write.url>
+                <xzn.write.username>sa</xzn.write.username>
+                <xzn.write.password>TRansluckAw8</xzn.write.password>
+
+                <xzn.read.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCT</xzn.read.url>
+                <xzn.read.username>sa</xzn.read.username>
+                <xzn.read.password>TRansluckAw8</xzn.read.password>
+
+                <xzn.redis.host>192.168.1.47</xzn.redis.host>
+                <xzn.redis.port>6379</xzn.redis.port>
+                <xzn.redis.password>redis@cnjnb</xzn.redis.password>
+                <xzn.redis.custom.db>3</xzn.redis.custom.db>
+                <xzn.redis.springcache.db>4</xzn.redis.springcache.db>
+                <xzn.redis.shiro.session.db>5</xzn.redis.shiro.session.db>
+
+                <log.moduleName>tct-api</log.moduleName>
+                <log.base>logs</log.base>
+                <log.other.level>DEBUG</log.other.level>
+                <log.root.level>DEBUG</log.root.level>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <properties>
+                <xzn.system.env>test</xzn.system.env>
+
+                <xzn.write.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCT</xzn.write.url>
+                <xzn.write.username>sa</xzn.write.username>
+                <xzn.write.password>TRansluckAw8</xzn.write.password>
+
+                <xzn.read.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCT</xzn.read.url>
+                <xzn.read.username>sa</xzn.read.username>
+                <xzn.read.password>TRansluckAw8</xzn.read.password>
+
+                <xzn.redis.host>192.168.1.47</xzn.redis.host>
+                <xzn.redis.port>6379</xzn.redis.port>
+                <xzn.redis.password>redis@cnjnb</xzn.redis.password>
+                <xzn.redis.custom.db>3</xzn.redis.custom.db>
+                <xzn.redis.springcache.db>4</xzn.redis.springcache.db>
+                <xzn.redis.shiro.session.db>5</xzn.redis.shiro.session.db>
+
+                <log.moduleName>tct-api</log.moduleName>
+                <log.base>logs</log.base>
+                <log.other.level>INFO</log.other.level>
+                <log.root.level>INFO</log.root.level>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>pro</id>
+            <properties>
+                <xzn.system.env>pro</xzn.system.env>
+
+                <xzn.write.url>jdbc:mysql://localhost:3306/tct</xzn.write.url>
+                <xzn.write.username>root</xzn.write.username>
+                <xzn.write.password>123456</xzn.write.password>
+
+                <xzn.read.url>jdbc:mysql://localhost:3306/tct</xzn.read.url>
+                <xzn.read.username>root</xzn.read.username>
+                <xzn.read.password>123456</xzn.read.password>
+
+                <xzn.redis.host>192.168.1.47</xzn.redis.host>
+                <xzn.redis.port>6379</xzn.redis.port>
+                <xzn.redis.password>redis@cnjnb</xzn.redis.password>
+                <xzn.redis.custom.db>3</xzn.redis.custom.db>
+                <xzn.redis.springcache.db>4</xzn.redis.springcache.db>
+                <xzn.redis.shiro.session.db>5</xzn.redis.shiro.session.db>
+
+                <log.moduleName>tct-api</log.moduleName>
+                <log.base>logs</log.base>
+                <log.other.level>DEBUG</log.other.level>
+                <log.root.level>DEBUG</log.root.level>
+            </properties>
+        </profile>
+    </profiles>
+
+
+</project>

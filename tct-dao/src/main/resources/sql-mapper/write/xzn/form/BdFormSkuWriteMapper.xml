@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.form.BdFormSkuWriteDao">
+	<resultMap id="BdFormSkuResult" type="com.iyeed.core.entity.form.BdFormSku">
+			<result property="id" column="id" />
+			<result property="applyNo" column="apply_no" />
+			<result property="skuCode" column="sku_code" />
+			<result property="skuName" column="sku_name" />
+			<result property="stockDepotTotal" column="stock_depot_total" />
+			<result property="stockCounterTotal" column="stock_counter_total" />
+			<result property="changeTotal" column="change_total" />
+			<result property="changeType" column="change_type" />
+			<result property="inputDate" column="input_date" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="BdFormSkuResult">
+		select
+		   *
+		from bd_form_sku
+		where id = #{id}
+	</select>
+
+	<select id="getFormSkuList" parameterType="String" resultMap="BdFormSkuResult">
+		select
+		*
+		from bd_form_sku
+		where apply_no = #{applyNo}
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.form.BdFormSku">
+        update bd_form_sku
+    	<set>
+			
+			<if test="applyNo != null">apply_no= #{applyNo},</if>
+			<if test="skuCode != null">sku_code= #{skuCode},</if>
+			<if test="skuName != null">sku_name= #{skuName},</if>
+			<if test="stockDepotTotal != null">stock_depot_total= #{stockDepotTotal},</if>
+			<if test="stockCounterTotal != null">stock_counter_total= #{stockCounterTotal},</if>
+			<if test="changeTotal != null">change_total= #{changeTotal},</if>
+			<if test="changeType != null">change_type= #{changeType},</if>
+			<if test="inputDate != null">input_date= #{inputDate}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.form.BdFormSku" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		bd_form_sku
+		(
+			
+			apply_no,
+			sku_code,
+			sku_name,
+			stock_depot_total,
+			stock_counter_total,
+			change_total,
+			change_type
+		)
+		values
+		(
+			
+			#{applyNo},
+			#{skuCode},
+			#{skuName},
+			#{stockDepotTotal},
+			#{stockCounterTotal},
+			#{changeTotal},
+			#{changeType}
+		)
+	</insert>
+	
+</mapper>

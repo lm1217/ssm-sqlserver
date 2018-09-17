@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.stock.BdStockInvLogWriteDao">
+	<resultMap id="BdStockInvLogResult" type="com.iyeed.core.entity.stock.BdStockInvLog">
+			<result property="id" column="id" />
+			<result property="storeNo" column="store_no" />
+			<result property="storeName" column="store_name" />
+			<result property="skuCode" column="sku_code" />
+			<result property="skuName" column="sku_name" />
+			<result property="type" column="type" />
+			<result property="stockTotalBerore" column="stock_total_berore" />
+			<result property="stockTotalAfter" column="stock_total_after" />
+			<result property="moveNumber" column="move_number" />
+			<result property="inputDate" column="input_date" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="BdStockInvLogResult">
+		select
+		   *
+		from bd_stock_inv_log
+		where id = #{id}
+	</select>
+
+	<select id="getBdStockInvLogList" parameterType="java.util.Map" resultMap="BdStockInvLogResult">
+		SELECT
+		*
+		FROM bd_stock_inv_log
+		<include refid="getCondition"/>
+		order by input_date desc
+		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
+	</select>
+
+	<select id="getBdStockInvLogListCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT count(*)
+		FROM bd_stock_inv_log
+		<include refid="getCondition"/>
+	</select>
+
+	<sql id="getCondition">
+		<where>
+			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
+				and store_no = #{queryMap.q_storeNo}
+			</if>
+			<if test="queryMap.q_skuCode != null and queryMap.q_skuCode !=''">
+				and sku_code like CONCAT('%', #{queryMap.q_skuCode}, '%')
+			</if>
+			<if test="queryMap.q_type != null and queryMap.q_type !=''">
+				and type = #{queryMap.q_type}
+			</if>
+		</where>
+	</sql>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.stock.BdStockInvLog">
+        update bd_stock_inv_log
+    	<set>
+			
+			<if test="storeNo != null">store_no= #{storeNo},</if>
+			<if test="storeName != null">store_name= #{storeName},</if>
+			<if test="skuCode != null">sku_code= #{skuCode},</if>
+			<if test="skuName != null">sku_name= #{skuName},</if>
+			<if test="type != null">type= #{type},</if>
+			<if test="stockTotalBerore != null">stock_total_berore= #{stockTotalBerore},</if>
+			<if test="stockTotalAfter != null">stock_total_after= #{stockTotalAfter},</if>
+			<if test="moveNumber != null">move_number= #{moveNumber},</if>
+			<if test="inputDate != null">input_date= #{inputDate}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.stock.BdStockInvLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		bd_stock_inv_log
+		(
+			
+			store_no,
+			store_name,
+			sku_code,
+			sku_name,
+			type,
+			stock_total_berore,
+			stock_total_after,
+			move_number,
+			input_date
+		)
+		values
+		(
+			
+			#{storeNo},
+			#{storeName},
+			#{skuCode},
+			#{skuName},
+			#{type},
+			#{stockTotalBerore},
+			#{stockTotalAfter},
+			#{moveNumber},
+			#{inputDate}
+		)
+	</insert>
+
+	<insert id="insertForStockInvDepotToCounter" parameterType="Integer" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into
+		bd_stock_inv_log
+		(
+
+			store_no,
+			store_name,
+			sku_code,
+			sku_name,
+			type,
+			stock_total_berore,
+			stock_total_after,
+			move_number
+		)
+		SELECT
+		store_no,
+		store_name,
+		sku_code,
+		sku_name,
+		#{type},
+		stock_depot,
+		stock_depot - #{moveNum},
+		#{moveNum}
+		FROM bd_stock_inv WHERE id = #{id}
+	</insert>
+
+	<insert id="insertForStockInvCounterToDepot" parameterType="Integer" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into
+		bd_stock_inv_log
+		(
+
+			store_no,
+			store_name,
+			sku_code,
+			sku_name,
+			type,
+			stock_total_berore,
+			stock_total_after,
+			move_number
+		)
+		SELECT
+		store_no,
+		store_name,
+		sku_code,
+		sku_name,
+		#{type},
+		stock_counter,
+		stock_counter - #{moveNum},
+		#{moveNum}
+		FROM bd_stock_inv WHERE id = #{id}
+	</insert>
+	
+</mapper>

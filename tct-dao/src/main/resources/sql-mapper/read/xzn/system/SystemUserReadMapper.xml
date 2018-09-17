@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.read.xzn.system.SystemUserReadDao">
+	<resultMap id="SystemUserResult" type="com.iyeed.core.entity.system.SystemUser">
+			<result property="id" column="id" />
+			<result property="username" column="username" />
+			<result property="password" column="password" />
+			<result property="roleId" column="role_id" />
+			<result property="createTime" column="create_time" />
+			<result property="email" column="email" />
+			<result property="tel" column="tel" />
+			<result property="status" column="status" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SystemUserResult">
+		select
+		   *
+		from [system_user]
+		where id = #{id}
+	</select>
+	
+	<select id="getByNamePwd" parameterType="java.lang.String" resultMap="SystemUserResult">
+		select * 
+		from [system_user]
+		where username = #{username} and password = #{password}
+		and status=1
+		limit 1
+	</select>
+	
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from [system_user] t1
+		<include refid="whereConditions" />
+	</select>
+	
+	<select id="page"  parameterType="java.util.Map" resultType="com.iyeed.core.entity.system.SystemUser">
+		select * from [system_user] t1
+		<include refid="whereConditions" />
+		order by id
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="list" resultType="com.iyeed.core.entity.system.SystemUser">
+		select * from [system_user] t1
+		order by id
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		<where>
+			<if test="queryMap.id != null and queryMap.id !=''"  > and id= #{queryMap.id}</if>
+			<if test="queryMap.username != null and queryMap.username !=''"  > and username= #{queryMap.username}</if>
+			<if test="queryMap.q_username != null and queryMap.q_username !=''"  > and username like CONCAT('%',#{queryMap.q_username},'%')</if>
+			<if test="queryMap.password != null and queryMap.password !=''"  > and password= #{queryMap.password}</if>
+			<if test="queryMap.roleId != null and queryMap.roleId !=''"  > and role_id= #{queryMap.roleId}</if>
+			<if test="queryMap.createTime != null and queryMap.createTime !=''"  > and create_time= #{queryMap.createTime}</if>
+			<if test="queryMap.email != null and queryMap.email !=''"  > and email= #{queryMap.email}</if>
+			<if test="queryMap.tel != null and queryMap.tel !=''"  > and tel= #{queryMap.tel}</if>
+			<if test="queryMap.status != null and queryMap.status !=''"  > and status= #{queryMap.status}</if>
+		</where>
+	</sql>
+	
+	<select id="getByName" parameterType="java.lang.String" resultMap="SystemUserResult">
+		select * 
+		from [system_user]
+		where username = #{username}
+	</select>
+</mapper>

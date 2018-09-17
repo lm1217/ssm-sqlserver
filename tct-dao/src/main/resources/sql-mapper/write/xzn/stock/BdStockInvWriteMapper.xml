@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.stock.BdStockInvWriteDao">
+	<resultMap id="BdStockInvResult" type="com.iyeed.core.entity.stock.BdStockInv">
+			<result property="id" column="id" />
+			<result property="storeNo" column="store_no" />
+			<result property="storeName" column="store_name" />
+			<result property="skuCode" column="sku_code" />
+			<result property="skuName" column="sku_name" />
+			<result property="stockDepot" column="stock_depot" />
+			<result property="stockDepotEnabled" column="stock_depot_enabled" />
+			<result property="stockCounter" column="stock_counter" />
+			<result property="stockCounterEnabled" column="stock_counter_enabled" />
+			<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<resultMap id="BdStockInvSkuResult" type="com.iyeed.core.entity.stock.vo.GetStockInvSkuListBean">
+		<result property="id" column="id" />
+		<result property="skuCode" column="sku_code" />
+		<result property="skuName" column="sku_name" />
+		<result property="stockDepot" column="stock_depot" />
+		<result property="stockDepotEnabled" column="stock_depot_enabled" />
+		<result property="stockCounter" column="stock_counter" />
+		<result property="stockCounterEnabled" column="stock_counter_enabled" />
+	</resultMap>
+
+	<resultMap id="BdStockInvReportResult" type="com.iyeed.core.entity.stock.vo.GetStockInvReportListBean">
+		<result property="id" column="id" />
+		<result property="skuCode" column="sku_code" />
+		<result property="skuName" column="sku_name" />
+		<result property="storeNo" column="store_no" />
+		<result property="storeName" column="store_name" />
+		<result property="brandName" column="brand_name" />
+		<result property="stockDepot" column="stock_depot" />
+		<result property="stockDepotEnabled" column="stock_depot_enabled" />
+		<result property="stockCounter" column="stock_counter" />
+		<result property="stockCounterEnabled" column="stock_counter_enabled" />
+		<result property="total" column="total" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="BdStockInvResult">
+		select
+		   *
+		from bd_stock_inv
+		where id = #{id}
+	</select>
+
+	<select id="getStockInvSkuListByStoreNo" parameterType="String" resultMap="BdStockInvSkuResult">
+		select
+		*
+		from bd_stock_inv
+		where store_no = #{storeNo}
+	</select>
+
+	<select id="getStockInvReportList" parameterType="java.util.Map" resultMap="BdStockInvReportResult">
+		SELECT
+		bsi.store_no,
+		bsi.store_name,
+		bsi.sku_code,
+		bsi.sku_name,
+		ms.brand_name,
+		bsi.stock_depot,
+		bsi.stock_depot_enabled,
+		bsi.stock_counter,
+		bsi.stock_counter_enabled,
+		bsi.id,
+		(bsi.stock_depot + bsi.stock_counter) total
+		FROM
+		dbo.bd_stock_inv AS bsi ,
+		dbo.md_store AS ms
+		<include refid="whereConditions" />
+		ORDER BY
+		bsi.update_date DESC
+		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
+	</select>
+
+	<select id="getStockInvReportListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select
+		count(1)
+		FROM
+		dbo.bd_stock_inv AS bsi ,
+		dbo.md_store AS ms
+		<include refid="whereConditions" />
+	</select>
+
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		<where>
+			bsi.store_no = ms.store_no
+			<if test="queryMap.storeNo != null and queryMap.storeNo !=''"  > and bsi.store_no = #{queryMap.storeNo}</if>
+			<if test="queryMap.q_skuCode != null and queryMap.q_skuCode !=''"  > and bsi.sku_code like CONCAT('%',#{queryMap.q_skuCode},'%')</if>
+			<if test="queryMap.q_skuName != null and queryMap.q_skuName !=''"  > and bsi.sku_name like CONCAT('%',#{queryMap.q_skuName},'%')</if>
+		</where>
+	</sql>
+
+	<update id="updateDepotToCounter" parameterType="Integer">
+		update bd_stock_inv
+		<set>
+			<if test="moveNum != null">stock_depot= stock_depot - #{moveNum},</if>
+			<if test="moveNum != null">stock_depot_enabled= stock_depot_enabled - #{moveNum},</if>
+			<if test="moveNum != null">stock_counter= stock_counter + #{moveNum},</if>
+			<if test="moveNum != null">stock_counter_enabled= stock_counter_enabled + #{moveNum},</if>
+			<if test="updateDate != null">update_date= #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="updateCounterToDepot" parameterType="Integer">
+		update bd_stock_inv
+		<set>
+			<if test="moveNum != null">stock_depot= stock_depot + #{moveNum},</if>
+			<if test="moveNum != null">stock_depot_enabled= stock_depot_enabled + #{moveNum},</if>
+			<if test="moveNum != null">stock_counter= stock_counter - #{moveNum},</if>
+			<if test="moveNum != null">stock_counter_enabled= stock_counter_enabled - #{moveNum},</if>
+			<if test="updateDate != null">update_date= #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.stock.BdStockInv">
+        update bd_stock_inv
+    	<set>
+
+			<if test="storeNo != null">store_no= #{storeNo},</if>
+			<if test="storeName != null">store_name= #{storeName},</if>
+			<if test="skuCode != null">sku_code= #{skuCode},</if>
+			<if test="skuName != null">sku_name= #{skuName},</if>
+			<if test="stockDepot != null">stock_depot= #{stockDepot},</if>
+			<if test="stockDepotEnabled != null">stock_depot_enabled= #{stockDepotEnabled},</if>
+			<if test="stockCounter != null">stock_counter= #{stockCounter},</if>
+			<if test="stockCounterEnabled != null">stock_counter_enabled= #{stockCounterEnabled},</if>
+			<if test="updateDate != null">update_date= #{updateDate}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.stock.BdStockInv" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		bd_stock_inv
+		(
+			
+			store_no,
+			store_name,
+			sku_code,
+			sku_name,
+			stock_depot,
+			stock_depot_enabled,
+			stock_counter,
+			stock_counter_enabled
+		)
+		values
+		(
+			
+			#{storeNo},
+			#{storeName},
+			#{skuCode},
+			#{skuName},
+			#{stockDepot},
+			#{stockDepotEnabled},
+			#{stockCounter},
+			#{stockCounterEnabled}
+		)
+	</insert>
+
+	<!--存在即更新，否则插入-->
+	<insert id="insertOrUpdate" parameterType="com.iyeed.core.entity.stock.BdStockInv" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		IF EXISTS (
+		SELECT
+		*
+		FROM
+		bd_stock_inv
+		WHERE
+		store_no = #{storeNo}
+		AND sku_code = #{skuCode}
+		)
+		BEGIN
+		UPDATE bd_stock_inv
+		<set>
+			<if test = "stockDepot != null" >stock_depot = stock_depot + #{stockDepot}, </if>
+			<if test = "stockDepotEnabled != null" >stock_depot_enabled = stock_depot_enabled + #{stockDepotEnabled}, </if>
+			<if test = "stockCounter != null" >stock_counter = stock_counter + #{stockCounter}, </if>
+			<if test = "stockCounterEnabled != null" >stock_counter_enabled = stock_counter_enabled + #{stockCounterEnabled} </if>
+		</set>
+		WHERE
+		store_no = #{storeNo}
+		AND sku_code = #{skuCode}
+		END
+		ELSE
+		BEGIN
+		INSERT INTO
+		bd_stock_inv
+		(
+			store_no,
+			store_name,
+			sku_code,
+			sku_name,
+			stock_depot,
+			stock_depot_enabled,
+			stock_counter,
+			stock_counter_enabled
+		)
+		VALUES
+		(
+			#{storeNo},
+			#{storeName},
+			#{skuCode},
+			#{skuName},
+			ABS(#{stockDepot}),
+			ABS(#{stockDepotEnabled}),
+			ABS(#{stockCounter}),
+			ABS(#{stockCounterEnabled})
+		)
+		END
+	</insert>
+	
+</mapper>

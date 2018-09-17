@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.form.BdFormWriteDao">
+	<resultMap id="BdFormResult" type="com.iyeed.core.entity.form.BdForm">
+			<result property="id" column="id" />
+			<result property="storeNo" column="store_no" />
+			<result property="storeName" column="store_name" />
+			<result property="applyNo" column="apply_no" />
+			<result property="applicant" column="applicant" />
+			<result property="applicantTel" column="applicant_tel" />
+			<result property="remark" column="remark" />
+			<result property="applyDate" column="apply_date" />
+			<result property="destroyType" column="destroy_type" />
+			<result property="receiveStoreNo" column="receive_store_no" />
+			<result property="receiveStoreName" column="receive_store_name" />
+			<result property="expressCode" column="express_code" />
+			<result property="expressName" column="express_name" />
+			<result property="orderNo" column="order_no" />
+			<result property="expressDate" column="express_date" />
+			<result property="allotType" column="allot_type" />
+			<result property="exceptionType" column="exception_type" />
+			<result property="formType" column="form_type" />
+			<result property="disposeUserNo" column="dispose_user_no" />
+			<result property="disposeStatus" column="dispose_status" />
+			<result property="disposeStatusDesc" column="dispose_status_desc" />
+			<result property="disposeGrade" column="dispose_grade" />
+			<result property="inputDate" column="input_date" />
+			<result property="inputUserNo" column="input_user_no" />
+	</resultMap>
+
+	<resultMap id="GetDisposeFormListBeanResult" type="com.iyeed.core.entity.form.vo.GetDisposeFormListBean">
+		<result property="id" column="id" />
+		<result property="storeNo" column="store_no" />
+		<result property="storeName" column="store_name" />
+		<result property="applyNo" column="apply_no" />
+		<result property="applyDate" column="apply_date" />
+		<result property="formType" column="form_type" />
+		<result property="disposeStatus" column="dispose_status" />
+		<result property="disposeStatusDesc" column="dispose_status_desc" />
+		<result property="inputDate" column="input_date" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="BdFormResult">
+		select
+		   *
+		from bd_form
+		where id = #{id}
+	</select>
+
+	<select id="getBdFormList" parameterType="java.util.Map" resultMap="GetDisposeFormListBeanResult">
+		SELECT
+		*
+		FROM bd_form
+		<include refid="getCondition"/>
+		order by input_date desc
+		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
+	</select>
+
+	<select id="getBdFormListCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT count(*)
+		FROM bd_form
+		<include refid="getCondition"/>
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.form.BdForm">
+        update bd_form
+    	<set>
+			<if test="storeNo != null">store_no= #{storeNo},</if>
+			<if test="storeName != null">store_name= #{storeName},</if>
+			<if test="applyNo != null">apply_no= #{applyNo},</if>
+			<if test="applicant != null">applicant= #{applicant},</if>
+			<if test="applicantTel != null">applicant_tel= #{applicantTel},</if>
+			<if test="remark != null">remark= #{remark},</if>
+			<if test="applyDate != null">apply_date= #{applyDate},</if>
+			<if test="destroyType != null">destroy_type= #{destroyType},</if>
+			<if test="receiveStoreNo != null">receive_store_no= #{receiveStoreNo},</if>
+			<if test="receiveStoreName != null">receive_store_name= #{receiveStoreName},</if>
+			<if test="expressCode != null">express_code= #{expressCode},</if>
+			<if test="expressName != null">express_name= #{expressName},</if>
+			<if test="orderNo != null">order_no= #{orderNo},</if>
+			<if test="expressDate != null">express_date= #{expressDate},</if>
+			<if test="allotType != null">allot_type= #{allotType},</if>
+			<if test="exceptionType != null">exception_type= #{exceptionType},</if>
+			<if test="formType != null">form_type= #{formType},</if>
+			<if test="disposeUserNo != null">dispose_user_no= #{disposeUserNo},</if>
+			<if test="disposeStatus != null">dispose_status= #{disposeStatus},</if>
+			<if test="disposeStatusDesc != null">dispose_status_desc= #{disposeStatusDesc},</if>
+			<if test="disposeGrade != null">dispose_grade= #{disposeGrade},</if>
+			<if test="inputDate != null">input_date= #{inputDate},</if>
+			<if test="inputUserNo != null">input_user_no= #{inputUserNo}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.form.BdForm" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		bd_form
+		(
+			
+			store_no,
+			store_name,
+			apply_no,
+			applicant,
+			applicant_tel,
+			remark,
+			apply_date,
+			destroy_type,
+			receive_store_no,
+			receive_store_name,
+			express_code,
+			express_name,
+			order_no,
+			express_date,
+			allot_type,
+			exception_type,
+			form_type,
+			dispose_user_no,
+			dispose_status,
+			dispose_status_desc,
+			dispose_grade,
+			input_user_no
+		)
+		values
+		(
+			
+			#{storeNo},
+			#{storeName},
+			#{applyNo},
+			#{applicant},
+			#{applicantTel},
+			#{remark},
+			#{applyDate},
+			#{destroyType},
+			#{receiveStoreNo},
+			#{receiveStoreName},
+			#{expressCode},
+			#{expressName},
+			#{orderNo},
+			#{expressDate},
+			#{allotType},
+			#{exceptionType},
+			#{formType},
+			#{disposeUserNo},
+			#{disposeStatus},
+			#{disposeStatusDesc},
+			#{disposeGrade},
+			#{inputUserNo}
+		)
+	</insert>
+
+	<sql id="getCondition">
+		<where>
+			<if test="queryMap.q_disposeUserNo != null and queryMap.q_disposeUserNo !=''">
+				and dispose_user_no = #{queryMap.q_disposeUserNo}
+			</if>
+			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
+				and store_no = #{queryMap.q_storeNo}
+			</if>
+			<if test="queryMap.q_applyNo != null and queryMap.q_applyNo !=''">
+				and apply_no = #{queryMap.q_applyNo}
+			</if>
+			<if test="queryMap.q_disposeStatus != null and queryMap.q_disposeStatus !=''">
+				<if test="queryMap.q_disposeStatus == 1">
+					and dispose_status IN (1,2)
+				</if>
+				<if test="queryMap.q_disposeStatus != 1">
+					and dispose_status = #{queryMap.q_disposeStatus}
+				</if>
+			</if>
+			<if test="queryMap.q_formType != null and queryMap.q_formType !=''">
+				and form_type = #{queryMap.q_formType}
+			</if>
+			<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+				and apply_date &gt;= #{queryMap.q_starttime}
+			</if>
+			<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+				and apply_date &lt;= #{queryMap.q_endtime}
+			</if>
+		</where>
+	</sql>
+	
+</mapper>

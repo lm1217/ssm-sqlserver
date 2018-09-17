@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.store.MdStoreWriteDao">
+	<resultMap id="MdStoreResult" type="com.iyeed.core.entity.store.MdStore">
+			<result property="id" column="id" />
+			<result property="storeNo" column="store_no" />
+			<result property="storeName" column="store_name" />
+			<result property="brandNo" column="brand_no" />
+			<result property="brandName" column="brand_name" />
+			<result property="brandLogo" column="brand_logo" />
+			<result property="userNo" column="user_no" />
+			<result property="userName" column="user_name" />
+			<result property="post" column="post" />
+			<result property="inputDate" column="input_date" />
+	</resultMap>
+
+	<resultMap id="MdStoreBeanResult" type="com.iyeed.core.entity.store.vo.GetStoreListBean">
+		<result property="storeNo" column="store_no" />
+		<result property="storeName" column="store_name" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="MdStoreResult">
+		select
+		   *
+		from md_store
+		where id = #{id}
+	</select>
+
+	<select id="getStoreByStoreNo" parameterType="String" resultMap="MdStoreResult">
+		select
+		*
+		from md_store
+		where store_no = #{storeNo}
+	</select>
+
+	<select id="getStoreList" resultMap="MdStoreBeanResult">
+		select
+		*
+		from md_store
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.store.MdStore">
+        update md_store
+    	<set>
+			
+			<if test="storeNo != null">store_no= #{storeNo},</if>
+			<if test="storeName != null">store_name= #{storeName},</if>
+			<if test="brandNo != null">brand_no= #{brandNo},</if>
+			<if test="brandName != null">brand_name= #{brandName},</if>
+			<if test="brandLogo != null">brand_logo= #{brandLogo},</if>
+			<if test="userNo != null">brand_logo= #{user_no},</if>
+			<if test="userName != null">brand_logo= #{user_name},</if>
+			<if test="post != null">brand_logo= #{post},</if>
+			<if test="inputDate != null">input_date= #{inputDate}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.store.MdStore" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		md_store
+		(
+			
+			store_no,
+			store_name,
+			brand_no,
+			brand_name,
+			brand_logo,
+			user_no,
+			user_name,
+			post
+		)
+		values
+		(
+			
+			#{storeNo},
+			#{storeName},
+			#{brandNo},
+			#{brandName},
+			#{brandLogo},
+			#{userNo},
+			#{userName},
+			#{post}
+		)
+	</insert>
+	
+</mapper>

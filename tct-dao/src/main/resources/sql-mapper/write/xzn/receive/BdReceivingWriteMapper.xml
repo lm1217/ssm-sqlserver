@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.receive.BdReceivingWriteDao">
+	<resultMap id="BdReceivingResult" type="com.iyeed.core.entity.receive.BdReceiving">
+			<result property="id" column="id" />
+			<result property="erpNo" column="erp_no" />
+			<result property="orderNo" column="order_no" />
+			<result property="expressCode" column="express_code" />
+			<result property="sendType" column="send_type" />
+			<result property="sendStoreNo" column="send_store_no" />
+			<result property="sendStoreName" column="send_store_name" />
+			<result property="receiveStoreNo" column="receive_store_no" />
+			<result property="receiveStoreName" column="receive_store_name" />
+			<result property="sendTotal" column="send_total" />
+			<result property="actSendTotal" column="act_send_total" />
+			<result property="status" column="status" />
+			<result property="sendDate" column="send_date" />
+			<result property="expectReceiveDate" column="expect_receive_date" />
+			<result property="receiveDate" column="receive_date" />
+			<result property="inputDate" column="input_date" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="BdReceivingResult">
+		SELECT br.*, a.send_store_name, b.receive_store_name
+		FROM bd_receiving br,
+		(SELECT br.erp_no erp_no, ms.store_name send_store_name FROM md_store ms, bd_receiving br WHERE br.send_store_no = ms.store_no) a,
+		(SELECT br.erp_no erp_no, ms.store_name receive_store_name FROM md_store ms, bd_receiving br WHERE br.receive_store_no = ms.store_no) b
+		WHERE br.erp_no = a.erp_no AND a.erp_no = b.erp_no AND br.id = #{id}
+	</select>
+
+	<select id="getBdReceivingList" parameterType="java.util.Map" resultMap="BdReceivingResult">
+		SELECT br.*, a.send_store_name, b.receive_store_name
+		FROM bd_receiving br,
+		(SELECT br.erp_no erp_no, ms.store_name send_store_name FROM md_store ms, bd_receiving br WHERE br.send_store_no = ms.store_no) a,
+		(SELECT br.erp_no erp_no, ms.store_name receive_store_name FROM md_store ms, bd_receiving br WHERE br.receive_store_no = ms.store_no) b
+		<include refid="getCondition"/>
+		order by br.input_date desc
+		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
+	</select>
+
+	<select id="getBdReceivingListCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT count(*)
+		FROM bd_receiving br,
+		(SELECT br.erp_no erp_no, ms.store_name send_store_name FROM md_store ms, bd_receiving br WHERE br.send_store_no = ms.store_no) a,
+		(SELECT br.erp_no erp_no, ms.store_name receive_store_name FROM md_store ms, bd_receiving br WHERE br.receive_store_no = ms.store_no) b
+		<include refid="getCondition"/>
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.receive.BdReceiving">
+        update bd_receiving
+    	<set>
+			<if test="erpNo != null">erp_no= #{erpNo},</if>
+			<if test="orderNo != null">order_no= #{orderNo},</if>
+			<if test="expressCode != null">express_code= #{expressCode},</if>
+			<if test="sendType != null">send_type= #{sendType},</if>
+			<if test="sendStoreNo != null">send_store_no= #{sendStoreNo},</if>
+			<if test="receiveStoreNo != null">receive_store_no= #{receiveStoreNo},</if>
+			<if test="sendTotal != null">send_total= #{sendTotal},</if>
+			<if test="actSendTotal != null">act_send_total= #{actSendTotal},</if>
+			<if test="status != null">status= #{status},</if>
+			<if test="sendDate != null">send_date= #{sendDate},</if>
+			<if test="expectReceiveDate != null">expect_receive_date= #{expectReceiveDate},</if>
+			<if test="receiveDate != null">receive_date= #{receiveDate},</if>
+			<if test="inputDate != null">input_date= #{inputDate}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.receive.BdReceiving" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		bd_receiving
+		(
+			
+			erp_no,
+			order_no,
+			express_code,
+			send_type,
+			send_store_no,
+			receive_store_no,
+			send_total,
+			act_send_total,
+			status,
+			send_date,
+			expect_receive_date,
+			receive_date
+		)
+		values
+		(
+			
+			#{erpNo},
+			#{orderNo},
+			#{expressCode},
+			#{sendType},
+			#{sendStoreNo},
+			#{receiveStoreNo},
+			#{sendTotal},
+			#{actSendTotal},
+			#{status},
+			#{sendDate},
+			#{expectReceiveDate},
+			#{receiveDate}
+		)
+	</insert>
+
+	<sql id="getCondition">
+		<where>
+				br.erp_no = a.erp_no AND a.erp_no = b.erp_no
+			<if test="queryMap.q_erpNo != null and queryMap.q_erpNo !=''">
+				and br.erp_no = #{queryMap.q_erpNo}
+			</if>
+			<if test="queryMap.q_orderNo != null and queryMap.q_orderNo !=''">
+				and br.order_no = #{queryMap.q_orderNo}
+			</if>
+			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
+				and br.receive_store_no = #{queryMap.q_storeNo}
+			</if>
+			<if test="queryMap.q_status != null and queryMap.q_status !=''">
+				and br.status = #{queryMap.q_status}
+			</if>
+			<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+				and br.input_date &gt;= #{queryMap.q_starttime}
+			</if>
+			<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+				and br.input_date &lt;= #{queryMap.q_endtime}
+			</if>
+		</where>
+	</sql>
+	
+</mapper>

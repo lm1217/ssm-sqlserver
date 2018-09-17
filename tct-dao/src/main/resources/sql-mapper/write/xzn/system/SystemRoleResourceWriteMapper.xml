@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.system.SystemRoleResourceWriteDao">
+    <resultMap id="SystemRoleResourceResult" type="com.iyeed.core.entity.system.SystemRoleResource">
+        <result property="id" column="id"/>
+        <result property="roleId" column="role_id"/>
+        <result property="resourceId" column="resource_Id"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <select id="get" parameterType="Integer" resultMap="SystemRoleResourceResult">
+        select
+        *
+        from system_role_resource
+        where id = #{id}
+    </select>
+
+    <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from system_role_resource t1
+        <include refid="whereConditions"/>
+    </select>
+
+    <delete id="del">
+        delete from system_role_resource where id = #{id}
+    </delete>
+
+    <delete id="delByRole">
+        delete from system_role_resource where role_id = #{roleId}
+    </delete>
+
+    <select id="page" parameterType="java.util.Map" resultMap="SystemRoleResourceResult">
+        select *
+        from system_role_resource t1
+        <include refid="whereConditions"/>
+        order by id
+        <if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
+    </select>
+
+    <select id="getResourceByRoleId" resultType="com.iyeed.core.entity.system.SystemResource">
+        select * from system_resource t1
+        where t1.id in(select t2.resource_id from system_role_resource t2 where t2.role_id = #{roleId})
+        order by id
+    </select>
+
+    <select id="getResourceByPid" resultType="com.iyeed.core.entity.system.SystemResource">
+        select * from system_resource t1
+        where
+        t1.pid = #{pid}
+        and t1.id in(select t2.resource_id from system_role_resource t2 where t2.role_id = #{roleId})
+        order by id
+    </select>
+
+    <select id="list" resultType="com.iyeed.core.entity.system.SystemRoleResource">
+        select * from system_role_resource t1
+        order by id
+    </select>
+
+    <!-- 查询条件 -->
+    <sql id="whereConditions">
+        where 1=1
+        <trim suffixOverrides=",">
+            <if test="id != null and id !=''">and id= #{id}</if>
+            <if test="resourceId != null and resourceId !=''">and resource_id= #{resourceId}</if>
+            <if test="roleId != null and roleId !=''">and role_id= #{roleId}</if>
+            <if test="createTime != null and createTime !=''">and create_time= #{createTime}</if>
+        </trim>
+    </sql>
+
+    <update id="update" parameterType="com.iyeed.core.entity.system.SystemRoleResource">
+        update system_role_resource
+        <set>
+            <if test="resourceId != null">resource_id= #{resourceId},</if>
+            <if test="roleId != null">role_id= #{roleId},</if>
+            <if test="createTime != null">create_time= #{createTime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <insert id="save" parameterType="com.iyeed.core.entity.system.SystemRoleResource" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        insert into
+        system_role_resource
+        (
+
+        resource_id,
+        role_id
+        )
+        values
+        (
+
+        #{resourceId},
+        #{roleId}
+        )
+    </insert>
+
+</mapper>

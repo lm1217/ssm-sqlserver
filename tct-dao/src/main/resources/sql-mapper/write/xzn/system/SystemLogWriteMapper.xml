@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.system.SystemLogWriteDao">
+	<resultMap id="SystemLogResult" type="com.iyeed.core.entity.system.SystemLog">
+			<result property="id" column="id" />
+			<result property="module" column="module" />
+			<result property="ip" column="ip" />
+			<result property="commit" column="commit" />
+			<result property="inputDate" column="input_date" />
+			<result property="targetName" column="target_name" />
+			<result property="methodName" column="method_name" />
+			<result property="businessDesc" column="business_desc" />
+			<result property="responseParams" column="response_params" />
+			<result property="requestParams" column="request_params" />
+			<result property="exeTime" column="exe_time" />
+			<result property="opUserNo" column="op_user_no" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SystemLogResult">
+		select
+		   *
+		from system_log
+		where id = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.system.SystemLog">
+        update system_log
+    	<set>
+			<if test="module != null">[module]= #{module},</if>
+			<if test="ip != null">ip= #{ip},</if>
+			<if test="commit != null">[commit]= #{commit},</if>
+			<if test="inputDate != null">input_date= #{inputDate},</if>
+			<if test="targetName != null">target_name= #{targetName},</if>
+			<if test="methodName != null">method_name= #{methodName},</if>
+			<if test="businessDesc != null">business_desc= #{businessDesc},</if>
+			<if test="requestParams != null">request_params= #{requestParams},</if>
+			<if test="responseParams != null">response_params= #{responseParams},</if>
+			<if test="exeTime != null">exe_time= #{exeTime},</if>
+			<if test="opUserNo != null">op_user_no= #{opUserNo}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.system.SystemLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		system_log
+		(
+
+			[module],
+			ip,
+			[commit],
+			target_name,
+			method_name,
+			business_desc,
+			request_params,
+			response_params,
+			exe_time,
+			op_user_no
+		)
+		values
+		(
+
+			#{module},
+			#{ip},
+			#{commit},
+			#{targetName},
+			#{methodName},
+			#{businessDesc},
+			#{requestParams},
+			#{responseParams},
+			#{exeTime},
+			#{opUserNo}
+		)
+	</insert>
+	
+</mapper>

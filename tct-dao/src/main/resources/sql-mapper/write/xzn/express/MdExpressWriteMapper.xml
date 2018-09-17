@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.express.MdExpressWriteDao">
+	<resultMap id="MdExpressResult" type="com.iyeed.core.entity.express.MdExpress">
+			<result property="id" column="id" />
+			<result property="expressCode" column="express_code" />
+			<result property="expressName" column="express_name" />
+			<result property="inputDate" column="input_date" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="MdExpressResult">
+		select
+		   *
+		from md_express
+		where id = #{id}
+	</select>
+
+	<select id="getExpressList" parameterType="java.util.Map" resultMap="MdExpressResult">
+		select
+		   *
+		from md_express
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.express.MdExpress">
+        update md_express
+    	<set>
+			
+			<if test="expressCode != null">express_code= #{expressCode},</if>
+			<if test="expressName != null">express_name= #{expressName},</if>
+			<if test="inputDate != null">input_date= #{inputDate}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.express.MdExpress" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		md_express
+		(
+			
+			express_code,
+			express_name
+		)
+		values
+		(
+			
+			#{expressCode},
+			#{expressName}
+		)
+	</insert>
+	
+</mapper>
