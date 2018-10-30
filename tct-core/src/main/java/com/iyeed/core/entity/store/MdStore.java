@@ -22,15 +22,49 @@ import java.io.Serializable;
 public class MdStore implements Serializable {
 
  	private Integer id;
+ 	private String storeId;
  	private String storeNo;
+ 	private String storeCode;
  	private String storeName;
  	private String brandNo;
+ 	private String brandCode;
  	private String brandName;
  	private String brandLogo;
  	private String userNo;
  	private String userName;
- 	private String post;
  	private java.util.Date inputDate;
+
+    public String getBrandLogo() {
+        return brandLogo;
+    }
+
+    public void setBrandLogo(String brandLogo) {
+        this.brandLogo = brandLogo;
+    }
+
+    public String getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(String storeId) {
+		this.storeId = storeId;
+	}
+
+	public String getStoreCode() {
+		return storeCode;
+	}
+
+	public void setStoreCode(String storeCode) {
+		this.storeCode = storeCode;
+	}
+
+	public String getBrandCode() {
+		return brandCode;
+	}
+
+	public void setBrandCode(String brandCode) {
+		this.brandCode = brandCode;
+	}
 
 	public String getUserNo() {
 		return userNo;
@@ -48,13 +82,6 @@ public class MdStore implements Serializable {
 		this.userName = userName;
 	}
 
-	public String getPost() {
-		return post;
-	}
-
-	public void setPost(String post) {
-		this.post = post;
-	}
 
 	/**
      * 获取主键自增长
@@ -126,20 +153,7 @@ public class MdStore implements Serializable {
 		this.brandName = brandName;
 	}
 
-	/**
-     * 获取品牌logo
-     */
-	public String getBrandLogo(){
-		return this.brandLogo;
-	}
 
-	/**
-     * 设置品牌logo
-     */
-	public void setBrandLogo(String brandLogo){
-		this.brandLogo = brandLogo;
-	}
- 		
 	/**
      * 获取放入时间
      */

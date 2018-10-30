@@ -2,27 +2,19 @@ package com.iyeed.model.stock;
 
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.stock.BdStockInv;
-import com.iyeed.core.entity.stock.BdStockInvLog;
 import com.iyeed.core.entity.stock.vo.GetStockInvReportListBean;
 import com.iyeed.core.entity.stock.vo.GetStockInvSkuListBean;
 import com.iyeed.core.entity.stock.vo.StockInvSkuForm;
-import com.iyeed.dao.db.write.xzn.stock.BdStockInvLogWriteDao;
-import com.iyeed.dao.db.write.xzn.stock.BdStockInvWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class BdStockInvModel {
-    
-    @Resource
-    private BdStockInvWriteDao bdStockInvWriteDao;
-    @Resource
-    private BdStockInvLogWriteDao bdStockInvLogWriteDao;
+public class BdStockInvModel extends BaseModel {
     
     /**
      * 根据id取得库存表
@@ -56,6 +48,10 @@ public class BdStockInvModel {
      */
     public Integer getStockInvReportListCount(Map<String, Object> queryMap) throws Exception{
         return bdStockInvWriteDao.getStockInvReportListCount(queryMap);
+    }
+
+    public List<GetStockInvReportListBean> exportStockInvReportExcel(Map<String, Object> queryMap) throws Exception {
+        return bdStockInvWriteDao.exportStockInvReportExcel(queryMap);
     }
 
     /**

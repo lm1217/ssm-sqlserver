@@ -6,22 +6,18 @@ import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.stock.BdStockInvLog;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.stock.BdStockInvLogModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.stock.IBdStockInvLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Service(value = "bdStockInvLogService")
-public class BdStockInvLogServiceImpl implements IBdStockInvLogService {
+public class BdStockInvLogServiceImpl extends BaseService implements IBdStockInvLogService {
 	private static final Logger log = LoggerFactory.getLogger(BdStockInvLogServiceImpl.class);
-
-	@Resource
-    private BdStockInvLogModel bdStockInvLogModel;
 
     /**
      * 根据id取得库存日志表

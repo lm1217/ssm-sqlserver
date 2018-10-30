@@ -2,17 +2,13 @@ package com.iyeed.model.form;
 
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.form.BdFormSku;
-import com.iyeed.dao.db.write.xzn.form.BdFormSkuWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class BdFormSkuModel {
-    
-    @Resource
-    private BdFormSkuWriteDao bdFormSkuWriteDao;
+public class BdFormSkuModel extends BaseModel {
     
     /**
      * 根据id取得表单-SKU子表 
@@ -25,6 +21,10 @@ public class BdFormSkuModel {
 
     public List<BdFormSku> getBdFormSkuListByApplyNo(String applyNo) throws Exception {
         return bdFormSkuWriteDao.getFormSkuList(applyNo);
+    }
+
+    public List<BdFormSku> getBdFormSkuListForBack(String applyNo, String storeNo) throws Exception {
+        return bdFormSkuWriteDao.getFormSkuListForBack(applyNo, storeNo);
     }
     
     /**

@@ -1,8 +1,9 @@
 package com.iyeed.api.controller.form;
 
 import com.iyeed.api.controller.BaseController;
-import com.iyeed.api.controller.common.emuns.RespCode;
-import com.iyeed.api.controller.common.model.AjaxResponse;
+import com.iyeed.core.annotation.SystemControllerLog;
+import com.iyeed.core.common.emuns.RespCode;
+import com.iyeed.core.common.model.AjaxResponse;
 import com.iyeed.core.utils.AliyunOSSUtil;
 import com.iyeed.core.utils.Identities;
 import com.iyeed.service.form.IBdFormImageService;
@@ -34,9 +35,6 @@ import java.util.Map;
 @RequestMapping(value = "api/form/image")
 public class FormImageController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(FormImageController.class);
-
-    @Resource
-    private IBdFormImageService bdFormImageService;
 
     @RequestMapping(value = "imageUpload.json", method = { RequestMethod.POST })
     @ResponseBody
@@ -71,6 +69,7 @@ public class FormImageController extends BaseController {
         return AjaxResponse.success(dataMap);
     }
 
+    @SystemControllerLog(module = "文件管理", businessDesc = "图片上传")
     @RequestMapping(value = "fileUpload.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse fileUpload(@RequestParam MultipartFile file, @RequestParam String type, HttpServletRequest request) {
@@ -113,6 +112,7 @@ public class FormImageController extends BaseController {
         log.debug("上传文件Path: " + path);
         Map<String, String> dataMap = new HashMap<>();
         dataMap.put("url", path);
+        dataMap.put("upfileName", oriName);
         return AjaxResponse.success(dataMap);
     }
 

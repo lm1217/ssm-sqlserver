@@ -23,14 +23,14 @@ public interface IBdReceivingService {
      * @param  pagerInfo
      * @return
      */
-    ServiceResult<List<BdReceiving>> getBdReceivingList(Map<String, String> queryMap, PagerInfo pagerInfo);
+    ServiceResult<List<BdReceiving>> getBdReceivingList(Map<String, Object> queryMap, PagerInfo pagerInfo);
 
     /**
      * 获取收货列表总数
      * @param  queryMap
      * @return
      */
-    ServiceResult<Integer> getBdReceivingListCount(Map<String, String> queryMap);
+    ServiceResult<Integer> getBdReceivingListCount(Map<String, Object> queryMap);
 
     /**
      * 保存收货表-总表

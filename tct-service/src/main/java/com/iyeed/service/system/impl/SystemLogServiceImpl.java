@@ -4,20 +4,15 @@ import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.system.SystemLog;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.system.SystemLogModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.system.ISystemLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-
 @Service(value = "systemLogService")
-public class SystemLogServiceImpl implements ISystemLogService {
+public class SystemLogServiceImpl extends BaseService implements ISystemLogService {
 	private static final Logger log = LoggerFactory.getLogger(SystemLogServiceImpl.class);
-
-	@Resource
-    private SystemLogModel systemLogModel;
 
     /**
      * 根据id取得system_log对象

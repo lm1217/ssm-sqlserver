@@ -4,20 +4,17 @@ import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.user.MdUser;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.user.MdUserModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.user.IMdUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import java.util.List;
 
 @Service(value = "mdUserService")
-public class MdUserServiceImpl implements IMdUserService {
+public class MdUserServiceImpl extends BaseService implements IMdUserService {
 	private static final Logger log = LoggerFactory.getLogger(MdUserServiceImpl.class);
-
-	@Resource
-    private MdUserModel mdUserModel;
 
     /**
      * 根据id取得md_user对象
@@ -46,6 +43,23 @@ public class MdUserServiceImpl implements IMdUserService {
         ServiceResult<MdUser> result = new ServiceResult<MdUser>();
         try {
             result.setResult(mdUserModel.getMdUserByUserNo(userNo));
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error("[IMdUserService][getMdUserById]根据id["+userNo+"]取得md_user对象时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[IMdUserService][getMdUserById]根据id["+userNo+"]取得md_user对象时出现未知异常：",
+                    e);
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<List<MdUser>> getUserListByUserNo(String userNo) {
+        ServiceResult<List<MdUser>> result = new ServiceResult<>();
+        try {
+            result.setResult(mdUserModel.getUserListByUserNo(userNo));
         } catch (BusinessException e) {
             result.setSuccess(false);
             result.setMessage(e.getMessage());

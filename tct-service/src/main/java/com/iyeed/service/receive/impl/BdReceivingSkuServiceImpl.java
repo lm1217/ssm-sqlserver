@@ -4,21 +4,17 @@ import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.receive.BdReceivingSku;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.receive.BdReceivingSkuModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.receive.IBdReceivingSkuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Service(value = "bdReceivingSkuService")
-public class BdReceivingSkuServiceImpl implements IBdReceivingSkuService {
+public class BdReceivingSkuServiceImpl extends BaseService implements IBdReceivingSkuService {
 	private static final Logger log = LoggerFactory.getLogger(BdReceivingSkuServiceImpl.class);
-
-	@Resource
-    private BdReceivingSkuModel bdReceivingSkuModel;
 
     /**
      * 根据id取得收货表-SKU子表

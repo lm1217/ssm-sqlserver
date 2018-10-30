@@ -4,30 +4,26 @@ import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.form.BdForm;
+import com.iyeed.core.entity.form.vo.ExceptionReportBean;
 import com.iyeed.core.entity.form.vo.ExecDisposeForm;
 import com.iyeed.core.entity.form.vo.GetDisposeFormListBean;
 import com.iyeed.core.entity.form.vo.SaveApplyForm;
-import com.iyeed.core.entity.receive.BdReceiving;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.form.BdFormModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.form.IBdFormService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Service(value = "bdFormService")
-public class BdFormServiceImpl implements IBdFormService {
+public class BdFormServiceImpl extends BaseService implements IBdFormService {
 	private static final Logger log = LoggerFactory.getLogger(BdFormServiceImpl.class);
 
-	@Resource
-    private BdFormModel bdFormModel;
-
     @Override
-    public ServiceResult<Integer> getBdFormListCount(Map<String, String> queryMap) {
+    public ServiceResult<Integer> getBdFormListCount(Map<String, Object> queryMap) {
         ServiceResult<Integer> result = new ServiceResult<Integer>();
         try {
             result.setResult(bdFormModel.getBdFormListCount(queryMap));
@@ -65,6 +61,23 @@ public class BdFormServiceImpl implements IBdFormService {
     }
 
     @Override
+    public ServiceResult<BdForm> getBdFormByApplyNo(String applyNo) {
+        ServiceResult<BdForm> result = new ServiceResult<BdForm>();
+        try {
+            result.setResult(bdFormModel.getBdFormByApplyNo(applyNo));
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error("[IBdFormService][getBdFormById]根据id["+applyNo+"]取得表单-总表时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[IBdFormService][getBdFormById]根据id["+applyNo+"]取得表单-总表时出现未知异常：",
+                    e);
+        }
+        return result;
+    }
+
+    @Override
     public ServiceResult<Integer> execDisposeFormDetails(BdForm bdForm, ExecDisposeForm form) {
         ServiceResult<Integer> result = new ServiceResult<Integer>();
         try {
@@ -81,7 +94,7 @@ public class BdFormServiceImpl implements IBdFormService {
     }
 
     @Override
-    public ServiceResult<List<GetDisposeFormListBean>> getBdFormList(Map<String, String> queryMap, PagerInfo pagerInfo) {
+    public ServiceResult<List<GetDisposeFormListBean>> getBdFormList(Map<String, Object> queryMap, PagerInfo pagerInfo) {
         ServiceResult<List<GetDisposeFormListBean>> serviceResult = new ServiceResult<>();
         serviceResult.setPager(pagerInfo);
         try {
@@ -92,6 +105,45 @@ public class BdFormServiceImpl implements IBdFormService {
                 size = pagerInfo.getPageSize();
             }
             serviceResult.setResult(bdFormModel.getBdFormList(queryMap, start, size));
+        } catch (BusinessException e) {
+            serviceResult.setSuccess(false);
+            serviceResult.setMessage(e.getMessage());
+            log.error("[IBdReceivingService][getBdFormList]根据queryMap[" + queryMap.toString() + "]取得收货表时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[IBdReceivingService][getBdFormList]根据queryMap[" + queryMap.toString() + "]取得收货表时出现未知异常：", e);
+        }
+        return serviceResult;
+    }
+
+    @Override
+    public ServiceResult<List<ExceptionReportBean>> getExceptionReportList(Map<String, Object> queryMap, PagerInfo pagerInfo) {
+        ServiceResult<List<ExceptionReportBean>> serviceResult = new ServiceResult<>();
+        serviceResult.setPager(pagerInfo);
+        try {
+            Integer start = 0, size = 0;
+            if (pagerInfo != null) {
+                pagerInfo.setRowsCount(bdFormModel.getExceptionReportListCount(queryMap));
+                start = pagerInfo.getStart();
+                size = pagerInfo.getPageSize();
+            }
+            serviceResult.setResult(bdFormModel.getExceptionReportList(queryMap, start, size));
+        } catch (BusinessException e) {
+            serviceResult.setSuccess(false);
+            serviceResult.setMessage(e.getMessage());
+            log.error("[IBdReceivingService][getBdFormList]根据queryMap[" + queryMap.toString() + "]取得收货表时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[IBdReceivingService][getBdFormList]根据queryMap[" + queryMap.toString() + "]取得收货表时出现未知异常：", e);
+        }
+        return serviceResult;
+    }
+
+    @Override
+    public ServiceResult<List<ExceptionReportBean>> exportExceptionReportExcel(Map<String, Object> queryMap) {
+        ServiceResult<List<ExceptionReportBean>> serviceResult = new ServiceResult<>();
+        try {
+            serviceResult.setResult(bdFormModel.getExceptionReportList(queryMap, null, null));
         } catch (BusinessException e) {
             serviceResult.setSuccess(false);
             serviceResult.setMessage(e.getMessage());
@@ -126,6 +178,22 @@ public class BdFormServiceImpl implements IBdFormService {
     }
 
     @Override
+    public ServiceResult<Integer> backFormDestroy(BdForm bdForm, ExecDisposeForm form) {
+        ServiceResult<Integer> result = new ServiceResult<Integer>();
+        try {
+            result.setResult(bdFormModel.backFormDestroy(bdForm, form));
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error(e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
     public ServiceResult<Integer> saveForm(SaveApplyForm form) {
         ServiceResult<Integer> result = new ServiceResult<Integer>();
         try {
@@ -135,9 +203,57 @@ public class BdFormServiceImpl implements IBdFormService {
             result.setMessage(e.getMessage());
             log.error("[IBdFormService][saveBdForm]保存表单-总表时出现未知异常：" + e.getMessage());
         } catch (Exception e) {
-            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_FORM_SYSERROR);
             log.error("[IBdFormService][saveBdForm]保存表单-总表时出现未知异常：",
                     e);
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<Integer> saveLocalForm(SaveApplyForm form) {
+        ServiceResult<Integer> result = new ServiceResult<Integer>();
+        try {
+            result.setResult(bdFormModel.saveLocalForm(form));
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error(e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<Integer> sendFormMail() {
+        ServiceResult<Integer> result = new ServiceResult<Integer>();
+        try {
+            result.setResult(bdFormModel.sendFormMail());
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error(e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<Integer> changeAudit() {
+        ServiceResult<Integer> result = new ServiceResult<Integer>();
+        try {
+            result.setResult(bdFormModel.changeAudit());
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error(e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -160,6 +276,22 @@ public class BdFormServiceImpl implements IBdFormService {
             result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
             log.error("[IBdFormService][updateBdForm]更新表单-总表时出现未知异常：",
                 e);
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<Integer> delBdForm(BdForm bdForm) {
+        ServiceResult<Integer> result = new ServiceResult<Integer>();
+        try {
+            result.setResult(bdFormModel.delBdForm(bdForm));
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error(e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error(e.getMessage());
         }
         return result;
     }

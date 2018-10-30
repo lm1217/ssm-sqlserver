@@ -2,17 +2,13 @@ package com.iyeed.model.form;
 
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.form.BdFormImage;
-import com.iyeed.dao.db.write.xzn.form.BdFormImageWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class BdFormImageModel {
-    
-    @Resource
-    private BdFormImageWriteDao bdFormImageWriteDao;
+public class BdFormImageModel extends BaseModel {
     
     /**
      * 根据id取得表单-图片子表
@@ -23,8 +19,8 @@ public class BdFormImageModel {
     	return bdFormImageWriteDao.get(bdFormImageId);
     }
 
-    public List<BdFormImage> getBdFormImageListByApplyNo(String applyNo) throws Exception {
-        return bdFormImageWriteDao.getFormImageList(applyNo);
+    public List<BdFormImage> getBdFormImageListByApplyNo(String applyNo, Integer type) throws Exception {
+        return bdFormImageWriteDao.getFormImageList(applyNo, type);
     }
     
     /**

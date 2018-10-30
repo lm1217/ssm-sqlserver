@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.store.MdBrandWriteDao">
+	<resultMap id="MdBrandResult" type="com.iyeed.core.entity.store.MdBrand">
+			<result property="id" column="id" />
+			<result property="brandNo" column="brand_no" />
+			<result property="brandCode" column="brand_code" />
+			<result property="brandName" column="brand_name" />
+			<result property="brandLogo" column="brand_logo" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="MdBrandResult">
+		select
+		   *
+		from md_brand
+		where id = #{id}
+	</select>
+
+	<select id="getBrandByBrandNo" parameterType="String" resultMap="MdBrandResult">
+		select
+		   *
+		from md_brand
+		where brand_no = #{brandNo}
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.store.MdBrand">
+        update md_brand
+    	<set>
+			
+			<if test="brandNo != null">brand_no= #{brandNo},</if>
+			<if test="brandCode != null">brand_code= #{brandCode},</if>
+			<if test="brandName != null">brand_name= #{brandName},</if>
+			<if test="brandLogo != null">brand_logo= #{brandLogo}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.store.MdBrand" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		md_brand
+		(
+			
+			brand_no,
+			brand_code,
+			brand_name,
+			brand_logo
+		)
+		values
+		(
+			
+			#{brandNo},
+			#{brandCode},
+			#{brandName},
+			#{brandLogo}
+		)
+	</insert>
+	
+</mapper>

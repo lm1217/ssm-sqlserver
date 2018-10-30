@@ -15,6 +15,7 @@ public class ConstantsEJS {
     public static final int DEFAULT_PAGE_SIZE = 20;
     public static final String SERVICE_RESULT_CODE_SYSERROR = "syserror";
     public static final String SERVICE_RESULT_EXCEPTION_SYSERROR = "服务异常，请联系系统管理员。";
+    public static final String SERVICE_RESULT_EXCEPTION_FORM_SYSERROR = "页面参数错误或SKU库存差异。";
 
     /**
      *
@@ -106,5 +107,21 @@ public class ConstantsEJS {
     public static final int SYSTEM_USER_STATUS_NORM = 1;
 
     public static final int SYSTEM_RESOURCE_ROOT = 0;
+
+    /**
+     * 邮箱发送配置
+     */
+    public static final String MAIL_HOST = "smtp.qq.com";
+    public static final String MAIL_PORT = "465";
+    public static final String MAIL_USERNAME = "237509918@qq.com";
+    public static final String MAIL_PASSWORD = "xuzoidklgdxxbjgh";
+
+    /**
+     * FTP链接配置
+     */
+    public static final String FTPDEAL_HOSTNAME = "127.0.0.1";
+    public static final Integer FTPDEAL_PORT = 21;
+    public static final String FTPDEAL_USERNAME = "ftptest";
+    public static final String FTPDEAL_PASSWORD = "1qazxsw2";
 
 }

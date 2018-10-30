@@ -12,7 +12,7 @@ public interface BdReceivingWriteDao {
  
 	BdReceiving get(Integer id) throws Exception;
 
-	List<BdReceiving> getBdReceivingList(@Param("queryMap") Map<String, String> queryMap,
+	List<BdReceiving> getBdReceivingList(@Param("queryMap") Map<String, Object> queryMap,
 										 @Param("start") Integer start,
 										 @Param("size") Integer size) throws Exception;
 	/**
@@ -20,7 +20,7 @@ public interface BdReceivingWriteDao {
 	 * @param queryMap
 	 * @return
 	 */
-	Integer getBdReceivingListCount(@Param("queryMap") Map<String, String> queryMap);
+	Integer getBdReceivingListCount(@Param("queryMap") Map<String, Object> queryMap);
 	
 	Integer insert(BdReceiving bdReceiving) throws Exception;
 	

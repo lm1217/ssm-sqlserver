@@ -23,26 +23,31 @@
 	<select id="get" parameterType="Integer" resultMap="BdReceivingResult">
 		SELECT br.*, a.send_store_name, b.receive_store_name
 		FROM bd_receiving br,
-		(SELECT br.erp_no erp_no, ms.store_name send_store_name FROM md_store ms, bd_receiving br WHERE br.send_store_no = ms.store_no) a,
-		(SELECT br.erp_no erp_no, ms.store_name receive_store_name FROM md_store ms, bd_receiving br WHERE br.receive_store_no = ms.store_no) b
+		( SELECT br.erp_no erp_no, CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.send_store_no = ms.store_no ) a,
+		( SELECT br.erp_no erp_no, ms.store_name  receive_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.receive_store_no = ms.store_no ) b
 		WHERE br.erp_no = a.erp_no AND a.erp_no = b.erp_no AND br.id = #{id}
 	</select>
 
 	<select id="getBdReceivingList" parameterType="java.util.Map" resultMap="BdReceivingResult">
 		SELECT br.*, a.send_store_name, b.receive_store_name
 		FROM bd_receiving br,
-		(SELECT br.erp_no erp_no, ms.store_name send_store_name FROM md_store ms, bd_receiving br WHERE br.send_store_no = ms.store_no) a,
-		(SELECT br.erp_no erp_no, ms.store_name receive_store_name FROM md_store ms, bd_receiving br WHERE br.receive_store_no = ms.store_no) b
+		( SELECT br.erp_no erp_no, CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.send_store_no = ms.store_no ) a,
+		( SELECT br.erp_no erp_no, ms.store_name  receive_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.receive_store_no = ms.store_no ) b
 		<include refid="getCondition"/>
-		order by br.input_date desc
+		<if test="queryMap.q_status != null and queryMap.q_status !='' and queryMap.q_status == 1">
+			order by br.input_date desc
+		</if>
+		<if test="queryMap.q_status != null and queryMap.q_status !='' and queryMap.q_status == 2">
+			order by br.receive_date desc
+		</if>
 		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
 	</select>
 
 	<select id="getBdReceivingListCount" parameterType="java.util.Map" resultType="Integer">
 		SELECT count(*)
 		FROM bd_receiving br,
-		(SELECT br.erp_no erp_no, ms.store_name send_store_name FROM md_store ms, bd_receiving br WHERE br.send_store_no = ms.store_no) a,
-		(SELECT br.erp_no erp_no, ms.store_name receive_store_name FROM md_store ms, bd_receiving br WHERE br.receive_store_no = ms.store_no) b
+		( SELECT br.erp_no erp_no, CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.send_store_no = ms.store_no ) a,
+		( SELECT br.erp_no erp_no, ms.store_name  receive_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.receive_store_no = ms.store_no ) b
 		<include refid="getCondition"/>
 	</select>
 	
@@ -114,14 +119,26 @@
 			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
 				and br.receive_store_no = #{queryMap.q_storeNo}
 			</if>
+			<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
+				and br.receive_store_no in
+				<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
+					#{storeNo}
+				</foreach>
+			</if>
 			<if test="queryMap.q_status != null and queryMap.q_status !=''">
 				and br.status = #{queryMap.q_status}
 			</if>
-			<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
-				and br.input_date &gt;= #{queryMap.q_starttime}
+			<if test="queryMap.q_starttime != null and queryMap.q_starttime != '' and queryMap.q_status == 1">
+				and br.send_date &gt;= #{queryMap.q_starttime}
 			</if>
-			<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
-				and br.input_date &lt;= #{queryMap.q_endtime}
+			<if test="queryMap.q_endtime != null and queryMap.q_endtime != '' and queryMap.q_status == 1">
+				and br.send_date &lt;= #{queryMap.q_endtime}
+			</if>
+			<if test="queryMap.q_starttime != null and queryMap.q_starttime != '' and queryMap.q_status == 2">
+				and br.receive_date &gt;= #{queryMap.q_starttime}
+			</if>
+			<if test="queryMap.q_endtime != null and queryMap.q_endtime != '' and queryMap.q_status == 2">
+				and br.receive_date &lt;= #{queryMap.q_endtime}
 			</if>
 		</where>
 	</sql>

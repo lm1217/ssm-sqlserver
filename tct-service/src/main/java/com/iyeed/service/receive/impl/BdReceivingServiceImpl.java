@@ -6,23 +6,19 @@ import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.receive.BdReceiving;
 import com.iyeed.core.entity.receive.vo.UpdateReceiveForm;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.receive.BdReceivingModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.receive.IBdReceivingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 
 @Service(value = "bdReceivingService")
-public class BdReceivingServiceImpl implements IBdReceivingService {
+public class BdReceivingServiceImpl extends BaseService implements IBdReceivingService {
 	private static final Logger log = LoggerFactory.getLogger(BdReceivingServiceImpl.class);
-
-	@Resource
-    private BdReceivingModel bdReceivingModel;
 
     /**
      * 根据id取得收货表-总表
@@ -47,7 +43,7 @@ public class BdReceivingServiceImpl implements IBdReceivingService {
     }
 
     @Override
-    public ServiceResult<List<BdReceiving>> getBdReceivingList(Map<String, String> queryMap, PagerInfo pagerInfo) {
+    public ServiceResult<List<BdReceiving>> getBdReceivingList(Map<String, Object> queryMap, PagerInfo pagerInfo) {
         ServiceResult<List<BdReceiving>> serviceResult = new ServiceResult<>();
         serviceResult.setPager(pagerInfo);
         try {
@@ -70,7 +66,7 @@ public class BdReceivingServiceImpl implements IBdReceivingService {
     }
 
     @Override
-    public ServiceResult<Integer> getBdReceivingListCount(Map<String, String> queryMap) {
+    public ServiceResult<Integer> getBdReceivingListCount(Map<String, Object> queryMap) {
         ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
         try {
             serviceResult.setResult(bdReceivingModel.getBdReceivingListCount(queryMap));

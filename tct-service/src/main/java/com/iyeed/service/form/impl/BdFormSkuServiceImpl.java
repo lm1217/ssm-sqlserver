@@ -4,21 +4,17 @@ import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.form.BdFormSku;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.form.BdFormSkuModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.form.IBdFormSkuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Service(value = "bdFormSkuService")
-public class BdFormSkuServiceImpl implements IBdFormSkuService {
+public class BdFormSkuServiceImpl extends BaseService implements IBdFormSkuService {
 	private static final Logger log = LoggerFactory.getLogger(BdFormSkuServiceImpl.class);
-
-	@Resource
-    private BdFormSkuModel bdFormSkuModel;
 
     @Override
     public ServiceResult<List<BdFormSku>> getBdFormSkuListByApplyNo(String applyNo) {
@@ -33,6 +29,22 @@ public class BdFormSkuServiceImpl implements IBdFormSkuService {
             result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
             log.error("[IBdFormSkuService][getBdFormSkuById]根据id["+applyNo+"]取得表单-SKU子表 时出现未知异常：",
                     e);
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<List<BdFormSku>> getBdFormSkuListForBack(String applyNo, String storeNo) {
+        ServiceResult<List<BdFormSku>> result = new ServiceResult<>();
+        try {
+            result.setResult(bdFormSkuModel.getBdFormSkuListForBack(applyNo, storeNo));
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error(e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error(e.getMessage());
         }
         return result;
     }

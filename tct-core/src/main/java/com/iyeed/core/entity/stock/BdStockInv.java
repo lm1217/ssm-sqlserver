@@ -34,6 +34,24 @@ public class BdStockInv implements Serializable {
  	private Integer stockCounter;
  	private Integer stockCounterEnabled;
  	private java.util.Date updateDate;
+ 	private Integer stockDepotFreeze;
+ 	private Integer stockCounterFreeze;
+
+	public Integer getStockDepotFreeze() {
+		return stockDepotFreeze;
+	}
+
+	public void setStockDepotFreeze(Integer stockDepotFreeze) {
+		this.stockDepotFreeze = stockDepotFreeze;
+	}
+
+	public Integer getStockCounterFreeze() {
+		return stockCounterFreeze;
+	}
+
+	public void setStockCounterFreeze(Integer stockCounterFreeze) {
+		this.stockCounterFreeze = stockCounterFreeze;
+	}
 
 	/**
      * 获取主键自增长

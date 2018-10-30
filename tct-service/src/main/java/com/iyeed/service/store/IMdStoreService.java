@@ -23,6 +23,8 @@ public interface IMdStoreService {
      * @return
      */
     ServiceResult<List<GetStoreListBean>> getStoreList();
+
+    ServiceResult<List<GetStoreListBean>> getStoreListByBrandNo(String brandNo);
     
     /**
      * 保存门店表

@@ -2,8 +2,8 @@ package com.iyeed.api.aspect;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.iyeed.api.controller.common.model.AjaxResponse;
 import com.iyeed.core.annotation.SystemControllerLog;
+import com.iyeed.core.common.model.AjaxResponse;
 import com.iyeed.core.entity.system.SystemLog;
 import com.iyeed.core.entity.system.SystemUser;
 import com.iyeed.core.utils.CommonUtil;

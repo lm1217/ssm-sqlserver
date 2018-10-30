@@ -22,13 +22,38 @@ import java.io.Serializable;
 public class MdSku implements Serializable {
 
  	private Integer id;
+ 	private String skuId;
  	private String skuCode;
  	private String skuName;
+ 	private String skuNameEn;
  	private String brandNo;
+ 	private String brandCode;
  	private String brandName;
- 	private String updateUserNo;
  	private java.util.Date inputDate;
 
+	public String getSkuId() {
+		return skuId;
+	}
+
+	public void setSkuId(String skuId) {
+		this.skuId = skuId;
+	}
+
+	public String getSkuNameEn() {
+		return skuNameEn;
+	}
+
+	public void setSkuNameEn(String skuNameEn) {
+		this.skuNameEn = skuNameEn;
+	}
+
+	public String getBrandCode() {
+		return brandCode;
+	}
+
+	public void setBrandCode(String brandCode) {
+		this.brandCode = brandCode;
+	}
 
 	/**
      * 获取主键自增长
@@ -98,20 +123,6 @@ public class MdSku implements Serializable {
      */
 	public void setBrandName(String brandName){
 		this.brandName = brandName;
-	}
-
-	/**
-     * 获取更新人
-     */
-	public String getUpdateUserNo(){
-		return this.updateUserNo;
-	}
-
-	/**
-     * 设置更新人
-     */
-	public void setUpdateUserNo(String updateUserNo){
-		this.updateUserNo = updateUserNo;
 	}
  		
 	/**

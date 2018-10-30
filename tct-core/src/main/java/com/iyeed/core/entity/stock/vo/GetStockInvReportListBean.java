@@ -6,14 +6,32 @@ public class GetStockInvReportListBean implements Serializable {
     private Integer id;
     private String storeNo;
     private String storeName;
-    private String skuName;
-    private String skuCode;
     private String brandName;
+    private String skuCode;
+    private String skuName;
     private Integer stockDepot;
     private Integer stockDepotEnabled;
+    private Integer stockDepotFreeze;
     private Integer stockCounter;
     private Integer stockCounterEnabled;
+    private Integer stockCounterFreeze;
     private Integer total;
+
+    public Integer getStockDepotFreeze() {
+        return stockDepotFreeze;
+    }
+
+    public void setStockDepotFreeze(Integer stockDepotFreeze) {
+        this.stockDepotFreeze = stockDepotFreeze;
+    }
+
+    public Integer getStockCounterFreeze() {
+        return stockCounterFreeze;
+    }
+
+    public void setStockCounterFreeze(Integer stockCounterFreeze) {
+        this.stockCounterFreeze = stockCounterFreeze;
+    }
 
     public Integer getId() {
         return id;

@@ -2,33 +2,22 @@ package com.iyeed.model.system;
 
 
 import com.iyeed.core.entity.system.SystemUser;
-import com.iyeed.core.exception.BusinessException;
-import com.iyeed.dao.db.read.xzn.system.SystemUserReadDao;
-import com.iyeed.dao.db.write.xzn.system.SystemRoleWriteDao;
-import com.iyeed.dao.db.write.xzn.system.SystemUserWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class SystemUserModel {
-
-    @Resource
-    private SystemUserReadDao systemUserReadDao;
-    @Resource
-    private SystemUserWriteDao systemUserWriteDao;
-    @Resource
-    private SystemRoleWriteDao systemRoleWriteDao;
+public class SystemUserModel extends BaseModel {
 
     /**
     * 根据id取得系统管理员表
     * @param  systemUserId
     * @return
     */
-    public SystemUser getSystemUserById(Integer systemUserId) {
+    public SystemUser getSystemUserById(Integer systemUserId) throws Exception {
         return systemUserWriteDao.get(systemUserId);
     }
 
@@ -37,7 +26,7 @@ public class SystemUserModel {
      * @param  systemUser
      * @return
      */
-    public Integer saveSystemUser(SystemUser systemUser) {
+    public Integer saveSystemUser(SystemUser systemUser) throws Exception {
         return systemUserWriteDao.save(systemUser);
     }
 
@@ -47,27 +36,23 @@ public class SystemUserModel {
     * @return
     */
 
-    public Integer updateSystemUser(SystemUser systemAdmin) {
+    public Integer updateSystemUser(SystemUser systemAdmin) throws Exception {
         return systemUserWriteDao.update(systemAdmin);
     }
 
-    public Integer pageCount(Map<String, String> queryMap) {
+    public Integer pageCount(Map<String, String> queryMap) throws Exception {
         return systemUserWriteDao.getCount(queryMap);
     }
 
-    public List<SystemUser> page(Map<String, String> queryMap, Integer start, Integer size) {
-        List<SystemUser> list = systemUserWriteDao.page(queryMap, start, size);
-
-        return list;
+    public List<SystemUser> page(Map<String, String> queryMap, Integer start, Integer size) throws Exception {
+        return systemUserWriteDao.page(queryMap, start, size);
     }
 
-    public Boolean del(Integer id) {
-        if (id == null)
-            throw new BusinessException("删除系统管理员表[" + id + "]时出错");
+    public Boolean del(Integer id) throws Exception {
         return this.systemUserWriteDao.del(id) > 0;
     }
 
-    public SystemUser getSystemUserByNamePwd(String name, String password) {
+    public SystemUser getSystemUserByNamePwd(String name, String password) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("name", name);
         map.put("password", password);
@@ -79,7 +64,7 @@ public class SystemUserModel {
      * @param username
      * @return
      */
-    public List<SystemUser> getSystemUserByName(String username) {
+    public List<SystemUser> getSystemUserByName(String username) throws Exception {
         return systemUserReadDao.getByName(username);
     }
 

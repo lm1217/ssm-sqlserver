@@ -3,11 +3,13 @@
 <mapper namespace="com.iyeed.dao.db.write.xzn.sku.MdSkuWriteDao">
 	<resultMap id="MdSkuResult" type="com.iyeed.core.entity.sku.MdSku">
 			<result property="id" column="id" />
+			<result property="skuId" column="sku_id" />
 			<result property="skuCode" column="sku_code" />
 			<result property="skuName" column="sku_name" />
+			<result property="skuNameEn" column="sku_name_en" />
 			<result property="brandNo" column="brand_no" />
+			<result property="brandCode" column="brand_code" />
 			<result property="brandName" column="brand_name" />
-			<result property="updateUserNo" column="update_user_no" />
 			<result property="inputDate" column="input_date" />
 	</resultMap>
 
@@ -35,12 +37,13 @@
 	<update id="update" parameterType="com.iyeed.core.entity.sku.MdSku">
         update md_sku
     	<set>
-			
+			<if test="skuId != null">sku_id= #{skuId},</if>
 			<if test="skuCode != null">sku_code= #{skuCode},</if>
 			<if test="skuName != null">sku_name= #{skuName},</if>
+			<if test="skuNameEn != null">sku_name_en= #{skuNameEn},</if>
 			<if test="brandNo != null">brand_no= #{brandNo},</if>
+			<if test="brandCode != null">brand_code= #{brandCode},</if>
 			<if test="brandName != null">brand_name= #{brandName},</if>
-			<if test="updateUserNo != null">update_user_no= #{updateUserNo},</if>
 			<if test="inputDate != null">input_date= #{inputDate}</if>
 	    </set>
         where id = #{id}
@@ -50,21 +53,23 @@
 		insert into 
 		md_sku
 		(
-			
+			sku_id,
 			sku_code,
 			sku_name,
+			sku_name_en,
 			brand_no,
-			brand_name,
-			update_user_no
+		  	brand_code,
+			brand_name
 		)
 		values
 		(
-			
+			#{skuId},
 			#{skuCode},
 			#{skuName},
+			#{skuNameEn},
 			#{brandNo},
-			#{brandName},
-			#{updateUserNo}
+			#{brandCode},
+			#{brandName}
 		)
 	</insert>
 	

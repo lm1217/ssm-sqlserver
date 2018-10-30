@@ -1,14 +1,13 @@
 package com.iyeed.api.shiro;
 
-import com.iyeed.api.controller.common.emuns.RespCode;
-import com.iyeed.api.controller.common.model.AjaxResponse;
 import com.iyeed.api.util.WebUtil;
+import com.iyeed.core.common.emuns.RespCode;
+import com.iyeed.core.common.model.AjaxResponse;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ResourceCheckFilter extends AccessControlFilter {

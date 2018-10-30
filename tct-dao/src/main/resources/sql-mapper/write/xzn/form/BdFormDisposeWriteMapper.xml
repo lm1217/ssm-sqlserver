@@ -48,6 +48,11 @@
 		and store_no = #{storeNo}
 		and dispose_date is null
 	</select>
+
+	<delete id="del" parameterType="String">
+		delete from bd_form_dispose
+		where apply_no = #{applyNo} and dispose_date is null
+	</delete>
 	
 	<update id="update" parameterType="com.iyeed.core.entity.form.BdFormDispose">
         update bd_form_dispose

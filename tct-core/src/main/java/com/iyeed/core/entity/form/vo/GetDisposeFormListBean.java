@@ -19,6 +19,24 @@ public class GetDisposeFormListBean implements Serializable {
     private java.util.Date inputDate;
     private Integer disposeStatus;
     private String disposeStatusDesc;
+    private Integer isBack;
+    private String applyUserNo;
+
+    public Integer getIsBack() {
+        return isBack;
+    }
+
+    public void setIsBack(Integer isBack) {
+        this.isBack = isBack;
+    }
+
+    public String getApplyUserNo() {
+        return applyUserNo;
+    }
+
+    public void setApplyUserNo(String applyUserNo) {
+        this.applyUserNo = applyUserNo;
+    }
 
     public String getDisposeStatusDesc() {
         return disposeStatusDesc;

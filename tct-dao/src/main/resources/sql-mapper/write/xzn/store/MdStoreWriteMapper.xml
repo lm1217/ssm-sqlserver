@@ -3,14 +3,15 @@
 <mapper namespace="com.iyeed.dao.db.write.xzn.store.MdStoreWriteDao">
 	<resultMap id="MdStoreResult" type="com.iyeed.core.entity.store.MdStore">
 			<result property="id" column="id" />
+			<result property="storeId" column="store_id" />
 			<result property="storeNo" column="store_no" />
+			<result property="storeCode" column="store_code" />
 			<result property="storeName" column="store_name" />
 			<result property="brandNo" column="brand_no" />
+			<result property="brandCode" column="brand_code" />
 			<result property="brandName" column="brand_name" />
-			<result property="brandLogo" column="brand_logo" />
 			<result property="userNo" column="user_no" />
 			<result property="userName" column="user_name" />
-			<result property="post" column="post" />
 			<result property="inputDate" column="input_date" />
 	</resultMap>
 
@@ -38,19 +39,27 @@
 		*
 		from md_store
 	</select>
+
+	<select id="getStoreListByBrandNo" parameterType="String" resultMap="MdStoreBeanResult">
+		select
+		*
+		from md_store
+		where brand_no = #{brandNo}
+	</select>
 	
 	<update id="update" parameterType="com.iyeed.core.entity.store.MdStore">
         update md_store
     	<set>
 			
+			<if test="storeId != null">store_id= #{storeId},</if>
 			<if test="storeNo != null">store_no= #{storeNo},</if>
+			<if test="storeCode != null">store_code= #{storeCode},</if>
 			<if test="storeName != null">store_name= #{storeName},</if>
 			<if test="brandNo != null">brand_no= #{brandNo},</if>
+			<if test="brandCode != null">brand_code= #{brandCode},</if>
 			<if test="brandName != null">brand_name= #{brandName},</if>
-			<if test="brandLogo != null">brand_logo= #{brandLogo},</if>
 			<if test="userNo != null">brand_logo= #{user_no},</if>
 			<if test="userName != null">brand_logo= #{user_name},</if>
-			<if test="post != null">brand_logo= #{post},</if>
 			<if test="inputDate != null">input_date= #{inputDate}</if>
 	    </set>
         where id = #{id}
@@ -60,27 +69,27 @@
 		insert into 
 		md_store
 		(
-			
+			store_id,
 			store_no,
+			store_code,
 			store_name,
 			brand_no,
+			brand_code,
 			brand_name,
-			brand_logo,
 			user_no,
-			user_name,
-			post
+			user_name
 		)
 		values
 		(
-			
+			#{storeId},
 			#{storeNo},
+			#{storeCode},
 			#{storeName},
 			#{brandNo},
+			#{brandCode},
 			#{brandName},
-			#{brandLogo},
 			#{userNo},
-			#{userName},
-			#{post}
+			#{userName}
 		)
 	</insert>
 	

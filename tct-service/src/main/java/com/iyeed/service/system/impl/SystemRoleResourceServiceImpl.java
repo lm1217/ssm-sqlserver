@@ -7,22 +7,18 @@ import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.system.SystemResource;
 import com.iyeed.core.entity.system.SystemRoleResource;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.system.SystemRoleResourceModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.system.ISystemRoleResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Service(value = "systemRoleResourceService")
-public class SystemRoleResourceServiceImpl implements ISystemRoleResourceService {
+public class SystemRoleResourceServiceImpl extends BaseService implements ISystemRoleResourceService {
     private static Logger log = LoggerFactory.getLogger(SystemRoleResourceServiceImpl.class);
-
-    @Resource
-    private SystemRoleResourceModel systemRoleResourceModel;
 
     @Override
     public ServiceResult<SystemRoleResource> getSystemRoleResourceById(Integer systemRoleResourceId) {
@@ -68,8 +64,7 @@ public class SystemRoleResourceServiceImpl implements ISystemRoleResourceService
     }
 
     @Override
-    public ServiceResult<List<SystemRoleResource>> page(Map<String, String> queryMap,
-                                                          PagerInfo pager) {
+    public ServiceResult<List<SystemRoleResource>> page(Map<String, String> queryMap, PagerInfo pager) {
         ServiceResult<List<SystemRoleResource>> serviceResult = new ServiceResult<List<SystemRoleResource>>();
         try {
             Integer start = 0, size = 0;
@@ -98,7 +93,6 @@ public class SystemRoleResourceServiceImpl implements ISystemRoleResourceService
 
     @Override
     public ServiceResult<Boolean> del(Integer id) {
-
         ServiceResult<Boolean> sr = new ServiceResult<Boolean>();
         try {
             sr.setResult(systemRoleResourceModel.del(id));
@@ -113,7 +107,6 @@ public class SystemRoleResourceServiceImpl implements ISystemRoleResourceService
     public ServiceResult<Boolean> save(String roleId, String[] resArr) {
         ServiceResult<Boolean> serRes = new ServiceResult<Boolean>();
         try {
-
             serRes.setResult(systemRoleResourceModel.save(roleId, resArr));
             serRes.setMessage("保存成功。");
         } catch (Exception e) {
@@ -127,7 +120,6 @@ public class SystemRoleResourceServiceImpl implements ISystemRoleResourceService
     public ServiceResult<List<SystemResource>> getResourceByRoleId(Integer roleId) {
         ServiceResult<List<SystemResource>> serRes = new ServiceResult<List<SystemResource>>();
         try {
-
             serRes.setResult(systemRoleResourceModel.getResourceByRoleId(roleId));
         } catch (Exception e) {
             serRes.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, e.getMessage());
@@ -137,7 +129,14 @@ public class SystemRoleResourceServiceImpl implements ISystemRoleResourceService
     }
 
     @Override
-    public List<SystemResource> getResourceByPid(Integer pid, Integer roleId) throws BusinessException {
-        return systemRoleResourceModel.getResourceByPid(pid, roleId);
+    public ServiceResult<List<SystemResource>> getResourceByPid(Integer pid, Integer roleId) throws BusinessException {
+        ServiceResult<List<SystemResource>> serRes = new ServiceResult<List<SystemResource>>();
+        try {
+            serRes.setResult(systemRoleResourceModel.getResourceByPid(pid, roleId));
+        } catch (Exception e) {
+            serRes.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, e.getMessage());
+            e.printStackTrace();
+        }
+        return serRes;
     }
 }

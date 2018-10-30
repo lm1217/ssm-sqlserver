@@ -15,6 +15,8 @@ public interface IBdFormSkuService {
     ServiceResult<BdFormSku> getBdFormSkuById(Integer bdFormSkuId);
 
     ServiceResult<List<BdFormSku>> getBdFormSkuListByApplyNo(String applyNo);
+
+    ServiceResult<List<BdFormSku>> getBdFormSkuListForBack(String applyNo, String storeNo);
     
     /**
      * 保存表单-SKU子表 

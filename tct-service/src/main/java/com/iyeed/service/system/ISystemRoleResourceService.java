@@ -74,5 +74,5 @@ public interface ISystemRoleResourceService {
      * @param roleId
      * @return
      */
-    List<SystemResource> getResourceByPid(Integer pid, Integer roleId);
+    ServiceResult<List<SystemResource>> getResourceByPid(Integer pid, Integer roleId);
 }

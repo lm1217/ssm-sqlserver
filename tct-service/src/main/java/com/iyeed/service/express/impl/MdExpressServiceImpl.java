@@ -4,22 +4,18 @@ import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.express.MdExpress;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.express.MdExpressModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.express.IMdExpressService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Service(value = "mdExpressService")
-public class MdExpressServiceImpl implements IMdExpressService {
+public class MdExpressServiceImpl extends BaseService implements IMdExpressService {
 	private static final Logger log = LoggerFactory.getLogger(MdExpressServiceImpl.class);
-
-	@Resource
-    private MdExpressModel mdExpressModel;
 
     @Override
     public ServiceResult<List<MdExpress>> getExpressList(Map<String, Object> qureyMap) {

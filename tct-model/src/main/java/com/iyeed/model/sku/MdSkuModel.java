@@ -2,18 +2,16 @@ package com.iyeed.model.sku;
 
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.sku.MdSku;
-import com.iyeed.dao.db.write.xzn.sku.MdSkuWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class MdSkuModel {
+public class MdSkuModel extends BaseModel {
     
-    @Resource
-    private MdSkuWriteDao mdSkuWriteDao;
+
     
     /**
      * 根据id取得SKU表
@@ -53,6 +51,5 @@ public class MdSkuModel {
 		mdSku.setSkuName(StringUtil.dbSafeString(mdSku.getSkuName(), true, 200));
 		mdSku.setBrandNo(StringUtil.dbSafeString(mdSku.getBrandNo(), true, 40));
 		mdSku.setBrandName(StringUtil.dbSafeString(mdSku.getBrandName(), true, 40));
-		mdSku.setUpdateUserNo(StringUtil.dbSafeString(mdSku.getUpdateUserNo(), true, 40));
-    }
+	}
 }

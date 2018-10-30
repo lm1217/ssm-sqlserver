@@ -1,15 +1,13 @@
 package com.iyeed.api.controller.system;
 
 import com.iyeed.api.controller.BaseController;
-import com.iyeed.api.controller.common.emuns.RespCode;
-import com.iyeed.api.controller.common.model.AjaxResponse;
-import com.iyeed.api.util.WebUtil;
-import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
+import com.iyeed.core.annotation.SystemControllerLog;
+import com.iyeed.core.common.emuns.RespCode;
+import com.iyeed.core.common.model.AjaxResponse;
 import com.iyeed.core.entity.system.SystemUser;
 import com.iyeed.core.entity.system.vo.UserListForm;
-import com.iyeed.core.exception.BusinessException;
 import com.iyeed.core.utils.Md5;
 import com.iyeed.service.system.ISystemRoleService;
 import com.iyeed.service.system.ISystemUserService;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,17 +33,14 @@ import java.util.Map;
 @RequestMapping(value = "api/system/user")
 @Scope("prototype")
 public class SystemUserController extends BaseController {
-    private Logger log = LoggerFactory.getLogger(this.getClass());
-    @Resource
-    private ISystemUserService systemUserService;
-    @Resource
-    private ISystemRoleService systemRoleService;
+    private static final Logger log = LoggerFactory.getLogger(SystemUserController.class);
 
     /**
      * 获取系统用户列表
      * @param
      * @return AjaxResponse
      */
+    @SystemControllerLog(module = "系统-用户管理", businessDesc = "按条件获取系统用户列表")
     @RequestMapping(value = "getSystemUserList.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse getSystemUserList(@RequestBody UserListForm form) {
@@ -68,7 +62,7 @@ public class SystemUserController extends BaseController {
         return AjaxResponse.success(dataMap);
     }
 
-
+    @SystemControllerLog(module = "系统-用户管理", businessDesc = "编辑用户-根据系统用户ID获取用户信息")
     @RequestMapping(value = "editSystemUser.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse editSystemUser(@RequestParam Integer id) {
@@ -85,6 +79,7 @@ public class SystemUserController extends BaseController {
      * 冻结管理员账号
      * @param id
      */
+    @SystemControllerLog(module = "系统-用户管理", businessDesc = "根据系统用户ID冻结账号")
     @RequestMapping(value = "freezeSystemUser.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse freezeSystemUser(@RequestParam Integer id) {
@@ -99,6 +94,11 @@ public class SystemUserController extends BaseController {
         return AjaxResponse.success("账号[" + systemUser.getUsername() + "]已被冻结");
     }
 
+    /**
+     * 删除账号
+     * @param id
+     */
+    @SystemControllerLog(module = "系统-用户管理", businessDesc = "根据系统用户ID删除账号")
     @RequestMapping(value = "delSystemUser.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse delSystemUser(@RequestParam Integer id) {
@@ -117,6 +117,7 @@ public class SystemUserController extends BaseController {
      * 保存
      * @param systemUser
      */
+    @SystemControllerLog(module = "系统-用户管理", businessDesc = "保存or更新系统用户账号")
     @RequestMapping(value = "saveSystemUser.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse saveSystemUser(@RequestBody SystemUser systemUser) {

@@ -3,32 +3,23 @@ package com.iyeed.model.system;
 import com.iyeed.core.entity.system.SystemResource;
 import com.iyeed.core.entity.system.SystemRoleResource;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.dao.db.write.xzn.system.SystemRoleResourceWriteDao;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class SystemRoleResourceModel {
-
-    @Resource
-    private SystemRoleResourceWriteDao systemRoleResourceWriteDao;
-    @Resource
-    private DataSourceTransactionManager transactionManager;
+public class SystemRoleResourceModel extends BaseModel {
 
     /**
     * 根据id取得角色资源对应表
     * @param  systemRoleResourceId
     * @return
     */
-    public SystemRoleResource getSystemRoleResourceById(Integer systemRoleResourceId) {
+    public SystemRoleResource getSystemRoleResourceById(Integer systemRoleResourceId) throws Exception {
         return systemRoleResourceWriteDao.get(systemRoleResourceId);
     }
 
@@ -37,7 +28,7 @@ public class SystemRoleResourceModel {
      * @param  systemRoleResource
      * @return
      */
-    public Integer saveSystemRoleResource(SystemRoleResource systemRoleResource) {
+    public Integer saveSystemRoleResource(SystemRoleResource systemRoleResource) throws Exception {
         return systemRoleResourceWriteDao.save(systemRoleResource);
     }
 
@@ -46,52 +37,38 @@ public class SystemRoleResourceModel {
     * @param  systemRoleResource
     * @return
     */
-    public Integer updateSystemRoleResource(SystemRoleResource systemRoleResource) {
+    public Integer updateSystemRoleResource(SystemRoleResource systemRoleResource) throws Exception {
         return systemRoleResourceWriteDao.update(systemRoleResource);
     }
 
-    public Integer pageCount(Map<String, String> queryMap) {
+    public Integer pageCount(Map<String, String> queryMap) throws Exception {
         return systemRoleResourceWriteDao.getCount(queryMap);
     }
 
-    public List<SystemRoleResource> page(Map<String, String> queryMap) {
+    public List<SystemRoleResource> page(Map<String, String> queryMap) throws Exception {
         return systemRoleResourceWriteDao.page(queryMap);
     }
 
-    public boolean del(Integer id) {
-        if (id == null)
-            throw new BusinessException("删除角色资源对应表[" + id + "]时出错");
+    public boolean del(Integer id) throws Exception {
         return systemRoleResourceWriteDao.del(id) > 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public boolean save(String roleId, String[] resArr) throws Exception {
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-        TransactionStatus status = transactionManager.getTransaction(def);
-        try {
-            //删除此角色之前的资源关联
-            systemRoleResourceWriteDao.delByRole(roleId);
+        //删除此角色之前的资源关联
+        systemRoleResourceWriteDao.delByRole(roleId);
 
-            //保存选中的资源
-            for (String resId : resArr) {
-                SystemRoleResource srr = new SystemRoleResource();
-                srr.setResourceId(Integer.valueOf(resId));
-                srr.setRoleId(Integer.valueOf(roleId));
-                systemRoleResourceWriteDao.save(srr);
-            }
-
-            transactionManager.commit(status);
-        } catch (Exception e) {
-            e.printStackTrace();
-            transactionManager.rollback(status);
-            throw e;
+        //保存选中的资源
+        for (String resId : resArr) {
+            SystemRoleResource srr = new SystemRoleResource();
+            srr.setResourceId(Integer.valueOf(resId));
+            srr.setRoleId(Integer.valueOf(roleId));
+            systemRoleResourceWriteDao.save(srr);
         }
         return true;
     }
 
-    public List<SystemResource> getResourceByRoleId(Integer roleId) {
-        if (roleId == null)
-            throw new BusinessException("未指定角色");
+    public List<SystemResource> getResourceByRoleId(Integer roleId) throws Exception {
         return systemRoleResourceWriteDao.getResourceByRoleId(roleId);
     }
 
@@ -103,12 +80,7 @@ public class SystemRoleResourceModel {
      * @return
      * @throws BusinessException
      */
-    public List<SystemResource> getResourceByPid(Integer pid, Integer roleId) throws BusinessException {
-        if (pid == null)
-            throw new BusinessException("未指定父资源");
-        if (roleId == null)
-            throw new BusinessException("未指定角色");
-
+    public List<SystemResource> getResourceByPid(Integer pid, Integer roleId) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("pid", pid);
         map.put("roleId", roleId);

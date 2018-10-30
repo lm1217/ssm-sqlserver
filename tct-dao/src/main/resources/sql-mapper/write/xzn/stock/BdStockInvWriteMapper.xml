@@ -12,6 +12,8 @@
 			<result property="stockCounter" column="stock_counter" />
 			<result property="stockCounterEnabled" column="stock_counter_enabled" />
 			<result property="updateDate" column="update_date" />
+			<result property="stockDepotFreeze" column="stock_depot_freeze" />
+			<result property="stockCounterFreeze" column="stock_counter_freeze" />
 	</resultMap>
 
 	<resultMap id="BdStockInvSkuResult" type="com.iyeed.core.entity.stock.vo.GetStockInvSkuListBean">
@@ -22,19 +24,23 @@
 		<result property="stockDepotEnabled" column="stock_depot_enabled" />
 		<result property="stockCounter" column="stock_counter" />
 		<result property="stockCounterEnabled" column="stock_counter_enabled" />
+		<result property="stockDepotFreeze" column="stock_depot_freeze" />
+		<result property="stockCounterFreeze" column="stock_counter_freeze" />
 	</resultMap>
 
 	<resultMap id="BdStockInvReportResult" type="com.iyeed.core.entity.stock.vo.GetStockInvReportListBean">
 		<result property="id" column="id" />
-		<result property="skuCode" column="sku_code" />
-		<result property="skuName" column="sku_name" />
 		<result property="storeNo" column="store_no" />
 		<result property="storeName" column="store_name" />
 		<result property="brandName" column="brand_name" />
+		<result property="skuCode" column="sku_code" />
+		<result property="skuName" column="sku_name" />
 		<result property="stockDepot" column="stock_depot" />
 		<result property="stockDepotEnabled" column="stock_depot_enabled" />
+		<result property="stockDepotFreeze" column="stock_depot_freeze" />
 		<result property="stockCounter" column="stock_counter" />
 		<result property="stockCounterEnabled" column="stock_counter_enabled" />
+		<result property="stockCounterFreeze" column="stock_counter_freeze" />
 		<result property="total" column="total" />
 	</resultMap>
 	
@@ -63,6 +69,8 @@
 		bsi.stock_depot_enabled,
 		bsi.stock_counter,
 		bsi.stock_counter_enabled,
+		bsi.stock_depot_freeze,
+		bsi.stock_counter_freeze,
 		bsi.id,
 		(bsi.stock_depot + bsi.stock_counter) total
 		FROM
@@ -83,13 +91,42 @@
 		<include refid="whereConditions" />
 	</select>
 
+	<select id="exportStockInvReportExcel" parameterType="java.util.Map" resultMap="BdStockInvReportResult">
+		SELECT
+		bsi.id,
+		bsi.store_no,
+		bsi.store_name,
+		ms.brand_name,
+		bsi.sku_code,
+		bsi.sku_name,
+		bsi.stock_depot,
+		bsi.stock_depot_enabled,
+		bsi.stock_depot_freeze,
+		bsi.stock_counter,
+		bsi.stock_counter_enabled,
+		bsi.stock_counter_freeze,
+		(bsi.stock_depot + bsi.stock_counter) total
+		FROM
+		dbo.bd_stock_inv AS bsi ,
+		dbo.md_store AS ms
+		<include refid="whereConditions" />
+		ORDER BY
+		bsi.update_date DESC
+	</select>
+
 	<!-- 查询条件 -->
 	<sql id="whereConditions">
 		<where>
 			bsi.store_no = ms.store_no
-			<if test="queryMap.storeNo != null and queryMap.storeNo !=''"  > and bsi.store_no = #{queryMap.storeNo}</if>
-			<if test="queryMap.q_skuCode != null and queryMap.q_skuCode !=''"  > and bsi.sku_code like CONCAT('%',#{queryMap.q_skuCode},'%')</if>
+			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''"  > and bsi.store_no = #{queryMap.storeNo}</if>
+			<if test="queryMap.q_skuCode != null and queryMap.q_skuCode !=''"  > and upper(bsi.sku_code) like CONCAT('%',#{queryMap.q_skuCode},'%')</if>
 			<if test="queryMap.q_skuName != null and queryMap.q_skuName !=''"  > and bsi.sku_name like CONCAT('%',#{queryMap.q_skuName},'%')</if>
+			<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
+				and bsi.store_no in
+				<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
+					#{storeNo}
+				</foreach>
+			</if>
 		</where>
 	</sql>
 
@@ -146,7 +183,9 @@
 			stock_depot,
 			stock_depot_enabled,
 			stock_counter,
-			stock_counter_enabled
+			stock_counter_enabled,
+			stock_depot_freeze,
+			stock_counter_freeze
 		)
 		values
 		(
@@ -158,7 +197,9 @@
 			#{stockDepot},
 			#{stockDepotEnabled},
 			#{stockCounter},
-			#{stockCounterEnabled}
+			#{stockCounterEnabled},
+			#{stockDepotFreeze},
+			#{stockCounterFreeze}
 		)
 	</insert>
 
@@ -179,7 +220,9 @@
 			<if test = "stockDepot != null" >stock_depot = stock_depot + #{stockDepot}, </if>
 			<if test = "stockDepotEnabled != null" >stock_depot_enabled = stock_depot_enabled + #{stockDepotEnabled}, </if>
 			<if test = "stockCounter != null" >stock_counter = stock_counter + #{stockCounter}, </if>
-			<if test = "stockCounterEnabled != null" >stock_counter_enabled = stock_counter_enabled + #{stockCounterEnabled} </if>
+			<if test = "stockCounterEnabled != null" >stock_counter_enabled = stock_counter_enabled + #{stockCounterEnabled}, </if>
+            <if test = "stockDepotFreeze != null" >stock_depot_freeze = stock_depot_freeze + #{stockDepotFreeze}, </if>
+			<if test = "stockCounterFreeze != null" >stock_counter_freeze = stock_counter_freeze + #{stockCounterFreeze} </if>
 		</set>
 		WHERE
 		store_no = #{storeNo}
@@ -197,7 +240,9 @@
 			stock_depot,
 			stock_depot_enabled,
 			stock_counter,
-			stock_counter_enabled
+			stock_counter_enabled,
+            stock_depot_freeze,
+			stock_counter_freeze
 		)
 		VALUES
 		(
@@ -208,7 +253,9 @@
 			ABS(#{stockDepot}),
 			ABS(#{stockDepotEnabled}),
 			ABS(#{stockCounter}),
-			ABS(#{stockCounterEnabled})
+			ABS(#{stockCounterEnabled}),
+            ABS(#{stockDepotFreeze}),
+			ABS(#{stockCounterFreeze})
 		)
 		END
 	</insert>

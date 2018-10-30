@@ -6,6 +6,8 @@
 			<result property="applyNo" column="apply_no" />
 			<result property="imageUrl" column="image_url" />
 			<result property="inputDate" column="input_date" />
+			<result property="type" column="type" />
+			<result property="upfileName" column="upfile_name" />
 	</resultMap>
 	
 	<select id="get" parameterType="Integer" resultMap="BdFormImageResult">
@@ -15,11 +17,11 @@
 		where id = #{id}
 	</select>
 
-	<select id="getFormImageList" parameterType="String" resultMap="BdFormImageResult">
+	<select id="getFormImageList" resultMap="BdFormImageResult">
 		select
 		*
 		from bd_form_image
-		where apply_no = #{applyNo}
+		where apply_no = #{applyNo} and [type] = #{type}
 	</select>
 	
 	<update id="update" parameterType="com.iyeed.core.entity.form.BdFormImage">
@@ -29,9 +31,15 @@
 			<if test="applyNo != null">apply_no= #{applyNo},</if>
 			<if test="imageUrl != null">image_url= #{imageUrl},</if>
 			<if test="inputDate != null">input_date= #{inputDate}</if>
+			<if test="type != null">[type]= #{type}</if>
 	    </set>
         where id = #{id}
 	</update>
+
+	<delete id="del" parameterType="String">
+		delete from bd_form_image
+		where apply_no = #{applyNo}
+	</delete>
 	
 	<insert id="insert" parameterType="com.iyeed.core.entity.form.BdFormImage" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into 
@@ -39,13 +47,17 @@
 		(
 			
 			apply_no,
-			image_url
+			image_url,
+			[type],
+			upfile_name
 		)
 		values
 		(
 			
 			#{applyNo},
-			#{imageUrl}
+			#{imageUrl},
+			#{type},
+			#{upfileName}
 		)
 	</insert>
 	

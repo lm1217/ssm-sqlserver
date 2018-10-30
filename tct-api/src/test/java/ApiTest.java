@@ -1,7 +1,13 @@
 import com.iyeed.core.entity.form.vo.SaveApplyForm;
+import com.iyeed.service.ftp.IFtpService;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
+import javax.ws.rs.ApplicationPath;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -18,7 +24,16 @@ import java.util.Map;
  * @Auther guanghua.deng
  * @Date 2018/8/16 17:35
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:spring-config/spring-context.xml")
 public class ApiTest {
+    @Resource
+    private IFtpService ftpService;
+
+    @Test
+    public void testFtp() {
+        ftpService.executeMdUser("E:/ftp");
+    }
 
     @Test
     public void base64Upload() {

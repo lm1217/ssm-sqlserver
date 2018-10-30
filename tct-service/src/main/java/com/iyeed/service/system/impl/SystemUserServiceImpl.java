@@ -6,25 +6,18 @@ import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.system.SystemUser;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.system.SystemUserModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.system.ISystemUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Service(value = "systemUserService")
-public class SystemUserServiceImpl implements ISystemUserService {
+public class SystemUserServiceImpl extends BaseService implements ISystemUserService {
     private static Logger log = LoggerFactory.getLogger(SystemUserServiceImpl.class);
-
-    @Resource
-    private SystemUserModel systemUserModel;
-    @Resource
-    private DataSourceTransactionManager transactionManager;
 
     @Override
     public ServiceResult<SystemUser> getSystemUserById(Integer systemUserId) {
@@ -96,7 +89,6 @@ public class SystemUserServiceImpl implements ISystemUserService {
 
     @Override
     public ServiceResult<Boolean> del(Integer id) {
-
         ServiceResult<Boolean> sr = new ServiceResult<>();
         try {
             sr.setResult(systemUserModel.del(id));

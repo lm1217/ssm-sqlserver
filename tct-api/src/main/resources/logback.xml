@@ -99,6 +99,10 @@
         <appender-ref ref="file.error" />
     </logger>
 
+    <logger name="org.springframework.scheduling">
+        <level value="info" />
+    </logger>
+
     <!-- root将级别为${log.root.level}及大于${log.root.level}的日志信息交给已经配置好的名为“Console”的appender处理，“Console”appender将信息打印到Console,其它同理 -->
     <root level="${log.root.level}">
         <!--  标识这个appender将会添加到这个logger -->

@@ -2,16 +2,11 @@ package com.iyeed.model.system;
 
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.system.SystemLog;
-import com.iyeed.dao.db.write.xzn.system.SystemLogWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 @Component
-public class SystemLogModel {
-    
-    @Resource
-    private SystemLogWriteDao systemLogWriteDao;
+public class SystemLogModel extends BaseModel {
     
     /**
      * 根据id取得system_log对象

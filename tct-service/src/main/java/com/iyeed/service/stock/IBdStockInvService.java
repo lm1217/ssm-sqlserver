@@ -22,6 +22,9 @@ public interface IBdStockInvService {
     ServiceResult<List<GetStockInvSkuListBean>> getStockInvSkuListByStoreNo(String storeNo);
 
     ServiceResult<List<GetStockInvReportListBean>> getStockInvReportList(Map<String, Object> queryMap, PagerInfo pagerInfo);
+
+    ServiceResult<List<GetStockInvReportListBean>> exportStockInvReportExcel(Map<String, Object> queryMap);
+
     /**
      * 保存库存表
      * @param  bdStockInv

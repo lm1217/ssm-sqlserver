@@ -126,6 +126,7 @@
             </resource>
         </resources>
         <plugins>
+
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
@@ -216,8 +217,8 @@
 
                 <log.moduleName>tct-api</log.moduleName>
                 <log.base>logs</log.base>
-                <log.other.level>INFO</log.other.level>
-                <log.root.level>INFO</log.root.level>
+                <log.other.level>ERROR</log.other.level>
+                <log.root.level>ERROR</log.root.level>
             </properties>
         </profile>
 

@@ -1,15 +1,13 @@
 package com.iyeed.api.controller.system;
 
 import com.iyeed.api.controller.BaseController;
-import com.iyeed.api.controller.common.emuns.RespCode;
-import com.iyeed.api.controller.common.model.AjaxResponse;
-import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
-import com.iyeed.core.entity.system.SystemResource;
+import com.iyeed.core.annotation.SystemControllerLog;
+import com.iyeed.core.common.emuns.RespCode;
+import com.iyeed.core.common.model.AjaxResponse;
 import com.iyeed.core.entity.system.SystemRole;
 import com.iyeed.core.entity.system.vo.RoleListForm;
-import com.iyeed.core.exception.BusinessException;
 import com.iyeed.service.system.ISystemRoleResourceService;
 import com.iyeed.service.system.ISystemRoleService;
 import org.slf4j.Logger;
@@ -18,11 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,17 +29,13 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "api/system/role")
 public class SystemRoleController extends BaseController {
-    @Resource
-    private ISystemRoleService systemRoleService;
-    @Resource
-    private ISystemRoleResourceService systemRoleResourceService;
-
     private static final Logger log = LoggerFactory.getLogger(SystemRoleController.class);
 
     /**
      * 验证角色编码不重复
      * @param roleCode
      */
+    @SystemControllerLog(module = "系统-角色管理", businessDesc = "验证角色编码不重复")
     @RequestMapping(value = "validateRole.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse validateRole(@RequestParam String roleCode) {
@@ -69,6 +58,7 @@ public class SystemRoleController extends BaseController {
      * 获取角色列表
      * @return
      */
+    @SystemControllerLog(module = "系统-角色管理", businessDesc = "按条件获取角色列表")
     @RequestMapping(value = "roleList.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse roleList(@RequestBody RoleListForm form) {
@@ -97,9 +87,10 @@ public class SystemRoleController extends BaseController {
      * @param roleId
      * @return
      */
+    @SystemControllerLog(module = "系统-角色管理", businessDesc = "编辑角色-根据角色ID获取角色信息")
     @RequestMapping(value = "editRole.json", method = { RequestMethod.POST })
     @ResponseBody
-    public AjaxResponse editRole(@RequestParam(value = "id", required = true) Integer roleId) {
+    public AjaxResponse editRole(@RequestParam(value = "id") Integer roleId) {
         ServiceResult<SystemRole> serviceResult = systemRoleService.getSystemRoleById(roleId);
         if (!serviceResult.getSuccess()) {
             return AjaxResponse.failure(RespCode.FAILED, serviceResult.getMessage());
@@ -115,6 +106,7 @@ public class SystemRoleController extends BaseController {
      * @param role
      * @return
      */
+    @SystemControllerLog(module = "系统-角色管理", businessDesc = "保存or更新角色信息")
     @RequestMapping(value = "saveRole.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse saveRole(@RequestBody SystemRole role) {
@@ -141,6 +133,7 @@ public class SystemRoleController extends BaseController {
      * @param roleId
      * @param resourceIds
      */
+    @SystemControllerLog(module = "系统-角色管理", businessDesc = "保存角色资源信息")
     @RequestMapping(value = "saveRoleResource.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse saveRoleResource(@RequestParam String roleId, @RequestParam String resourceIds) {
@@ -153,6 +146,11 @@ public class SystemRoleController extends BaseController {
         return AjaxResponse.success();
     }
 
+    /**
+     * 删除角色信息
+     * @param id
+     */
+    @SystemControllerLog(module = "系统-角色管理", businessDesc = "根据角色ID删除角色")
     @RequestMapping(value = "delRole.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse delRole(@RequestParam Integer id) {

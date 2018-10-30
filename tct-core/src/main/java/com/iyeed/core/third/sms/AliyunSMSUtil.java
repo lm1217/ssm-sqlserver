@@ -29,7 +29,7 @@ public class AliyunSMSUtil {
     private static final String domain = "dysmsapi.aliyuncs.com";
     private static final Logger logger = LoggerFactory.getLogger(AliyunSMSUtil.class);
 
-    // TODO 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
+    //此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
     static final String accessKeyId = ConstantsEJS.ALIDAYU_APPKEY;
     static final String accessKeySecret = ConstantsEJS.ALIDAYU_SECRET;
 

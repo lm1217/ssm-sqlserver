@@ -6,22 +6,18 @@ import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.system.SystemRole;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.system.SystemRoleModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.system.ISystemRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Service(value = "systemRoleService")
-public class SystemRoleServiceImpl implements ISystemRoleService {
+public class SystemRoleServiceImpl extends BaseService implements ISystemRoleService {
     private static Logger log = LoggerFactory.getLogger(SystemRoleServiceImpl.class);
-
-    @Resource
-    private SystemRoleModel systemRoleModel;
 
     /**
     * 根据id取得角色表
@@ -107,7 +103,6 @@ public class SystemRoleServiceImpl implements ISystemRoleService {
 
     @Override
     public ServiceResult<Boolean> del(Integer id) {
-
         ServiceResult<Boolean> serviceResult = new ServiceResult<Boolean>();
         try {
             serviceResult.setResult(systemRoleModel.del(id));

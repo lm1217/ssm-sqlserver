@@ -2,25 +2,21 @@ package com.iyeed.model.receive;
 
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.receive.BdReceiving;
+import com.iyeed.core.entity.receive.BdReceivingSku;
 import com.iyeed.core.entity.receive.vo.UpdateReceiveForm;
-import com.iyeed.dao.db.write.xzn.receive.BdReceivingSkuWriteDao;
-import com.iyeed.dao.db.write.xzn.receive.BdReceivingWriteDao;
+import com.iyeed.core.entity.stock.BdStockInv;
+import com.iyeed.core.entity.store.MdStore;
+import com.iyeed.model.BaseModel;
+import com.iyeed.model.form.BdFormModel;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class BdReceivingModel {
-    
-    @Resource
-    private BdReceivingWriteDao bdReceivingWriteDao;
-
-    @Resource
-    private BdReceivingSkuWriteDao bdReceivingSkuWriteDao;
+public class BdReceivingModel extends BaseModel {
     
     /**
      * 根据id取得收货表-总表
@@ -38,7 +34,7 @@ public class BdReceivingModel {
      * @param  size
      * @return
      */
-    public List<BdReceiving> getBdReceivingList(Map<String, String> queryMap,
+    public List<BdReceiving> getBdReceivingList(Map<String, Object> queryMap,
                                    Integer start, Integer size) throws Exception {
         return bdReceivingWriteDao.getBdReceivingList(queryMap, start, size);
     }
@@ -48,7 +44,7 @@ public class BdReceivingModel {
      * @param  queryMap
      * @return
      */
-    public Integer getBdReceivingListCount(Map<String, String> queryMap) throws Exception{
+    public Integer getBdReceivingListCount(Map<String, Object> queryMap) throws Exception{
         return bdReceivingWriteDao.getBdReceivingListCount(queryMap);
     }
     
@@ -70,19 +66,34 @@ public class BdReceivingModel {
     @Transactional(rollbackFor = Exception.class)
     public Integer updateBdReceiving(UpdateReceiveForm form) throws Exception {
         BdReceiving bdReceiving = new BdReceiving();
-        bdReceiving.setId(form.getId());
+        bdReceiving = bdReceivingWriteDao.get(form.getId());
+        MdStore store = mdStoreWriteDao.getStoreByStoreNo(bdReceiving.getReceiveStoreNo());
         for (int i = 0; i < form.getBdReceivingSkuList().size(); i++) {
+            BdReceivingSku sku = form.getBdReceivingSkuList().get(i);
+            BdReceivingSku bdReceivingSku = bdReceivingSkuWriteDao.get(sku.getId());
             if (bdReceiving.getActSendTotal() == null) {
-                bdReceiving.setActSendTotal(form.getBdReceivingSkuList().get(i).getActSendTotal());
+                bdReceiving.setActSendTotal(sku.getActSendTotal());
             } else {
-                bdReceiving.setActSendTotal(bdReceiving.getActSendTotal() + form.getBdReceivingSkuList().get(i).getActSendTotal());
+                bdReceiving.setActSendTotal(bdReceiving.getActSendTotal() + sku.getActSendTotal());
             }
-            bdReceivingSkuWriteDao.update(form.getBdReceivingSkuList().get(i));
+            bdReceivingSkuWriteDao.update(sku);
+
+            BdStockInv stockInv = new BdStockInv();
+            stockInv.setStoreNo(store.getStoreNo());
+            stockInv.setStoreName(store.getStoreName());
+            stockInv.setSkuCode(bdReceivingSku.getSkuCode());
+            stockInv.setSkuName(bdReceivingSku.getSkuName());
+            stockInv.setStockDepot(sku.getActSendTotal());
+            stockInv.setStockDepotEnabled(sku.getActSendTotal());
+            changeData(stockInv);
+            bdStockInvWriteDao.insertOrUpdate(stockInv);
         }
         bdReceiving.setReceiveDate(new Date());
         bdReceiving.setStatus(form.getStatus());
      	return bdReceivingWriteDao.update(bdReceiving);
     }
+
+
      
     private void dbConstrains(BdReceiving bdReceiving) throws Exception {
 		bdReceiving.setErpNo(StringUtil.dbSafeString(bdReceiving.getErpNo(), true, 40));

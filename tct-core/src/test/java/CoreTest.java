@@ -1,9 +1,13 @@
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.oss.common.utils.DateUtil;
+import com.iyeed.core.entity.form.BdForm;
 import com.iyeed.core.entity.form.BdFormImage;
 import com.iyeed.core.entity.form.BdFormSku;
 import com.iyeed.core.entity.form.vo.SaveApplyForm;
 import com.iyeed.core.entity.stock.BdStockInv;
+import com.iyeed.core.entity.user.MdUser;
+import com.iyeed.core.mail.MailInfo;
+import com.iyeed.core.mail.MailSender;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -65,10 +69,68 @@ public class CoreTest {
     }
 
     @Test
+    public void testAAAA() {
+        List<BdFormImage> imageList = new ArrayList<>();
+        BdFormImage image = new BdFormImage();
+        image.setImageUrl("asdf");
+        imageList.add(image);
+        image = new BdFormImage();
+        imageList.add(image);
+        if (imageList != null) {
+            for (BdFormImage img : imageList) {
+                if (img.getImageUrl() == null) continue;
+                System.out.println("url = " + img.getImageUrl());
+            }
+        }
+    }
+
+    @Test
     public void testDateTime() {
         String format = "yyyy-MM-dd HH:mm:ss";
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         String dateStr = sdf.format(new Date(Long.valueOf("1534738872000")));
         System.out.println("dateStr = " + dateStr);
+    }
+
+
+
+
+
+    @Test
+    public void testAAA() {
+        double a = 15000;
+        double b = 0;
+        for (int i = 0; i < 49; i++) {
+            System.out.println("a = " + a);
+            b = b + (a * 0.0005);//每天的利息累计
+            a = a + (a * 0.0005);//每天的利息+本金 = 新的本金
+            System.out.println("b = " + b);
+        }
+        System.out.println("a = " + a);
+        System.out.println("b = " + b);
+    }
+
+    @Test
+    public void testMailSend() {
+        MailSender mailSender = MailSender.getInstance();
+        MailInfo mailInfo = new MailInfo();
+        mailInfo.setNotifyTo("112538201@qq.com");
+        mailInfo.setSubject("java send mail test");
+        mailInfo.setContent("中文编码测试，看是不是乱码");
+        mailInfo.setAttachFileNames(new String[]{});//添加附件
+        try {
+            mailSender.sendHtmlMail(mailInfo, 3);
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    @Test
+    public void testArray() {
+        Integer[] idArr = new Integer[2];
+        idArr[0] = 1;
+        idArr[1] = 2;
+        System.out.println("aaaaaaa=" + idArr.toString());
     }
 }

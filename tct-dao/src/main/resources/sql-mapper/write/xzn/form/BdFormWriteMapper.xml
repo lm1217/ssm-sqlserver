@@ -25,7 +25,10 @@
 			<result property="disposeStatusDesc" column="dispose_status_desc" />
 			<result property="disposeGrade" column="dispose_grade" />
 			<result property="inputDate" column="input_date" />
-			<result property="inputUserNo" column="input_user_no" />
+			<result property="applyUserNo" column="apply_user_no" />
+			<result property="updateDate" column="update_date" />
+			<result property="sendMailDate" column="send_mail_date" />
+			<result property="isBack" column="is_back" />
 	</resultMap>
 
 	<resultMap id="GetDisposeFormListBeanResult" type="com.iyeed.core.entity.form.vo.GetDisposeFormListBean">
@@ -38,6 +41,36 @@
 		<result property="disposeStatus" column="dispose_status" />
 		<result property="disposeStatusDesc" column="dispose_status_desc" />
 		<result property="inputDate" column="input_date" />
+		<result property="isBack" column="is_back" />
+		<result property="applyUserNo" column="apply_user_no" />
+	</resultMap>
+
+	<resultMap id="FormJobBeanResult" type="com.iyeed.core.entity.form.vo.FormJobBean">
+		<result property="id" column="id" />
+		<result property="storeNo" column="store_no" />
+		<result property="storeName" column="store_name" />
+		<result property="applyNo" column="apply_no" />
+		<result property="formType" column="form_type" />
+		<result property="disposeUserNo" column="dispose_user_no" />
+		<result property="disposeStatus" column="dispose_status" />
+		<result property="disposeGrade" column="dispose_grade" />
+		<result property="email" column="email" />
+		<result property="isBack" column="is_back" />
+	</resultMap>
+
+	<resultMap id="ExceptionReportBeanResult" type="com.iyeed.core.entity.form.vo.ExceptionReportBean">
+		<result property="id" column="id" />
+		<result property="storeNo" column="store_no" />
+		<result property="storeName" column="store_name" />
+		<result property="applyNo" column="apply_no" />
+		<result property="applyDate" column="apply_date" />
+		<result property="exceptionType" column="exception_type" />
+		<result property="disposeStatus" column="dispose_status" />
+		<result property="brandName" column="brand_name" />
+		<result property="skuCode" column="sku_code" />
+		<result property="skuName" column="sku_name" />
+		<result property="changeType" column="change_type" />
+		<result property="changeTotal" column="change_total" />
 	</resultMap>
 	
 	<select id="get" parameterType="Integer" resultMap="BdFormResult">
@@ -45,6 +78,13 @@
 		   *
 		from bd_form
 		where id = #{id}
+	</select>
+
+	<select id="getByApplyNo" parameterType="String" resultMap="BdFormResult">
+		select
+		   *
+		from bd_form
+		where apply_no = #{applyNo}
 	</select>
 
 	<select id="getBdFormList" parameterType="java.util.Map" resultMap="GetDisposeFormListBeanResult">
@@ -60,6 +100,20 @@
 		SELECT count(*)
 		FROM bd_form
 		<include refid="getCondition"/>
+	</select>
+
+	<select id="getBdFormListForSendFormMail" parameterType="java.util.Map" resultMap="FormJobBeanResult">
+		SELECT
+		bf.*, mu.email
+		FROM bd_form bf, md_user mu
+		WHERE bf.dispose_user_no = mu.user_no and datediff([hour], bf.send_mail_date, getdate()) > 48 and bf.dispose_status != 0
+	</select>
+
+	<select id="getBdFormListForChangeAudit" parameterType="java.util.Map" resultMap="FormJobBeanResult">
+		SELECT
+		bf.*, mu.email
+		FROM bd_form bf, md_user mu
+		WHERE bf.dispose_user_no = mu.user_no and datediff([hour], bf.update_date, getdate()) > 168 and bf.dispose_status != 0
 	</select>
 	
 	<update id="update" parameterType="com.iyeed.core.entity.form.BdForm">
@@ -87,10 +141,44 @@
 			<if test="disposeStatusDesc != null">dispose_status_desc= #{disposeStatusDesc},</if>
 			<if test="disposeGrade != null">dispose_grade= #{disposeGrade},</if>
 			<if test="inputDate != null">input_date= #{inputDate},</if>
-			<if test="inputUserNo != null">input_user_no= #{inputUserNo}</if>
+			<if test="applyUserNo != null">apply_user_no= #{applyUserNo},</if>
+			<if test="updateDate != null">update_date= #{updateDate},</if>
+			<if test="sendMailDate != null">send_mail_date= #{sendMailDate},</if>
+			<if test="isBack != null">is_back= #{isBack},</if>
+			<if test="disposeResult != null">dispose_result= #{disposeResult}</if>
 	    </set>
         where id = #{id}
 	</update>
+
+	<update id="updateForSendFormMail" parameterType="com.iyeed.core.entity.form.vo.FormJobForm">
+		update bd_form
+		set send_mail_date= getdate()
+		where id in
+		<foreach item="id" index="index" collection="idArr" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+
+	<update id="updateForChangeAudit" parameterType="com.iyeed.core.entity.form.vo.FormJobForm">
+		update bd_form
+		<set>
+			<if test="disposeUserNo != null">dispose_user_no= #{disposeUserNo},</if>
+			<if test="disposeStatus != null">dispose_status= #{disposeStatus},</if>
+			<if test="disposeStatusDesc != null">dispose_status_desc= #{disposeStatusDesc},</if>
+			<if test="disposeGrade != null">dispose_grade= #{disposeGrade},</if>
+			<if test="updateDate != null">update_date= #{updateDate},</if>
+			<if test="sendMailDate != null">send_mail_date= #{sendMailDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="delBdForm" parameterType="Integer">
+		delete from bd_form where id = #{id}
+	</delete>
+
+	<delete id="delBdFormByApplyNo" parameterType="String">
+		delete from bd_form where apply_no = #{applyNo}
+	</delete>
 	
 	<insert id="insert" parameterType="com.iyeed.core.entity.form.BdForm" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into 
@@ -118,7 +206,8 @@
 			dispose_status,
 			dispose_status_desc,
 			dispose_grade,
-			input_user_no
+			apply_user_no,
+			is_back
 		)
 		values
 		(
@@ -144,7 +233,8 @@
 			#{disposeStatus},
 			#{disposeStatusDesc},
 			#{disposeGrade},
-			#{inputUserNo}
+			#{applyUserNo},
+			#{isBack}
 		)
 	</insert>
 
@@ -161,11 +251,20 @@
 			</if>
 			<if test="queryMap.q_disposeStatus != null and queryMap.q_disposeStatus !=''">
 				<if test="queryMap.q_disposeStatus == 1">
+					and dispose_status IN (1,2,3)
+				</if>
+				<if test="queryMap.q_disposeStatus == 2">
 					and dispose_status IN (1,2)
 				</if>
-				<if test="queryMap.q_disposeStatus != 1">
+				<if test="queryMap.q_disposeStatus == 0">
 					and dispose_status = #{queryMap.q_disposeStatus}
 				</if>
+			</if>
+			<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
+				and store_no in
+				<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
+					#{storeNo}
+				</foreach>
 			</if>
 			<if test="queryMap.q_formType != null and queryMap.q_formType !=''">
 				and form_type = #{queryMap.q_formType}
@@ -178,5 +277,55 @@
 			</if>
 		</where>
 	</sql>
-	
+
+	<select id="getExceptionReportList" parameterType="java.util.Map" resultMap="ExceptionReportBeanResult">
+		select bfs.id,bf.store_no,bf.store_name,bf.apply_no,bf.apply_date,bf.exception_type,
+		bf.dispose_status,ms.brand_name,bfs.sku_code,bfs.sku_name,bfs.change_type,bfs.change_total
+		from bd_form bf,bd_form_sku bfs, md_sku ms
+		<include refid="getExceptionReportCondition"/>
+		order by bf.apply_date desc
+		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
+	</select>
+
+	<select id="getExceptionReportListCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT count(*)
+		from bd_form bf,bd_form_sku bfs, md_sku ms
+		<include refid="getExceptionReportCondition"/>
+	</select>
+
+	<sql id="getExceptionReportCondition">
+		<where>
+			bf.apply_no = bfs.apply_no and bfs.sku_code = ms.sku_code and bf.form_type = 4
+			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
+				and bf.store_no = #{queryMap.q_storeNo}
+			</if>
+			<if test="queryMap.q_applyNo != null and queryMap.q_applyNo !=''">
+				and bf.apply_no = #{queryMap.q_applyNo}
+			</if>
+			<if test="queryMap.q_disposeStatus != null and queryMap.q_disposeStatus !=''">
+				<if test="queryMap.q_disposeStatus == 1">
+					and bf.dispose_status IN (1,2,3)
+				</if>
+				<if test="queryMap.q_disposeStatus == 2">
+					and bf.dispose_status IN (1,2)
+				</if>
+				<if test="queryMap.q_disposeStatus == 0">
+					and bf.dispose_status = #{queryMap.q_disposeStatus}
+				</if>
+			</if>
+			<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
+				and bf.store_no in
+				<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
+					#{storeNo}
+				</foreach>
+			</if>
+			<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+				and bf.apply_date &gt;= #{queryMap.q_starttime}
+			</if>
+			<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+				and bf.apply_date &lt;= #{queryMap.q_endtime}
+			</if>
+		</where>
+	</sql>
+
 </mapper>

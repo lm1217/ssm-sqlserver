@@ -6,22 +6,18 @@ import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.system.SystemResource;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.system.SystemResourceModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.system.ISystemResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Service(value = "systemResourceService")
-public class SystemResourceServiceImpl implements ISystemResourceService {
+public class SystemResourceServiceImpl extends BaseService implements ISystemResourceService {
     private static Logger log = LoggerFactory.getLogger(SystemResourceServiceImpl.class);
-
-    @Resource
-    private SystemResourceModel systemResourceModel;
 
     /**
     * 根据id取得资源表
@@ -80,8 +76,7 @@ public class SystemResourceServiceImpl implements ISystemResourceService {
     }
 
     @Override
-    public ServiceResult<List<SystemResource>> page(Map<String, String> queryMap,
-                                                     PagerInfo pager) {
+    public ServiceResult<List<SystemResource>> page(Map<String, String> queryMap, PagerInfo pager) {
         ServiceResult<List<SystemResource>> serviceResult = new ServiceResult<List<SystemResource>>();
         try {
             Integer start = 0, size = 0;
@@ -110,7 +105,6 @@ public class SystemResourceServiceImpl implements ISystemResourceService {
 
     @Override
     public ServiceResult<Boolean> del(Integer id) {
-
         ServiceResult<Boolean> result = new ServiceResult<Boolean>();
         try {
             result.setResult(systemResourceModel.del(id));

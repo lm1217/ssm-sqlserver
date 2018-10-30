@@ -4,22 +4,18 @@ import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.sku.MdSku;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.sku.MdSkuModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.sku.IMdSkuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Service(value = "mdSkuService")
-public class MdSkuServiceImpl implements IMdSkuService {
+public class MdSkuServiceImpl extends BaseService implements IMdSkuService {
 	private static final Logger log = LoggerFactory.getLogger(MdSkuServiceImpl.class);
-
-	@Resource
-    private MdSkuModel mdSkuModel;
 
     /**
      * 根据id取得SKU表

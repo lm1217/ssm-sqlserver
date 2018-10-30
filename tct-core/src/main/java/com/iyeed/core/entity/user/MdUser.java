@@ -27,17 +27,16 @@ public class MdUser implements Serializable {
  	private String userNo;
  	private String userName;
  	private String userPid;
- 	private String post;
+ 	private String userNameEn;
  	private String email;
- 	private String storeNo;
  	private java.util.Date inputDate;
 
-	public String getStoreNo() {
-		return storeNo;
+	public String getUserNameEn() {
+		return userNameEn;
 	}
 
-	public void setStoreNo(String storeNo) {
-		this.storeNo = storeNo;
+	public void setUserNameEn(String userNameEn) {
+		this.userNameEn = userNameEn;
 	}
 
 	/**
@@ -110,19 +109,6 @@ public class MdUser implements Serializable {
 		this.userPid = userPid;
 	}
 
-	/**
-     * 获取职位
-     */
-	public String getPost(){
-		return this.post;
-	}
-
-	/**
-     * 设置职位
-     */
-	public void setPost(String post){
-		this.post = post;
-	}
 
 	/**
      * 获取邮箱

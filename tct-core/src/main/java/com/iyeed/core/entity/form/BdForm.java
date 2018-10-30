@@ -1,6 +1,7 @@
 package com.iyeed.core.entity.form;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 表单-总表
@@ -53,11 +54,39 @@ public class BdForm implements Serializable {
  	private Integer exceptionType;
  	private Integer formType;
  	private java.util.Date inputDate;
- 	private String inputUserNo;
+ 	private String applyUserNo;
  	private String disposeUserNo;
  	private Integer disposeGrade;
  	private Integer disposeStatus;
  	private String disposeStatusDesc;
+ 	private java.util.Date updateDate;
+ 	private java.util.Date sendMailDate;
+ 	private Integer isBack;
+ 	private Integer disposeResult;
+
+	public Integer getDisposeResult() {
+		return disposeResult;
+	}
+
+	public void setDisposeResult(Integer disposeResult) {
+		this.disposeResult = disposeResult;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public Date getSendMailDate() {
+		return sendMailDate;
+	}
+
+	public void setSendMailDate(Date sendMailDate) {
+		this.sendMailDate = sendMailDate;
+	}
 
 	public String getDisposeStatusDesc() {
 		return disposeStatusDesc;
@@ -357,17 +386,19 @@ public class BdForm implements Serializable {
 		this.inputDate = inputDate;
 	}
 
-	/**
-     * 获取放入人
-     */
-	public String getInputUserNo(){
-		return this.inputUserNo;
+	public String getApplyUserNo() {
+		return applyUserNo;
 	}
 
-	/**
-     * 设置放入人
-     */
-	public void setInputUserNo(String inputUserNo){
-		this.inputUserNo = inputUserNo;
+	public void setApplyUserNo(String applyUserNo) {
+		this.applyUserNo = applyUserNo;
 	}
- }
+
+	public Integer getIsBack() {
+		return isBack;
+	}
+
+	public void setIsBack(Integer isBack) {
+		this.isBack = isBack;
+	}
+}

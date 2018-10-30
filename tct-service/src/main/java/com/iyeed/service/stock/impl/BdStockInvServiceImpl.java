@@ -8,22 +8,18 @@ import com.iyeed.core.entity.stock.vo.GetStockInvReportListBean;
 import com.iyeed.core.entity.stock.vo.GetStockInvSkuListBean;
 import com.iyeed.core.entity.stock.vo.StockInvSkuForm;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.stock.BdStockInvModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.stock.IBdStockInvService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Service(value = "bdStockInvService")
-public class BdStockInvServiceImpl implements IBdStockInvService {
+public class BdStockInvServiceImpl extends BaseService implements IBdStockInvService {
 	private static final Logger log = LoggerFactory.getLogger(BdStockInvServiceImpl.class);
-
-	@Resource
-    private BdStockInvModel bdStockInvModel;
 
     /**
      * 根据id取得库存表
@@ -76,6 +72,22 @@ public class BdStockInvServiceImpl implements IBdStockInvService {
                 size = pagerInfo.getPageSize();
             }
             serviceResult.setResult(bdStockInvModel.getStockInvReportList(queryMap, start, size));
+        } catch (BusinessException e) {
+            serviceResult.setSuccess(false);
+            serviceResult.setMessage(e.getMessage());
+            log.error("根据queryMap[" + queryMap.toString() + "]获取数据时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("根据queryMap[" + queryMap.toString() + "]获取数据时出现未知异常：", e);
+        }
+        return serviceResult;
+    }
+
+    @Override
+    public ServiceResult<List<GetStockInvReportListBean>> exportStockInvReportExcel(Map<String, Object> queryMap) {
+        ServiceResult<List<GetStockInvReportListBean>> serviceResult = new ServiceResult<>();
+        try {
+            serviceResult.setResult(bdStockInvModel.exportStockInvReportExcel(queryMap));
         } catch (BusinessException e) {
             serviceResult.setSuccess(false);
             serviceResult.setMessage(e.getMessage());

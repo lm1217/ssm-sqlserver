@@ -3,17 +3,13 @@ package com.iyeed.model.form;
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.form.BdFormDispose;
 import com.iyeed.core.entity.form.vo.GetDisposeListBean;
-import com.iyeed.dao.db.write.xzn.form.BdFormDisposeWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class BdFormDisposeModel {
-    
-    @Resource
-    private BdFormDisposeWriteDao bdFormDisposeWriteDao;
+public class BdFormDisposeModel extends BaseModel {
     
     /**
      * 根据id取得bd_form_dispose对象

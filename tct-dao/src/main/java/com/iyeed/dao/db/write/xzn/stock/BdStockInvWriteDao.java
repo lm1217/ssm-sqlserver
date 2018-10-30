@@ -23,6 +23,8 @@ public interface BdStockInvWriteDao {
 
 	Integer getStockInvReportListCount(@Param("queryMap") Map<String, Object> queryMap) throws Exception;
 
+	List<GetStockInvReportListBean> exportStockInvReportExcel(@Param("queryMap") Map<String, Object> queryMap) throws Exception;
+
 	Integer insert(BdStockInv bdStockInv) throws Exception;
 
 	Integer insertOrUpdate(BdStockInv bdStockInv) throws Exception;

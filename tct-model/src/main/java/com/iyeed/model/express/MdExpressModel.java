@@ -3,6 +3,7 @@ package com.iyeed.model.express;
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.express.MdExpress;
 import com.iyeed.dao.db.write.xzn.express.MdExpressWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -10,11 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class MdExpressModel {
-    
-    @Resource
-    private MdExpressWriteDao mdExpressWriteDao;
-    
+public class MdExpressModel extends BaseModel {
+
     /**
      * 根据id取得快递公司信息表
      * @param  mdExpressId

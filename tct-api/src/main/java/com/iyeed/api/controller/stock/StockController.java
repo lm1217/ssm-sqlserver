@@ -1,15 +1,16 @@
 package com.iyeed.api.controller.stock;
 
-import com.iyeed.core.annotation.SystemControllerLog;
 import com.iyeed.api.controller.BaseController;
-import com.iyeed.api.controller.common.emuns.RespCode;
-import com.iyeed.api.controller.common.model.AjaxResponse;
 import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
+import com.iyeed.core.annotation.SystemControllerLog;
+import com.iyeed.core.common.emuns.RespCode;
+import com.iyeed.core.common.model.AjaxResponse;
 import com.iyeed.core.entity.stock.BdStockInvLog;
 import com.iyeed.core.entity.stock.vo.GetBdStockInvLogListForm;
 import com.iyeed.core.entity.stock.vo.GetStockInvSkuListBean;
 import com.iyeed.core.entity.stock.vo.StockInvSkuForm;
+import com.iyeed.core.entity.system.SystemUser;
 import com.iyeed.service.stock.IBdStockInvLogService;
 import com.iyeed.service.stock.IBdStockInvService;
 import org.slf4j.Logger;
@@ -32,11 +33,6 @@ import java.util.Map;
 @RequestMapping(value = "api/stock")
 public class StockController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(StockController.class);
-
-    @Resource
-    private IBdStockInvService bdStockInvService;
-    @Resource
-    private IBdStockInvLogService bdStockInvLogService;
 
     @SystemControllerLog(module = "库存管理", businessDesc = "根据门店号获取库存SKU列表")
     @RequestMapping(value = "getSkuListByStoreNo.json", method = { RequestMethod.POST })
@@ -61,7 +57,7 @@ public class StockController extends BaseController {
         PagerInfo pagerInfo = new PagerInfo(form.getPageSize(), form.getPageIndex());
         Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("q_storeNo", form.getStoreNo());//搜索门店号
-        queryMap.put("q_skuCode", form.getSkuCode());//搜索skuCode
+        queryMap.put("q_skuCode", form.getSkuCode().toUpperCase());//搜索skuCode
         queryMap.put("q_type", form.getType());//搜索类型（1.店仓转柜面  2.柜面转店仓）
         ServiceResult<List<BdStockInvLog>> serviceResult = bdStockInvLogService.getBdStockInvLogList(queryMap, pagerInfo);
 
@@ -80,7 +76,10 @@ public class StockController extends BaseController {
     @RequestMapping(value = "updateDepotToCounter.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse updateDepotToCounter(@RequestBody StockInvSkuForm skuForm) {
-
+        SystemUser systemUser = this.getSystemUser();
+        if (systemUser.getUserType() != 1) {
+            return AjaxResponse.failure("非门店帐号不能进行此操作");
+        }
         ServiceResult<Integer> serviceResult = bdStockInvService.updateDepotToCounter(skuForm);
 
         if (!serviceResult.getSuccess()) {
@@ -94,7 +93,10 @@ public class StockController extends BaseController {
     @RequestMapping(value = "updateCounterToDepot.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse updateCounterToDepot(@RequestBody StockInvSkuForm skuForm) {
-
+        SystemUser systemUser = this.getSystemUser();
+        if (systemUser.getUserType() != 1) {
+            return AjaxResponse.failure("非门店帐号不能进行此操作");
+        }
         ServiceResult<Integer> serviceResult = bdStockInvService.updateCounterToDepot(skuForm);
 
         if (!serviceResult.getSuccess()) {

@@ -1,16 +1,15 @@
 package com.iyeed.api.controller.system;
 
 import com.iyeed.api.controller.BaseController;
-import com.iyeed.api.controller.common.emuns.RespCode;
-import com.iyeed.api.controller.common.model.AjaxResponse;
-import com.iyeed.api.util.WebUtil;
 import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.ServiceResult;
+import com.iyeed.core.annotation.SystemControllerLog;
+import com.iyeed.core.common.emuns.RespCode;
+import com.iyeed.core.common.model.AjaxResponse;
 import com.iyeed.core.entity.system.SystemResource;
 import com.iyeed.core.entity.system.SystemResourceTree;
 import com.iyeed.core.entity.system.SystemRole;
 import com.iyeed.core.entity.system.SystemRoleResource;
-import com.iyeed.core.exception.BusinessException;
 import com.iyeed.service.system.ISystemResourceService;
 import com.iyeed.service.system.ISystemRoleResourceService;
 import com.iyeed.service.system.ISystemRoleService;
@@ -21,10 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,12 +35,6 @@ import java.util.Map;
 @RequestMapping(value = "api/system/resource")
 @Scope("prototype")
 public class SystemResourceController extends BaseController {
-    @Resource
-    private ISystemRoleService systemRoleService;
-    @Resource
-    private ISystemResourceService systemResourceService;
-    @Resource
-    private ISystemRoleResourceService systemRoleResourceService;
     private List<Integer> roleResourceIds = new ArrayList<Integer>();
     private List<SystemResource> resourceAll;
     private byte[] lock = new byte[0];
@@ -57,9 +46,10 @@ public class SystemResourceController extends BaseController {
      * @param resourceId
      * @return
      */
+    @SystemControllerLog(module = "系统-资源管理", businessDesc = "编辑资源-根据资源ID获取资源信息")
     @RequestMapping(value = "editResource.json", method = { RequestMethod.POST })
     @ResponseBody
-    public AjaxResponse editResource(@RequestParam(value = "id", required = true) Integer resourceId) {
+    public AjaxResponse editResource(@RequestParam(value = "id") Integer resourceId) {
         ServiceResult<SystemResource> serviceResult = systemResourceService.getSystemResourceById(resourceId);
         if (!serviceResult.getSuccess()) {
             return AjaxResponse.failure(RespCode.FAILED, serviceResult.getMessage());
@@ -86,9 +76,10 @@ public class SystemResourceController extends BaseController {
      * @param pid
      * @return
      */
+    @SystemControllerLog(module = "系统-资源管理", businessDesc = "根据资源ID获取资源子列表")
     @RequestMapping(value = "resourceList.json", method = { RequestMethod.POST })
     @ResponseBody
-    public AjaxResponse resourceList(@RequestParam(value = "id", required = true) Integer pid) {
+    public AjaxResponse resourceList(@RequestParam(value = "id") Integer pid) {
         ServiceResult<List<SystemResource>> serviceResult = systemResourceService.getByPid(pid);
         if (!serviceResult.getSuccess()) {
             return AjaxResponse.failure(RespCode.FAILED, serviceResult.getMessage());
@@ -105,6 +96,7 @@ public class SystemResourceController extends BaseController {
      * @Author guanghua.deng
      * @Date 2018/8/23 14:11
      */
+    @SystemControllerLog(module = "系统-资源管理", businessDesc = "获取整个资源树")
     @RequestMapping(value = "resourceTree.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse resourceTree() {
@@ -129,6 +121,7 @@ public class SystemResourceController extends BaseController {
      * @Author guanghua.deng
      * @Date 2018/8/23 14:09
      */
+    @SystemControllerLog(module = "系统-资源管理", businessDesc = "根据角色id获取角色资源树")
     @RequestMapping(value = "roleResourceTree.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse roleResourceTree(@RequestParam String roleId) {
@@ -194,6 +187,7 @@ public class SystemResourceController extends BaseController {
      * @Author guanghua.deng
      * @Date 2018/8/23 14:06
      */
+    @SystemControllerLog(module = "系统-资源管理", businessDesc = "保存or更新资源信息")
     @RequestMapping(value = "saveResource.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse saveResource(@RequestBody SystemResource resource) {
@@ -219,6 +213,7 @@ public class SystemResourceController extends BaseController {
      * @Author guanghua.deng
      * @Date 2018/8/23 14:12
      */
+    @SystemControllerLog(module = "系统-资源管理", businessDesc = "根据资源ID删除对应资源")
     @RequestMapping(value = "delResource.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse delResource(@RequestParam Integer id) {

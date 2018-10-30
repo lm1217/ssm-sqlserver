@@ -2,17 +2,13 @@ package com.iyeed.model.receive;
 
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.receive.BdReceivingSku;
-import com.iyeed.dao.db.write.xzn.receive.BdReceivingSkuWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class BdReceivingSkuModel {
-    
-    @Resource
-    private BdReceivingSkuWriteDao bdReceivingSkuWriteDao;
+public class BdReceivingSkuModel extends BaseModel {
     
     /**
      * 根据id取得收货表-SKU子表

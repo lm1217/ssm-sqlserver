@@ -17,8 +17,17 @@ public class SystemUser implements Serializable {
     private String email;
     private String tel;
     private Integer status;
+    private Integer userType;
     private String userNo;
     private Date createTime;
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
 
     public Integer getId() {
         return id;

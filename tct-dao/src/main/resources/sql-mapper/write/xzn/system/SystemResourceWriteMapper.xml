@@ -73,7 +73,6 @@
 	<update id="update" parameterType="com.iyeed.core.entity.system.SystemResource">
         update system_resource
 		<set>
-			<if test="id != null">id= #{id},</if>
 			<if test="pid != null">pid= #{pid},</if>
 			<if test="url != null">url= #{url},</if>
 			<if test="content != null">content= #{content},</if>

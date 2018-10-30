@@ -6,10 +6,9 @@
 			<result property="userId" column="user_id" />
 			<result property="userNo" column="user_no" />
 			<result property="userName" column="user_name" />
+			<result property="userNameEn" column="user_name_en" />
 			<result property="userPid" column="user_pid" />
-			<result property="post" column="post" />
 			<result property="email" column="email" />
-			<result property="storeNo" column="store_no" />
 			<result property="inputDate" column="input_date" />
 	</resultMap>
 	
@@ -33,6 +32,19 @@
 		from md_user
 		where user_no = #{userNo}
 	</select>
+
+    <select id="getUserListByUserNo" parameterType="String" resultMap="MdUserResult">
+		WITH md_user1
+		AS (SELECT   *
+			FROM md_user
+			WHERE user_pid = #{userNo}
+			UNION ALL
+			SELECT mu.*
+			FROM md_user mu
+			INNER JOIN md_user1 ON mu.user_pid = md_user1.user_id
+		)
+		SELECT * FROM md_user1
+	</select>
 	
 	<update id="update" parameterType="com.iyeed.core.entity.user.MdUser">
         update md_user
@@ -42,9 +54,8 @@
 			<if test="userNo != null">user_no= #{userNo},</if>
 			<if test="userName != null">user_name= #{userName},</if>
 			<if test="userPid != null">user_pid= #{userPid},</if>
-			<if test="post != null">post= #{post},</if>
+			<if test="userNameEn != null">user_name_en= #{userNameEn},</if>
 			<if test="email != null">email= #{email},</if>
-			<if test="storeNo != null">email= #{store_no},</if>
 			<if test="inputDate != null">input_date= #{inputDate}</if>
 	    </set>
         where id = #{id}
@@ -52,16 +63,15 @@
 	
 	<insert id="insert" parameterType="com.iyeed.core.entity.user.MdUser" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into 
-		md_user
+		md_user_copy1
 		(
 			
 			user_id,
 			user_no,
 			user_name,
+			user_name_en,
 			user_pid,
-			post,
-			email,
-			store_no
+			email
 		)
 		values
 		(
@@ -69,10 +79,9 @@
 			#{userId},
 			#{userNo},
 			#{userName},
+			#{userNameEn},
 			#{userPid},
-			#{post},
-			#{email},
-			#{storeNo}
+			#{email}
 		)
 	</insert>
 	

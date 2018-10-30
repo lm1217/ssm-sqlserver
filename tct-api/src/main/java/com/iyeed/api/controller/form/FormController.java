@@ -1,20 +1,20 @@
 package com.iyeed.api.controller.form;
 
-import com.iyeed.core.annotation.SystemControllerLog;
 import com.iyeed.api.controller.BaseController;
-import com.iyeed.api.controller.common.emuns.RespCode;
-import com.iyeed.api.controller.common.model.AjaxResponse;
 import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
+import com.iyeed.core.annotation.SystemControllerLog;
+import com.iyeed.core.common.emuns.RespCode;
+import com.iyeed.core.common.model.AjaxResponse;
 import com.iyeed.core.entity.express.MdExpress;
 import com.iyeed.core.entity.form.BdForm;
 import com.iyeed.core.entity.form.BdFormImage;
 import com.iyeed.core.entity.form.BdFormSku;
 import com.iyeed.core.entity.form.vo.*;
 import com.iyeed.core.entity.sku.MdSku;
-import com.iyeed.core.entity.store.MdStore;
 import com.iyeed.core.entity.system.SystemUser;
 import com.iyeed.core.entity.user.MdUser;
+import com.iyeed.core.entity.user.MdUserStore;
 import com.iyeed.core.utils.CommonUtil;
 import com.iyeed.service.express.IMdExpressService;
 import com.iyeed.service.form.IBdFormDisposeService;
@@ -24,14 +24,22 @@ import com.iyeed.service.form.IBdFormSkuService;
 import com.iyeed.service.sku.IMdSkuService;
 import com.iyeed.service.store.IMdStoreService;
 import com.iyeed.service.user.IMdUserService;
+import com.iyeed.service.user.IMdUserStoreService;
+import org.apache.commons.io.FileUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,28 +55,11 @@ import java.util.Map;
 public class FormController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(FormController.class);
 
-    @Resource
-    private IBdFormService bdFormService;
-    @Resource
-    private IBdFormSkuService bdFormSkuService;
-    @Resource
-    private IBdFormImageService bdFormImageService;
-    @Resource
-    private IBdFormDisposeService bdFormDisposeService;
-    @Resource
-    private IMdExpressService mdExpressService;
-    @Resource
-    private IMdSkuService mdSkuService;
-    @Resource
-    private IMdStoreService mdStoreService;
-    @Resource
-    private IMdUserService mdUserService;
-
     @SystemControllerLog(module = "表单管理", businessDesc = "初始化表单申请")
     @RequestMapping(value = "saveFormInit.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse saveFormInit(@RequestBody SaveApplyForm form) {
-        if (form == null) {
+        if (isNull(form)) {
             return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
         }
 
@@ -80,18 +71,9 @@ public class FormController extends BaseController {
 
         form.setFormType(1);//库存初始化
 
-        if (form.getFormSkuList().isEmpty()) {
-            return AjaxResponse.failure("申请的SKU列表为空");
-        } else {
-            for (BdFormSku sku : form.getFormSkuList()) {
-                if (sku.getStockDepotTotal() == null || sku.getStockCounterTotal() == null) {
-                    return AjaxResponse.failure("申请数量不能为空");
-                } else if (sku.getStockDepotTotal() < 0 || sku.getStockCounterTotal() < 0) {
-                    return AjaxResponse.failure("申请数量不能为负数");
-                } else if (sku.getStockDepotTotal() == 0 && sku.getStockCounterTotal() == 0) {
-                    return AjaxResponse.failure("申请数量不能同时为0");
-                }
-            }
+        AjaxResponse checkSku = checkSkuList(form.getFormSkuList(), form.getFormType());
+        if (checkSku.getCode() != 0) {
+            return checkSku;
         }
 
         return saveForm(form);
@@ -101,7 +83,7 @@ public class FormController extends BaseController {
     @RequestMapping(value = "saveFormDestroy.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse saveFormDestroy(@RequestBody SaveApplyForm form) {
-        if (form == null) {
+        if (isNull(form)) {
             return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
         }
 
@@ -117,16 +99,19 @@ public class FormController extends BaseController {
             return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
         }
 
-        if (form.getFormSkuList().isEmpty()) {
-            return AjaxResponse.failure("申请的SKU列表为空");
+        if (form.getFormImageList().isEmpty()) {
+            return AjaxResponse.failure("上传图片列表为空");
         } else {
-            for (BdFormSku sku : form.getFormSkuList()) {
-                if (sku.getChangeTotal() <= 0) {
-                    return AjaxResponse.failure("销毁数量参数错误");
-                } else if (sku.getChangeTotal() > sku.getStockCounterTotal()) {
-                    return AjaxResponse.failure("销毁数量超出柜面可用数量");
+            for (BdFormImage image : form.getFormImageList()) {
+                if (image.getImageUrl().isEmpty()) {
+                    return AjaxResponse.failure("上传图片Url为空");
                 }
             }
+        }
+
+        AjaxResponse checkSku = checkSkuList(form.getFormSkuList(), form.getFormType());
+        if (checkSku.getCode() != 0) {
+            return checkSku;
         }
 
         return saveForm(form);
@@ -136,7 +121,7 @@ public class FormController extends BaseController {
     @RequestMapping(value = "saveFormAllot.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse saveFormAllot(@RequestBody SaveApplyForm form) {
-        if (form == null) {
+        if (isNull(form)) {
             return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
         }
 
@@ -155,16 +140,9 @@ public class FormController extends BaseController {
             return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
         }
 
-        if (form.getFormSkuList().isEmpty()) {
-            return AjaxResponse.failure("申请的SKU列表为空");
-        } else {
-            for (BdFormSku sku : form.getFormSkuList()) {
-                if (sku.getChangeTotal() <= 0) {
-                    return AjaxResponse.failure("调拨数量参数错误");
-                } else if (sku.getChangeTotal() > sku.getStockDepotTotal()) {
-                    return AjaxResponse.failure("销调拨数量超出店仓可用数量");
-                }
-            }
+        AjaxResponse checkSku = checkSkuList(form.getFormSkuList(), form.getFormType());
+        if (checkSku.getCode() != 0) {
+            return checkSku;
         }
 
         return saveForm(form);
@@ -174,7 +152,7 @@ public class FormController extends BaseController {
     @RequestMapping(value = "saveFormException.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse saveFormException(@RequestBody SaveApplyForm form) {
-        if (form == null) {
+        if (isNull(form)) {
             return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
         }
 
@@ -190,35 +168,57 @@ public class FormController extends BaseController {
             return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
         }
 
-        if (form.getFormSkuList().isEmpty()) {
-            return AjaxResponse.failure("申请的SKU列表为空");
-        } else {
-            for (BdFormSku sku : form.getFormSkuList()) {
-                if (sku.getChangeTotal() <= 0) {
-                    return AjaxResponse.failure("调整数量参数错误");
-                } else if (sku.getChangeType() == 2 && sku.getChangeTotal() > sku.getStockDepotTotal()) {
-                    return AjaxResponse.failure("调整数量超出店仓可用数量");
-                }
-            }
+        AjaxResponse checkSku = checkSkuList(form.getFormSkuList(), form.getFormType());
+        if (checkSku.getCode() != 0) {
+            return checkSku;
         }
 
         return saveForm(form);
     }
 
     private AjaxResponse saveForm(SaveApplyForm form) {
-        Subject subject = SecurityUtils.getSubject();
-        SystemUser systemUser = (SystemUser) subject.getPrincipal();
-        MdUser user = mdUserService.getMdUserByUserNo(systemUser.getUserNo()).getResult();
-        form.setUserName(user.getUserName());
-        form.setUserNo(user.getUserNo());
+        SystemUser systemUser = this.getSystemUser();
+        if (systemUser.getUserType() != 1) {
+            return AjaxResponse.failure("非门店帐号不能进行此操作");
+        }
+        form.setUserName(systemUser.getUserNo());
+        form.setUserNo(systemUser.getUserNo());
         ServiceResult<Integer> serviceResult = bdFormService.saveForm(form);
 
         if (!serviceResult.getSuccess()) {
             return AjaxResponse.failure(RespCode.FAILED, serviceResult.getMessage());
         }
+        return AjaxResponse.success("提交表单成功,等待门店主管审批");
+    }
 
-        MdStore store = mdStoreService.getMdStoreByStoreNo(form.getStoreNo()).getResult();
-        return AjaxResponse.success("提交表单成功,等待" + store.getPost() + "审核");
+    @SystemControllerLog(module = "表单管理", businessDesc = "审批退回")
+    @RequestMapping(value = "backFormDestroy.json", method = { RequestMethod.POST })
+    @ResponseBody
+    public AjaxResponse backFormDestroy(@RequestBody ExecDisposeForm form) {
+        ServiceResult<BdForm> serviceResult = bdFormService.getBdFormById(form.getId());
+
+        if (!serviceResult.getSuccess()) {
+            return AjaxResponse.failure(RespCode.FAILED, serviceResult.getMessage());
+        }
+
+        BdForm bdForm = serviceResult.getResult();
+
+        if (bdForm.getIsBack() == 1) {
+            return AjaxResponse.failure("该处理流程不能退回");
+        }
+        if (!form.getUserNo().equals(bdForm.getDisposeUserNo())) {
+            return AjaxResponse.failure("操作人与指定人员不相符");
+        }
+        if (form.getType() != 3) {
+            return AjaxResponse.failure("错误的操作");
+        }
+
+        ServiceResult<Integer> result = bdFormService.backFormDestroy(bdForm, form);
+        if (!result.getSuccess()) {
+            return AjaxResponse.failure(RespCode.FAILED, result.getMessage());
+        }
+
+        return AjaxResponse.success();
     }
 
     @SystemControllerLog(module = "表单管理", businessDesc = "获取快递公司列表")
@@ -256,10 +256,13 @@ public class FormController extends BaseController {
     @RequestMapping(value = "getDisposeFormList.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse getDisposeFormList(@RequestBody GetDisposeFormListForm form) {
-
+        if (isNull(form)) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
+        String[] storeNoArr = getStoreNoArr();
         PagerInfo pagerInfo = new PagerInfo(form.getPageSize(), form.getPageIndex());
 
-        Map<String, String> queryMap = new HashMap<>();
+        Map<String, Object> queryMap = new HashMap<>();
         if (!isNull(form.getFormType())) {
             if (form.getFormType() != 0)
                 queryMap.put("q_formType", String.valueOf(form.getFormType()));//表单类型（）
@@ -271,6 +274,8 @@ public class FormController extends BaseController {
 
         if (form.getDisposeStatus() == 1) {
             queryMap.put("q_disposeUserNo", form.getUserNo());
+        } else {
+            queryMap.put("q_storeNoArr", storeNoArr);
         }
 
         queryMap.put("q_disposeStatus", String.valueOf(form.getDisposeStatus()));
@@ -307,19 +312,27 @@ public class FormController extends BaseController {
         if (!serviceResult.getSuccess()) {
             return AjaxResponse.failure(RespCode.FAILED, serviceResult.getMessage());
         }
-        dataMap.put("bdForm", serviceResult.getResult());
+        BdForm bdForm = serviceResult.getResult();
+        dataMap.put("bdForm", bdForm);
 
-        ServiceResult<List<BdFormSku>> serviceResultSkuList = bdFormSkuService.getBdFormSkuListByApplyNo(serviceResult.getResult().getApplyNo());
+
+        ServiceResult<List<BdFormSku>> serviceResultSkuList = bdFormSkuService.getBdFormSkuListByApplyNo(bdForm.getApplyNo());
         if (!serviceResultSkuList.getSuccess()) {
             return AjaxResponse.failure(RespCode.FAILED, serviceResultSkuList.getMessage());
         }
         dataMap.put("bdFormSkuList", serviceResultSkuList.getResult());
 
-        ServiceResult<List<BdFormImage>> serviceResultImageList = bdFormImageService.getBdFormImageListByApplyNo(serviceResult.getResult().getApplyNo());
+        ServiceResult<List<BdFormImage>> serviceResultImageList = bdFormImageService.getBdFormImageListByApplyNo(bdForm.getApplyNo(), 1);
         if (!serviceResultImageList.getSuccess()) {
             return AjaxResponse.failure(RespCode.FAILED, serviceResultImageList.getMessage());
         }
         dataMap.put("bdFormImageList", serviceResultImageList.getResult());
+
+        serviceResultImageList = bdFormImageService.getBdFormImageListByApplyNo(bdForm.getApplyNo(), 2);
+        if (!serviceResultImageList.getSuccess()) {
+            return AjaxResponse.failure(RespCode.FAILED, serviceResultImageList.getMessage());
+        }
+        dataMap.put("bdFormSuperiorImageList", serviceResultImageList.getResult());
 
         ServiceResult<List<GetDisposeListBean>> serviceResultDisposeList = bdFormDisposeService.getDisposeListByApplyNo(serviceResult.getResult().getApplyNo());
 
@@ -368,12 +381,16 @@ public class FormController extends BaseController {
         return AjaxResponse.success();
     }
 
+    @SystemControllerLog(module = "表单管理", businessDesc = "根据门店号获取待处理与处理中的角标总数")
     @RequestMapping(value = "getDisposeCount.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse getDisposeCount(@RequestParam String storeNo, @RequestParam String userNo) {
-        Map<String, String> queryMap = new HashMap<>();
+        String[] storeNoArr = getStoreNoArr();
+
+        Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("q_disposeStatus", "2");//处理中
-        queryMap.put("q_storeNo", storeNo);//门店号
+        queryMap.put("q_storeNoArr", storeNoArr);
+
         //获取处理中的数量
         ServiceResult<Integer> disposeIngResult = bdFormService.getBdFormListCount(queryMap);
         if (!disposeIngResult.getSuccess()) {
@@ -409,5 +426,126 @@ public class FormController extends BaseController {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("skuList", serviceResult.getResult());
         return AjaxResponse.success(dataMap);
+    }
+
+    @SystemControllerLog(module = "表单管理", businessDesc = "删除保存或退回的申请单")
+    @RequestMapping(value = "delForm.json", method = { RequestMethod.POST })
+    @ResponseBody
+    public AjaxResponse delForm(Integer id) {
+        if (isNull(id)) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
+        SystemUser systemUser = this.getSystemUser();
+        if (systemUser.getUserType() != 1) {
+            return AjaxResponse.failure("非门店帐号不能进行此操作");
+        }
+
+        BdForm bdForm = bdFormService.getBdFormById(id).getResult();
+
+        if (isNull(bdForm) || isNull(bdForm.getId())) {
+            return AjaxResponse.failure("该表单不存在");
+        } else if (bdForm.getIsBack() != 1 && bdForm.getDisposeStatus() != 3) {
+            return AjaxResponse.failure("该表单不能删除");
+        }
+
+        ServiceResult<Integer> serviceResult = bdFormService.delBdForm(bdForm);
+        if (!serviceResult.getSuccess()) {
+            return AjaxResponse.failure(RespCode.FAILED, serviceResult.getMessage());
+        }
+        return AjaxResponse.success();
+    }
+
+    @SystemControllerLog(module = "表单管理", businessDesc = "初始化表单保存")
+    @RequestMapping(value = "saveLocalFormInit.json", method = { RequestMethod.POST })
+    @ResponseBody
+    public AjaxResponse saveLocalFormInit(@RequestBody SaveApplyForm form) {
+        if (isNull(form)) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
+
+        if (form.getApplyNo().isEmpty() || form.getApplyDate().isEmpty()) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
+
+        form.setFormType(1);//库存初始化
+
+        return saveLocalForm(form);
+    }
+
+    @SystemControllerLog(module = "表单管理", businessDesc = "销毁表单保存")
+    @RequestMapping(value = "saveLocalFormDestroy.json", method = { RequestMethod.POST })
+    @ResponseBody
+    public AjaxResponse saveLocalFormDestroy(@RequestBody SaveApplyForm form) {
+        if (isNull(form)) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
+
+        if (form.getApplyNo().isEmpty() || form.getApplyDate().isEmpty()) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
+
+        form.setFormType(2);//销毁表单
+
+        return saveLocalForm(form);
+    }
+
+    @SystemControllerLog(module = "表单管理", businessDesc = "调拨表单保存")
+    @RequestMapping(value = "saveLocalFormAllot.json", method = { RequestMethod.POST })
+    @ResponseBody
+    public AjaxResponse saveLocalFormAllot(@RequestBody SaveApplyForm form) {
+        if (isNull(form)) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
+
+        if (form.getApplyNo().isEmpty() || form.getApplyDate().isEmpty()) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
+
+        form.setFormType(3);//调拨表单
+
+        return saveLocalForm(form);
+    }
+
+    @SystemControllerLog(module = "表单管理", businessDesc = "异常表单保存")
+    @RequestMapping(value = "saveLocalFormException.json", method = { RequestMethod.POST })
+    @ResponseBody
+    public AjaxResponse saveLocalFormException(@RequestBody SaveApplyForm form) {
+        if (isNull(form)) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
+
+        if (form.getApplyNo().isEmpty() || form.getApplyDate().isEmpty()) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
+
+        form.setFormType(4);//异常表单
+
+        return saveLocalForm(form);
+    }
+
+    private AjaxResponse saveLocalForm(SaveApplyForm form) {
+        SystemUser systemUser = this.getSystemUser();
+        if (systemUser.getUserType() != 1) {
+            return AjaxResponse.failure("非门店帐号不能进行此操作");
+        }
+
+        form.setUserName(systemUser.getUserNo());
+        form.setUserNo(systemUser.getUserNo());
+        ServiceResult<Integer> serviceResult = bdFormService.saveLocalForm(form);
+
+        if (!serviceResult.getSuccess()) {
+            return AjaxResponse.failure(RespCode.FAILED, serviceResult.getMessage());
+        }
+
+        ServiceResult<BdForm> bdFormServiceResult = bdFormService.getBdFormByApplyNo(form.getApplyNo());
+
+        if (!bdFormServiceResult.getSuccess()) {
+            return AjaxResponse.failure(RespCode.FAILED, bdFormServiceResult.getMessage());
+        }
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("id", bdFormServiceResult.getResult().getId());
+
+        return AjaxResponse.success("保存表单成功", dataMap);
     }
 }

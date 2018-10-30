@@ -1,6 +1,9 @@
 package com.iyeed.core.entity.form.vo;
 
+import com.iyeed.core.entity.form.BdFormImage;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 功能描述:
@@ -13,6 +16,15 @@ public class ExecDisposeForm implements Serializable {
     private String userNo;
     private Integer type;
     private String remark;
+    private List<BdFormImage> formImageList;
+
+    public List<BdFormImage> getFormImageList() {
+        return formImageList;
+    }
+
+    public void setFormImageList(List<BdFormImage> formImageList) {
+        this.formImageList = formImageList;
+    }
 
     public Integer getId() {
         return id;

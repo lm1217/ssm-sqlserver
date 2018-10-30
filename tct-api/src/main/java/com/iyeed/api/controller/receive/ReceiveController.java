@@ -1,18 +1,24 @@
 package com.iyeed.api.controller.receive;
 
-import com.iyeed.core.annotation.SystemControllerLog;
 import com.iyeed.api.controller.BaseController;
-import com.iyeed.api.controller.common.emuns.RespCode;
-import com.iyeed.api.controller.common.model.AjaxResponse;
 import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
+import com.iyeed.core.annotation.SystemControllerLog;
+import com.iyeed.core.common.emuns.RespCode;
+import com.iyeed.core.common.model.AjaxResponse;
 import com.iyeed.core.entity.receive.BdReceiving;
 import com.iyeed.core.entity.receive.BdReceivingSku;
 import com.iyeed.core.entity.receive.vo.GetReceivingListForm;
 import com.iyeed.core.entity.receive.vo.UpdateReceiveForm;
+import com.iyeed.core.entity.system.SystemUser;
+import com.iyeed.core.entity.user.MdUser;
+import com.iyeed.core.entity.user.MdUserStore;
 import com.iyeed.core.utils.CommonUtil;
 import com.iyeed.service.receive.IBdReceivingService;
 import com.iyeed.service.receive.IBdReceivingSkuService;
+import com.iyeed.service.store.IMdStoreService;
+import com.iyeed.service.user.IMdUserService;
+import com.iyeed.service.user.IMdUserStoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -34,11 +40,6 @@ import java.util.Map;
 public class ReceiveController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(ReceiveController.class);
 
-    @Resource
-    private IBdReceivingService bdReceivingService;
-    @Resource
-    private IBdReceivingSkuService bdReceivingSkuService;
-
     /**
      * 方法描述:通过erpNo, orderNo, status, starttime, endtime
      *        分页获取收货列表信息
@@ -51,16 +52,19 @@ public class ReceiveController extends BaseController {
     @RequestMapping(value = "getReceivingList.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse getReceivingList(@RequestBody GetReceivingListForm form) {
-
+        if (isNull(form)) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
         PagerInfo pagerInfo = new PagerInfo(form.getPageSize(), form.getPageIndex());
-
-        Map<String, String> queryMap = new HashMap<>();
+        String[] storeNoArr = getStoreNoArr();
+        Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("q_status", String.valueOf(form.getStatus()));//收货类型,默认1.待收货
         queryMap.put("q_erpNo", form.getErpNo());//搜索ERP_NO
         queryMap.put("q_orderNo", form.getOrderNo());//搜索ORDER_NO
         queryMap.put("q_storeNo", form.getStoreNo());//收货门店
         queryMap.put("q_starttime", CommonUtil.startTime(form.getStarttime()));//搜索开始时间
         queryMap.put("q_endtime", CommonUtil.endTime(form.getEndtime()));//搜索结束时间
+        queryMap.put("q_storeNoArr", storeNoArr);
         ServiceResult<List<BdReceiving>> serviceResult = bdReceivingService.getBdReceivingList(queryMap, pagerInfo);
 
         if (!serviceResult.getSuccess()) {
@@ -86,6 +90,9 @@ public class ReceiveController extends BaseController {
     @RequestMapping(value = "getReceivingDetailsById.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse getReceivingDetailsById(@RequestParam Integer id) {
+        if (isNull(id)) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
         Map<String, Object> dataMap = new HashMap<>();
         ServiceResult<BdReceiving> serviceResult = bdReceivingService.getBdReceivingById(id);
         dataMap.put("bdReceiving", serviceResult.getResult());
@@ -112,6 +119,13 @@ public class ReceiveController extends BaseController {
     @RequestMapping(value = "updateReceiving.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse updateReceiving(@RequestBody UpdateReceiveForm form) {
+        if (isNull(form)) {
+            return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
+        }
+        SystemUser systemUser = this.getSystemUser();
+        if (systemUser.getUserType() != 1) {
+            return AjaxResponse.failure("非门店帐号不能进行此操作");
+        }
         if (form.getBdReceivingSkuList() == null || form.getBdReceivingSkuList().isEmpty()) {
             return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
         }
@@ -130,9 +144,11 @@ public class ReceiveController extends BaseController {
     @RequestMapping(value = "getReceiveCount.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse getReceiveCount(String storeNo) {
-        Map<String, String> queryMap = new HashMap<>();
+        String[] storeNoArr = getStoreNoArr();
+        Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("q_status", String.valueOf(1));//收货类型,默认1.待收货
-        queryMap.put("q_receiveStoreNo", storeNo);//storeNo
+        queryMap.put("q_storeNo", storeNo);//storeNo
+        queryMap.put("q_storeNoArr", storeNoArr);
         ServiceResult<Integer> serviceResult = bdReceivingService.getBdReceivingListCount(queryMap);
 
         if (!serviceResult.getSuccess()) {

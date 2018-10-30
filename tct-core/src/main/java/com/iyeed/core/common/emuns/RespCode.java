@@ -8,7 +8,11 @@ import com.iyeed.core.common.BaseEnum;
  * @version 0.1 2017-03-16 17:57
  */
 public enum RespCode implements BaseEnum<Integer> {
-    SUCCESS(0, null), ERROR(-1, "系统错误"), FAILED(1, "失败"),
+    SUCCESS(0, null),
+
+    ERROR(-1, "系统错误"),
+
+    FAILED(1, "失败"),
 
     /** 参数错误 */
     ILLEGAL_ARGUMENT(2, "参数错误"),
@@ -24,6 +28,9 @@ public enum RespCode implements BaseEnum<Integer> {
 
     /** 验证码失效 */
     SMSVERRIFY_ERROR(6, "短信验证码错误"),
+
+    /** 没有此权限 */
+    NOT_AUTH(10, "没有此权限"),
 
     /** 用户未登录 */
     NOT_LOGIN(11, "未登录"),
@@ -48,13 +55,7 @@ public enum RespCode implements BaseEnum<Integer> {
 
     USER_NOT_EXIST(112, "用户不存在"),
 
-    MOBILE_IS_NO_REGISTER(113, "手机号没有注册"),
-
-    /** 重复点赞 */
-    USER_LIKE_ALREADY(131, "今天已经赞TA了"),
-
-    /** 不能给自己点赞 */
-    USER_LIKE_MYSELF(132, "不要给自己点赞哟"),;
+    MOBILE_IS_NO_REGISTER(113, "手机号没有注册");
 
     private Integer code;
     private String desc;

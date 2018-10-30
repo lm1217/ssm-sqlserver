@@ -5,21 +5,17 @@ import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.store.MdStore;
 import com.iyeed.core.entity.store.vo.GetStoreListBean;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.store.MdStoreModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.store.IMdStoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Service(value = "mdStoreService")
-public class MdStoreServiceImpl implements IMdStoreService {
+public class MdStoreServiceImpl extends BaseService implements IMdStoreService {
 	private static final Logger log = LoggerFactory.getLogger(MdStoreServiceImpl.class);
-
-	@Resource
-    private MdStoreModel mdStoreModel;
 
     @Override
     public ServiceResult<MdStore> getMdStoreByStoreNo(String storeNo) {
@@ -56,6 +52,23 @@ public class MdStoreServiceImpl implements IMdStoreService {
             result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
             log.error("[IMdStoreService][getMdStoreById]根据id["+mdStoreId+"]取得门店表时出现未知异常：",
                 e);
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<List<GetStoreListBean>> getStoreListByBrandNo(String brandNo) {
+        ServiceResult<List<GetStoreListBean>> result = new ServiceResult<>();
+        try {
+            result.setResult(mdStoreModel.getStoreListByBrandNo(brandNo));
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error("[IMdStoreService][getMdStoreById]根据id[]取得门店表时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[IMdStoreService][getMdStoreById]根据id[]取得门店表时出现未知异常：",
+                    e);
         }
         return result;
     }

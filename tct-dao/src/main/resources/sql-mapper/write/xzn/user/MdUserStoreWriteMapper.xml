@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.user.MdUserStoreWriteDao">
+	<resultMap id="MdUserStoreResult" type="com.iyeed.core.entity.user.MdUserStore">
+			<result property="id" column="id" />
+			<result property="userNo" column="user_no" />
+			<result property="storeNo" column="store_no" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="MdUserStoreResult">
+		select
+		   *
+		from md_user_store
+		where id = #{id}
+	</select>
+
+	<select id="getUserStoreListByUserNo" parameterType="String" resultMap="MdUserStoreResult">
+		select
+		   *
+		from md_user_store
+		where user_no = #{userNo}
+	</select>
+
+	<select id="getUserStoreListByUserNoArr" parameterType="String" resultMap="MdUserStoreResult">
+		select
+		   *
+		from md_user_store
+
+		<if test="userNoArr != null and userNoArr !=''">
+			where user_no in
+			<foreach item="userNo" index="index" collection="userNoArr" open="(" separator="," close=")">
+				#{userNo}
+			</foreach>
+		</if>
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.user.MdUserStore">
+        update md_user_store
+    	<set>
+			
+			<if test="userNo != null">user_no= #{userNo},</if>
+			<if test="storeNo != null">store_no= #{storeNo}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.user.MdUserStore" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		md_user_store
+		(
+			
+			user_no,
+			store_no
+		)
+		values
+		(
+			
+			#{userNo},
+			#{storeNo}
+		)
+	</insert>
+	
+</mapper>

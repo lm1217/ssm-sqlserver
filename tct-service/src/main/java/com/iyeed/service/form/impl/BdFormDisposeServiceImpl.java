@@ -5,21 +5,17 @@ import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.form.BdFormDispose;
 import com.iyeed.core.entity.form.vo.GetDisposeListBean;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.form.BdFormDisposeModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.form.IBdFormDisposeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Service(value = "bdFormDisposeService")
-public class BdFormDisposeServiceImpl implements IBdFormDisposeService {
+public class BdFormDisposeServiceImpl extends BaseService implements IBdFormDisposeService {
 	private static final Logger log = LoggerFactory.getLogger(BdFormDisposeServiceImpl.class);
-
-	@Resource
-    private BdFormDisposeModel bdFormDisposeModel;
 
     /**
      * 根据id取得bd_form_dispose对象

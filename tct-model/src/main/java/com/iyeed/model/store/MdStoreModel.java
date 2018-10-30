@@ -3,17 +3,13 @@ package com.iyeed.model.store;
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.store.MdStore;
 import com.iyeed.core.entity.store.vo.GetStoreListBean;
-import com.iyeed.dao.db.write.xzn.store.MdStoreWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class MdStoreModel {
-    
-    @Resource
-    private MdStoreWriteDao mdStoreWriteDao;
+public class MdStoreModel extends BaseModel {
     
     /**
      * 根据id取得门店表
@@ -30,6 +26,10 @@ public class MdStoreModel {
 
     public List<GetStoreListBean> getStoreList() throws Exception {
         return mdStoreWriteDao.getStoreList();
+    }
+
+    public List<GetStoreListBean> getStoreListByBrandNo(String brandNo) throws Exception {
+        return mdStoreWriteDao.getStoreListByBrandNo(brandNo);
     }
     
     /**
@@ -57,6 +57,5 @@ public class MdStoreModel {
 		mdStore.setStoreName(StringUtil.dbSafeString(mdStore.getStoreName(), true, 40));
 		mdStore.setBrandNo(StringUtil.dbSafeString(mdStore.getBrandNo(), true, 40));
 		mdStore.setBrandName(StringUtil.dbSafeString(mdStore.getBrandName(), true, 40));
-		mdStore.setBrandLogo(StringUtil.dbSafeString(mdStore.getBrandLogo(), true, 100));
-    }
+	}
 }

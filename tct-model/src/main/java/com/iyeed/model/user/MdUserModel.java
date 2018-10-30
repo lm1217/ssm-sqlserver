@@ -2,17 +2,14 @@ package com.iyeed.model.user;
 
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.user.MdUser;
-import com.iyeed.dao.db.write.xzn.user.MdUserWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import java.util.List;
 
 @Component
-public class MdUserModel {
-    
-    @Resource
-    private MdUserWriteDao mdUserWriteDao;
-    
+public class MdUserModel extends BaseModel {
+
     /**
      * 根据id取得md_user对象
      * @param  mdUserId
@@ -24,6 +21,11 @@ public class MdUserModel {
 
     public MdUser getMdUserByUserNo(String userNo) throws Exception {
         return mdUserWriteDao.getUserByUserNo(userNo);
+    }
+
+    // 递归获取父ID下的所有子集
+    public List<MdUser> getUserListByUserNo(String userNo) throws Exception {
+        return mdUserWriteDao.getUserListByUserNo(userNo);
     }
     
     /**
@@ -51,7 +53,6 @@ public class MdUserModel {
 		mdUser.setUserNo(StringUtil.dbSafeString(mdUser.getUserNo(), true, 40));
 		mdUser.setUserName(StringUtil.dbSafeString(mdUser.getUserName(), true, 40));
 		mdUser.setUserPid(StringUtil.dbSafeString(mdUser.getUserPid(), true, 40));
-		mdUser.setPost(StringUtil.dbSafeString(mdUser.getPost(), true, 40));
 		mdUser.setEmail(StringUtil.dbSafeString(mdUser.getEmail(), true, 100));
     }
 }

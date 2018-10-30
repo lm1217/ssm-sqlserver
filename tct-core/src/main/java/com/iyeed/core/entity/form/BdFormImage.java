@@ -22,7 +22,24 @@ public class BdFormImage implements Serializable {
  	private String applyNo;
  	private String imageUrl;
  	private java.util.Date inputDate;
+	private Integer type;
+	private String upfileName;
 
+	public String getUpfileName() {
+		return upfileName;
+	}
+
+	public void setUpfileName(String upfileName) {
+		this.upfileName = upfileName;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
 
 	/**
      * 获取主键自增长

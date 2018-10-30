@@ -14,6 +14,11 @@
     <version>${version-iyeed}</version>
     <dependencies>
         <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${version-mail}</version>
+        </dependency>
+        <dependency>
             <groupId>com.aliyun.oss</groupId>
             <artifactId>aliyun-sdk-oss</artifactId>
             <version>${version-aliyun-sdk-oss}</version>

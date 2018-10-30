@@ -13,6 +13,7 @@ import java.util.List;
  * @Date 2018/8/16 16:12
  */
 public class SaveApplyForm implements Serializable {
+    private Integer id;
     private String storeNo;
     private String storeName;
     private String applyNo;
@@ -31,11 +32,28 @@ public class SaveApplyForm implements Serializable {
     private Integer exceptionType;
     private Integer formType;
     private String inputDate;
-    private String inputUserNo;
+    private String applyUserNo;
     private List<BdFormImage> formImageList;
     private List<BdFormSku> formSkuList;
     private String userName;
     private String userNo;
+    private Integer isBack;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getIsBack() {
+        return isBack;
+    }
+
+    public void setIsBack(Integer isBack) {
+        this.isBack = isBack;
+    }
 
     public String getUserNo() {
         return userNo;
@@ -197,12 +215,12 @@ public class SaveApplyForm implements Serializable {
         this.inputDate = inputDate;
     }
 
-    public String getInputUserNo() {
-        return inputUserNo;
+    public String getApplyUserNo() {
+        return applyUserNo;
     }
 
-    public void setInputUserNo(String inputUserNo) {
-        this.inputUserNo = inputUserNo;
+    public void setApplyUserNo(String applyUserNo) {
+        this.applyUserNo = applyUserNo;
     }
 
     public List<BdFormImage> getFormImageList() {

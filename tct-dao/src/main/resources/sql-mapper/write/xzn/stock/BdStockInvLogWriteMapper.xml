@@ -42,7 +42,7 @@
 				and store_no = #{queryMap.q_storeNo}
 			</if>
 			<if test="queryMap.q_skuCode != null and queryMap.q_skuCode !=''">
-				and sku_code like CONCAT('%', #{queryMap.q_skuCode}, '%')
+				and upper(sku_code) like CONCAT('%', #{queryMap.q_skuCode}, '%')
 			</if>
 			<if test="queryMap.q_type != null and queryMap.q_type !=''">
 				and type = #{queryMap.q_type}

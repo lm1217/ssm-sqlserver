@@ -4,21 +4,17 @@ import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.form.BdFormImage;
 import com.iyeed.core.exception.BusinessException;
-import com.iyeed.model.form.BdFormImageModel;
+import com.iyeed.service.BaseService;
 import com.iyeed.service.form.IBdFormImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Service(value = "bdFormImageService")
-public class BdFormImageServiceImpl implements IBdFormImageService {
+public class BdFormImageServiceImpl extends BaseService implements IBdFormImageService {
 	private static final Logger log = LoggerFactory.getLogger(BdFormImageServiceImpl.class);
-
-	@Resource
-    private BdFormImageModel bdFormImageModel;
 
     /**
      * 根据id取得表单-图片子表
@@ -43,10 +39,10 @@ public class BdFormImageServiceImpl implements IBdFormImageService {
     }
 
     @Override
-    public ServiceResult<List<BdFormImage>> getBdFormImageListByApplyNo(String applyNo) {
+    public ServiceResult<List<BdFormImage>> getBdFormImageListByApplyNo(String applyNo, Integer type) {
         ServiceResult<List<BdFormImage>> result = new ServiceResult<>();
         try {
-            result.setResult(bdFormImageModel.getBdFormImageListByApplyNo(applyNo));
+            result.setResult(bdFormImageModel.getBdFormImageListByApplyNo(applyNo, type));
         } catch (BusinessException e) {
             result.setSuccess(false);
             result.setMessage(e.getMessage());

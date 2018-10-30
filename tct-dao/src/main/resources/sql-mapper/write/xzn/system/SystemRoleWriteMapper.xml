@@ -61,7 +61,7 @@
 			<if test="userId != null">user_id= #{userId},</if>
 			<if test="status != null">status= #{status},</if>
 			<if test="roleCode != null">role_code= #{roleCode},</if>
-			create_time= now()
+			create_time= getdate()
 	    </set>
         where id = #{id}
 	</update>

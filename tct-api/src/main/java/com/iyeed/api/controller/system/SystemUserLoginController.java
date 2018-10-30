@@ -1,20 +1,21 @@
 package com.iyeed.api.controller.system;
 
 import com.iyeed.api.controller.BaseController;
-import com.iyeed.api.controller.common.emuns.RespCode;
-import com.iyeed.api.controller.common.model.AjaxResponse;
 import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.StringUtil;
+import com.iyeed.core.annotation.SystemControllerLog;
+import com.iyeed.core.common.emuns.RespCode;
+import com.iyeed.core.common.model.AjaxResponse;
+import com.iyeed.core.entity.store.MdBrand;
 import com.iyeed.core.entity.store.MdStore;
 import com.iyeed.core.entity.system.SystemResource;
 import com.iyeed.core.entity.system.SystemUser;
 import com.iyeed.core.entity.user.MdUser;
 import com.iyeed.core.utils.Md5;
+import com.iyeed.service.store.IMdBrandService;
 import com.iyeed.service.store.IMdStoreService;
 import com.iyeed.service.system.ISystemRoleResourceService;
-import com.iyeed.service.system.ISystemRoleService;
-import com.iyeed.service.system.ISystemUserService;
 import com.iyeed.service.user.IMdUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -43,13 +44,8 @@ import java.util.*;
 @RequestMapping(value = "api/system")
 public class SystemUserLoginController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(SystemUserLoginController.class);
-    @Resource
-    private IMdStoreService mdStoreService;
-    @Resource
-    private IMdUserService mdUserService;
-    @Resource
-    private ISystemRoleResourceService systemRoleResourceService;
 
+    @SystemControllerLog(module = "系统-用户管理", businessDesc = "系统用户登录")
     @RequestMapping(value = "login.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse login(@RequestParam String username, @RequestParam String password) throws Exception {
@@ -66,25 +62,50 @@ public class SystemUserLoginController extends BaseController {
             Set<String> urlSet = getUrlSet(resourceList);
             String sessionId = (String) subject.getSession().getId();
             log.info("当前登录用户的SessionId = [" + sessionId + "]");
-            ServiceResult<MdUser> userResult = mdUserService.getMdUserByUserNo(systemUser.getUserNo());
-            if (!userResult.getSuccess()) {
-                return AjaxResponse.failure(RespCode.FAILED, userResult.getMessage());
+            String storeNo = null;
+            String[] storeNoArr = null;
+            String[] userNoArr = null;
+            if (systemUser.getUserType() == 1) {
+                storeNo = systemUser.getUserNo();
+            } else if (systemUser.getUserType() == 2) {
+                ServiceResult<List<MdUser>> userListResult = mdUserService.getUserListByUserNo(systemUser.getUserNo());
+                if (!userListResult.getSuccess()) {
+                    return AjaxResponse.failure(RespCode.FAILED, userListResult.getMessage());
+                }
+                List<MdUser> userList = userListResult.getResult();
+                userNoArr = new String[userList.size()];
+                int i = 0;
+                for (MdUser user : userList) {
+                    userNoArr[i] = user.getUserNo();
+                    i++;
+                }
             }
-            MdUser user = userResult.getResult();
-            ServiceResult<MdStore> storeResult = mdStoreService.getMdStoreByStoreNo(user.getStoreNo());
+
+            ServiceResult<MdStore> storeResult = mdStoreService.getMdStoreByStoreNo(storeNo);
             if (!storeResult.getSuccess()) {
                 return AjaxResponse.failure(RespCode.FAILED, storeResult.getMessage());
             }
             MdStore store = storeResult.getResult();
+            String brandLogo = "/logos/logo.png";
+
             dataMap.put("id", systemUser.getId());
             dataMap.put("userNo", systemUser.getUserNo());
             dataMap.put("username", systemUser.getUsername());
             dataMap.put("roleId", systemUser.getRoleId());
-            dataMap.put("storeNo", store.getStoreNo());
-            dataMap.put("storeName", store.getStoreName());
-            dataMap.put("brandNo", store.getBrandNo());
-            dataMap.put("brandName", store.getBrandName());
-            dataMap.put("brandLogo", store.getBrandLogo());
+            if (!isNull(store)) {
+                ServiceResult<MdBrand> brandResult = mdBrandService.getBrandByBrandNo(store.getBrandNo());
+                brandLogo = brandResult.getResult().getBrandLogo();
+                dataMap.put("storeNo", store.getStoreNo());
+                dataMap.put("storeName", store.getStoreName());
+                dataMap.put("brandNo", store.getBrandNo());
+                dataMap.put("brandName", store.getBrandName());
+            } else {
+                dataMap.put("storeNo", null);
+                dataMap.put("storeName", null);
+                dataMap.put("brandNo", null);
+                dataMap.put("brandName", null);
+            }
+            dataMap.put("brandLogo", brandLogo);
             dataMap.put("token",sessionId);
             dataMap.put("urlSet", urlSet);
         } catch (UnknownAccountException e) {

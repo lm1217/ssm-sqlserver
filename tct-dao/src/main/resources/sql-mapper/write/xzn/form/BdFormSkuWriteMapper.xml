@@ -26,6 +26,15 @@
 		from bd_form_sku
 		where apply_no = #{applyNo}
 	</select>
+
+	<select id="getFormSkuListForBack" parameterType="String" resultMap="BdFormSkuResult">
+		select a.apply_no, a.sku_code, a.sku_name, b.stock_depot_enabled stock_depot_total,
+		b.stock_counter_enabled stock_counter_total, a.change_total, a.change_type, a.input_date, a.id
+		from
+		(select * from bd_form_sku where apply_no = #{applyNo}) a,
+		(select * from bd_stock_inv where store_no = #{storeNo}) b
+		where a.sku_code = b.sku_code
+	</select>
 	
 	<update id="update" parameterType="com.iyeed.core.entity.form.BdFormSku">
         update bd_form_sku
@@ -42,7 +51,12 @@
 	    </set>
         where id = #{id}
 	</update>
-	
+
+	<delete id="del" parameterType="String">
+		delete from bd_form_sku
+		where apply_no = #{applyNo}
+	</delete>
+
 	<insert id="insert" parameterType="com.iyeed.core.entity.form.BdFormSku" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into 
 		bd_form_sku

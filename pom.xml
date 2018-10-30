@@ -29,15 +29,18 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.locale>zh_CN</project.build.locale>
 
-        <!--spring-->
+        <!--spring-config-->
         <version-spring>4.3.18.RELEASE</version-spring>
 
         <!--aspectj(AOP)-->
         <version-aspectj>1.9.1</version-aspectj>
 
         <!--netty-->
-        <netty.version>4.1.8.Final</netty.version>
+        <netty.version>4.1.30.Final</netty.version>
         <jpush-client.version>3.2.18</jpush-client.version>
+
+        <!--mail-->
+        <version-mail>1.4.7</version-mail>
 
         <!--db-->
         <version-mybatis>3.4.6</version-mybatis>
@@ -66,9 +69,19 @@
         <!--shrio权限控制-->
         <version-apache-shiro>1.4.0</version-apache-shiro>
 
+        <!--quartz-->
+        <version-quartz>2.3.0</version-quartz>
+
+        <!--bing.excel-->
+        <version-bing-excel>2.0</version-bing-excel>
+
+        <!--apache.poi-->
+        <version-poi>4.0.0</version-poi>
+
         <version-commons-lang3>3.7</version-commons-lang3>
         <version-commons-io>2.6</version-commons-io>
         <version-commons-codec>1.11</version-commons-codec>
+        <version-commons-net>3.6</version-commons-net>
 
         <version-commons-fileupload>1.3.3</version-commons-fileupload>
         <version-commons-beanutils>1.9.3</version-commons-beanutils>
@@ -176,6 +189,18 @@
             <version>${version-aspectj}</version>
         </dependency>
 
+        <!--quartz-->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${version-quartz}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz-jobs</artifactId>
+            <version>${version-quartz}</version>
+        </dependency>
+
         <!-- Log begin -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -230,11 +255,6 @@
             <artifactId>shiro-spring</artifactId>
             <version>${version-apache-shiro}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-ehcache</artifactId>
-            <version>${version-apache-shiro}</version>
-        </dependency>
 
         <!--ehcache-->
         <dependency>
@@ -259,7 +279,24 @@
             <artifactId>commons-codec</artifactId>
             <version>${version-commons-codec}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>${version-commons-net}</version>
+        </dependency>
         <!-- Commons utils end -->
+
+        <!--apache.poi-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${version-poi}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${version-poi}</version>
+        </dependency>
 
         <!-- jackson -->
         <dependency>

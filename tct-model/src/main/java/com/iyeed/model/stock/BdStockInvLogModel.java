@@ -2,18 +2,14 @@ package com.iyeed.model.stock;
 
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.stock.BdStockInvLog;
-import com.iyeed.dao.db.write.xzn.stock.BdStockInvLogWriteDao;
+import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class BdStockInvLogModel {
-    
-    @Resource
-    private BdStockInvLogWriteDao bdStockInvLogWriteDao;
+public class BdStockInvLogModel extends BaseModel {
     
     /**
      * 根据id取得库存日志表

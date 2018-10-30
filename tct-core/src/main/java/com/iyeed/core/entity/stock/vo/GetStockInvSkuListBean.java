@@ -16,6 +16,24 @@ public class GetStockInvSkuListBean implements Serializable {
     private Integer stockDepotEnabled;
     private Integer stockCounter;
     private Integer stockCounterEnabled;
+    private Integer stockDepotFreeze;
+    private Integer stockCounterFreeze;
+
+    public Integer getStockDepotFreeze() {
+        return stockDepotFreeze;
+    }
+
+    public void setStockDepotFreeze(Integer stockDepotFreeze) {
+        this.stockDepotFreeze = stockDepotFreeze;
+    }
+
+    public Integer getStockCounterFreeze() {
+        return stockCounterFreeze;
+    }
+
+    public void setStockCounterFreeze(Integer stockCounterFreeze) {
+        this.stockCounterFreeze = stockCounterFreeze;
+    }
 
     public Integer getId() {
         return id;

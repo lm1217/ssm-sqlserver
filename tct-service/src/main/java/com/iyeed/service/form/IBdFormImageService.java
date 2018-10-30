@@ -14,7 +14,7 @@ public interface IBdFormImageService {
      */
     ServiceResult<BdFormImage> getBdFormImageById(Integer bdFormImageId);
 
-    ServiceResult<List<BdFormImage>> getBdFormImageListByApplyNo(String applyNo);
+    ServiceResult<List<BdFormImage>> getBdFormImageListByApplyNo(String applyNo, Integer type);
     
     /**
      * 保存表单-图片子表

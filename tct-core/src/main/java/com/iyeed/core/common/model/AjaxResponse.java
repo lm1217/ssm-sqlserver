@@ -43,6 +43,12 @@ public final class AjaxResponse {
         this.data = data;
     }
 
+    private AjaxResponse(RespCode code, String msg, Object data) {
+        this.code = code.getCode();
+        this.msg = msg;
+        this.data = data;
+    }
+
     public static AjaxResponse success() {
         return SUCCESS;
     }
@@ -53,6 +59,14 @@ public final class AjaxResponse {
 
     public static AjaxResponse success(RespCode code, Object data) {
         return new AjaxResponse(code, data);
+    }
+
+    public static AjaxResponse success(String msg) {
+        return new AjaxResponse(RespCode.SUCCESS, msg);
+    }
+
+    public static AjaxResponse success(String msg, Object data) {
+        return new AjaxResponse(RespCode.SUCCESS, msg, data);
     }
 
     public static AjaxResponse failure() {

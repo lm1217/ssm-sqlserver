@@ -69,7 +69,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             return super.retrieveSession(sessionKey);
         }catch (UnknownSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
             return null;
         }
     }
@@ -79,7 +79,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             return super.getStartTimestamp(key);
         }catch (InvalidSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
             return null;
         }
     }
@@ -89,7 +89,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             return super.getLastAccessTime(key);
         }catch (InvalidSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
             return null;
         }
     }
@@ -99,7 +99,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             return super.getTimeout(key);
         }catch (InvalidSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
             return 0;
         }
     }
@@ -109,7 +109,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             super.setTimeout(key, maxIdleTimeInMillis);
         }catch (InvalidSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
         }
     }
 
@@ -118,7 +118,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             super.touch(key);
         }catch (InvalidSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
         }
     }
 
@@ -127,7 +127,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             return super.getHost(key);
         }catch (InvalidSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
             return null;
         }
     }
@@ -137,7 +137,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             return super.getAttributeKeys(key);
         }catch (InvalidSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
             return null;
         }
     }
@@ -147,7 +147,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             return super.getAttribute(sessionKey, attributeKey);
         }catch (InvalidSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
             return null;
         }
     }
@@ -157,7 +157,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             super.setAttribute(sessionKey, attributeKey, value);
         }catch (InvalidSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
         }
     }
 
@@ -166,7 +166,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             return super.removeAttribute(sessionKey, attributeKey);
         }catch (InvalidSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
             return null;
         }
     }
@@ -176,7 +176,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
             super.stop(key);
         }catch (InvalidSessionException e) {
             // 获取不到SESSION不抛出异常
-            log.error("获取不到SESSION不抛出异常");
+            log.info("获取不到SESSION不抛出异常");
         }
     }
 

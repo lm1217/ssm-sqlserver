@@ -8,6 +8,15 @@ public class GetStockInvReportListForm implements Serializable {
     private Integer totalPage;
     private String skuName;
     private String skuCode;
+    private String storeNo;
+
+    public String getStoreNo() {
+        return storeNo;
+    }
+
+    public void setStoreNo(String storeNo) {
+        this.storeNo = storeNo;
+    }
 
     public Integer getPageIndex() {
         return pageIndex;

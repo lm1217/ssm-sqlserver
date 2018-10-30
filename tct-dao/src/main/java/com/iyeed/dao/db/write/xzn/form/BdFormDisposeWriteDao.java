@@ -21,4 +21,6 @@ public interface BdFormDisposeWriteDao {
 	Integer insert(BdFormDispose bdFormDispose) throws Exception;
 	
 	Integer update(BdFormDispose bdFormDispose) throws Exception;
+
+	Integer del(String applyNo) throws Exception;
 }
