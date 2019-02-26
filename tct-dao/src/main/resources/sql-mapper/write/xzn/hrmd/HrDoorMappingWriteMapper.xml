@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.hrmd.HrDoorMappingWriteDao">
+	<resultMap id="hrDoorResult" type="com.iyeed.core.entity.hrmd.DoorMapping">
+			<result property="brandCode" column="brand_code" />
+			<result property="storeNo" column="store_no" />
+			<result property="storeName" column="store_name" />
+			<result property="userId" column="user_id" />
+			<result property="userName" column="user_name" />
+			<result property="userNameEn" column="user_name_en" />
+			<result property="userNtaccount" column="user_ntaccount" />
+	</resultMap>
+
+	<delete id="del">
+		delete hr_door
+	</delete>
+	
+	<insert id="insert" parameterType="com.iyeed.core.entity.hrmd.DoorMapping">
+		insert into 
+		hr_door
+		(
+			brand_code,
+			store_no,
+			store_name,
+			user_id,
+			user_name,
+		  	user_name_en,
+			user_ntaccount
+		)
+		values
+		(
+			#{brandCode},
+			#{storeNo},
+			#{storeName},
+			#{userId},
+			#{userName},
+			#{userNameEn},
+			#{userNtaccount}
+		)
+	</insert>
+	
+</mapper>

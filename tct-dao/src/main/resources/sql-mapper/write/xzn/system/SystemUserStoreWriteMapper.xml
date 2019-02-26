@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.system.SystemUserStoreWriteDao">
+	<resultMap id="SystemUserStoreResult" type="com.iyeed.core.entity.system.SystemUserStore">
+			<result property="id" column="id" />
+			<result property="userNo" column="user_no" />
+			<result property="storeNo" column="store_no" />
+	</resultMap>
+
+	<resultMap id="SystemUserStoreBeanResult" type="com.iyeed.core.entity.system.vo.SystemUserStoreBean">
+		<result property="id" column="id" />
+		<result property="userNo" column="user_no" />
+		<result property="storeNo" column="store_no" />
+		<result property="userType" column="user_type" />
+	</resultMap>
+	
+	<select id="get" parameterType="String" resultMap="SystemUserStoreResult">
+		select
+		   *
+		from system_user_store
+		where user_no = #{userNo}
+	</select>
+
+	<select id="getSystemUserStoreListByStoreNo" parameterType="String" resultMap="SystemUserStoreBeanResult">
+		select
+		   sus.*,su.user_type
+		from system_user_store sus, [system_user] su
+		where su.username = sus.user_no and sus.store_no = #{storeNo}
+	</select>
+
+	<insert id="save" parameterType="com.iyeed.core.entity.system.SystemUserStore" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into
+		system_user_store
+		(
+			user_no,
+			store_no
+		)
+		values
+		(
+			#{userNo},
+			#{storeNo}
+		)
+	</insert>
+
+	<delete id="del" parameterType="String">
+        delete from system_user_store where user_no = #{userNo}
+	</delete>
+</mapper>

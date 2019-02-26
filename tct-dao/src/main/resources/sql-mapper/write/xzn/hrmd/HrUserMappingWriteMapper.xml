@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.hrmd.HrUserMappingWriteDao">
+	<resultMap id="hrUserResult" type="com.iyeed.core.entity.hrmd.UserMapping">
+		<result property="userName" column="user_name" />
+		<result property="userNameEn" column="user_name_en" />
+		<result property="userNtaccount" column="user_ntaccount" />
+		<result property="userEmail" column="user_email" />
+		<result property="userId" column="user_id" />
+		<result property="userPid" column="user_pid" />
+	</resultMap>
+
+	<delete id="del">
+		delete hr_user
+	</delete>
+
+	<insert id="insert" parameterType="com.iyeed.core.entity.hrmd.UserMapping">
+		insert into
+		hr_user
+		(
+			user_name,
+			user_name_en,
+			user_ntaccount,
+			user_email,
+			user_id,
+		  	user_pid
+		)
+		values
+		(
+			#{userName},
+			#{userNameEn},
+			#{userNtaccount},
+			#{userEmail},
+			#{userId},
+			#{userPid}
+		)
+	</insert>
+	
+</mapper>

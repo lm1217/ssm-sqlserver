@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iyeed.dao.db.write.xzn.stock.BdStockInvDataWriteDao">
+	<resultMap id="BdStockInvDataResult" type="com.iyeed.core.entity.stock.BdStockInvData">
+			<result property="storeNo" column="store_no" />
+			<result property="storeName" column="store_name" />
+			<result property="skuCode" column="sku_code" />
+			<result property="skuName" column="sku_name" />
+			<result property="stockDepot" column="stock_depot" />
+			<result property="stockDepotEnabled" column="stock_depot_enabled" />
+			<result property="stockCounter" column="stock_counter" />
+			<result property="stockCounterEnabled" column="stock_counter_enabled" />
+			<result property="updateDate" column="update_date" />
+			<result property="id" column="id" />
+			<result property="stockDepotFreeze" column="stock_depot_freeze" />
+			<result property="stockCounterFreeze" column="stock_counter_freeze" />
+			<result property="brandNo" column="brand_no" />
+			<result property="userNo" column="user_no" />
+			<result property="userType" column="user_type" />
+			<result property="backupDate" column="backup_date" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="BdStockInvDataResult">
+		select
+		   *
+		from bd_stock_inv_data
+		where id = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.iyeed.core.entity.stock.BdStockInvData">
+        update bd_stock_inv_data
+    	<set>
+			<if test="storeNo != null">store_no= #{storeNo},</if>
+			<if test="storeName != null">store_name= #{storeName},</if>
+			<if test="skuCode != null">sku_code= #{skuCode},</if>
+			<if test="skuName != null">sku_name= #{skuName},</if>
+			<if test="stockDepot != null">stock_depot= #{stockDepot},</if>
+			<if test="stockDepotEnabled != null">stock_depot_enabled= #{stockDepotEnabled},</if>
+			<if test="stockCounter != null">stock_counter= #{stockCounter},</if>
+			<if test="stockCounterEnabled != null">stock_counter_enabled= #{stockCounterEnabled},</if>
+			<if test="updateDate != null">update_date= #{updateDate},</if>
+			<if test="stockDepotFreeze != null">stock_depot_freeze= #{stockDepotFreeze},</if>
+			<if test="stockCounterFreeze != null">stock_counter_freeze= #{stockCounterFreeze},</if>
+			<if test="brandNo != null">brand_no= #{brandNo},</if>
+			<if test="userNo != null">user_no= #{userNo},</if>
+			<if test="userType != null">user_type= #{userType},</if>
+			<if test="backupDate != null">backup_date= #{backupDate}</if>
+	    </set>
+        where id = #{id}
+	</update>
+	
+	<insert id="insertForBackup" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into
+		bd_stock_inv_data
+		(
+			store_no,
+			store_name,
+			sku_code,
+			sku_name,
+			stock_depot,
+			stock_depot_enabled,
+			stock_counter,
+			stock_counter_enabled,
+			update_date,
+			stock_depot_freeze,
+			stock_counter_freeze,
+			brand_no,
+			user_no,
+			user_type,
+			backup_date
+		)
+		select store_no,
+		store_name,
+		sku_code,
+		sku_name,
+		stock_depot,
+		stock_depot_enabled,
+		stock_counter,
+		stock_counter_enabled,
+		update_date,
+		stock_depot_freeze,
+		stock_counter_freeze,
+		brand_no,
+		user_no,
+		user_type,
+		GETDATE()
+		from bd_stock_inv
+	</insert>
+
+	<insert id="insert" parameterType="com.iyeed.core.entity.stock.BdStockInvData" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into
+		bd_stock_inv_data
+		(
+			store_no,
+			store_name,
+			sku_code,
+			sku_name,
+			stock_depot,
+			stock_depot_enabled,
+			stock_counter,
+			stock_counter_enabled,
+			update_date,
+			stock_depot_freeze,
+			stock_counter_freeze,
+			brand_no,
+			user_no,
+			user_type,
+			backup_date
+		)
+		values
+		(
+			#{storeNo},
+			#{storeName},
+			#{skuCode},
+			#{skuName},
+			#{stockDepot},
+			#{stockDepotEnabled},
+			#{stockCounter},
+			#{stockCounterEnabled},
+			#{updateDate},
+			#{stockDepotFreeze},
+			#{stockCounterFreeze},
+			#{brandNo},
+			#{userNo},
+			#{userType},
+			#{backupDate}
+		)
+	</insert>
+	
+</mapper>
