@@ -55,7 +55,7 @@
 
 
         <!--jackson-->
-        <version-jackson>2.9.6</version-jackson>
+        <version-jackson>2.9.8</version-jackson>
 
         <!--servlet-->
         <version-servlet-api>3.1.0</version-servlet-api>
