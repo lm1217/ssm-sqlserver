@@ -30,6 +30,11 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
     </context:component-scan>
 
+    <!-- 全局跨域配置 -->
+    <mvc:cors>
+        <mvc:mapping path="/**"/>
+    </mvc:cors>
+
     <!--避免IE执行AJAX时，返回JSON出现下载文件 -->
     <mvc:annotation-driven>
         <mvc:message-converters>

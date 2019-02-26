@@ -52,14 +52,14 @@
     </servlet-mapping>
 
     <!--跨域-->
-    <filter>
-        <filter-name>cors</filter-name>
-        <filter-class>com.iyeed.api.filter.CorsFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>cors</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    <!--<filter>-->
+        <!--<filter-name>cors</filter-name>-->
+        <!--<filter-class>com.iyeed.api.filter.CorsFilter</filter-class>-->
+    <!--</filter>-->
+    <!--<filter-mapping>-->
+        <!--<filter-name>cors</filter-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
 
     <!--设置不缓存-->
     <filter>
@@ -136,5 +136,8 @@
         <!--<servlet-name>DruidStatView</servlet-name>-->
         <!--<url-pattern>/druid/*</url-pattern>-->
     <!--</servlet-mapping>-->
-
+    <!-- session永不过期 -->
+    <session-config>
+        <session-timeout>-1</session-timeout>
+    </session-config>
 </web-app>

@@ -74,6 +74,22 @@ public class MdStoreServiceImpl extends BaseService implements IMdStoreService {
     }
 
     @Override
+    public ServiceResult<List<GetStoreListBean>> getBrandStoreListByBrandNo(String brandNo) {
+        ServiceResult<List<GetStoreListBean>> result = new ServiceResult<>();
+        try {
+            result.setResult(mdStoreModel.getBrandStoreListByBrandNo(brandNo));
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error("[IMdStoreService][getMdStoreById]根据id[]取得门店表时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[IMdStoreService][getMdStoreById]根据id[]取得门店表时出现未知异常：", e);
+        }
+        return result;
+    }
+
+    @Override
     public ServiceResult<List<GetStoreListBean>> getStoreList() {
         ServiceResult<List<GetStoreListBean>> result = new ServiceResult<>();
         try {

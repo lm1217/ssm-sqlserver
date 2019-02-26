@@ -20,6 +20,26 @@ public class SystemUser implements Serializable {
     private Integer userType;
     private String userNo;
     private Date createTime;
+    private Integer logins;
+
+    // 额外属性
+    private String storeNo;
+
+    public String getStoreNo() {
+        return storeNo;
+    }
+
+    public void setStoreNo(String storeNo) {
+        this.storeNo = storeNo;
+    }
+
+    public Integer getLogins() {
+        return logins;
+    }
+
+    public void setLogins(Integer logins) {
+        this.logins = logins;
+    }
 
     public Integer getUserType() {
         return userType;

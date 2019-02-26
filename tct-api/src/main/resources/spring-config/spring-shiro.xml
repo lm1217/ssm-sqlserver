@@ -7,6 +7,11 @@
 
     <description>Shiro安全配置</description>
 
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <!-- 设置超时时间 -->
+        <property name="globalSessionTimeout" value="-10000"/>
+    </bean>
+
     <!-- 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT 等默认JSESSIONID,
         当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失! -->
     <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
@@ -63,6 +68,7 @@
             <value>
                 <!-- 不需要认证 -->
                 /api/system/login.json = anon
+                /api/system/adLogin.json = anon
                 /api/system/verifyCode.json = anon
                 /api/system/logout.json = logout
                 <!--/api/system/** = anon-->

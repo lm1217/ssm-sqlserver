@@ -36,6 +36,33 @@ public class BdStockInv implements Serializable {
  	private java.util.Date updateDate;
  	private Integer stockDepotFreeze;
  	private Integer stockCounterFreeze;
+ 	private String brandNo;
+ 	private String userNo;
+ 	private Integer userType;
+
+	public String getBrandNo() {
+		return brandNo;
+	}
+
+	public void setBrandNo(String brandNo) {
+		this.brandNo = brandNo;
+	}
+
+	public String getUserNo() {
+		return userNo;
+	}
+
+	public void setUserNo(String userNo) {
+		this.userNo = userNo;
+	}
+
+	public Integer getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Integer userType) {
+		this.userType = userType;
+	}
 
 	public Integer getStockDepotFreeze() {
 		return stockDepotFreeze;

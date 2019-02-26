@@ -5,7 +5,6 @@
 			<result property="id" column="id" />
 			<result property="roleName" column="role_name" />
 			<result property="desc" column="desc" />
-			<result property="userId" column="user_id" />
 			<result property="createTime" column="create_time" />
 			<result property="status" column="status" />
 			<result property="roleCode" column="role_code" />
@@ -46,7 +45,6 @@
 			<if test="queryMap.roleName != null and queryMap.roleName !=''"  > and role_name= #{queryMap.roleName}</if>
 			<if test="queryMap.q_roleName != null and queryMap.q_roleName !=''"  > and role_name like CONCAT('%',#{queryMap.q_roleName},'%')</if>
 			<if test="queryMap.desc != null and queryMap.desc !=''"  > and [desc]= #{queryMap.desc}</if>
-			<if test="queryMap.userId != null and queryMap.userId !=''"  > and user_id= #{queryMap.userId}</if>
 			<if test="queryMap.createTime != null and queryMap.createTime !=''"  > and create_time= #{queryMap.createTime}</if>
 			<if test="queryMap.status != null and queryMap.status !=''"  > and status= #{queryMap.status}</if>
 			<if test="queryMap.roleCode != null and queryMap.roleCode !=''"  > and role_code= #{queryMap.roleCode}</if>
@@ -58,7 +56,6 @@
     	<set>
 			<if test="roleName != null">role_name= #{roleName},</if>
 			<if test="desc != null">[desc]= #{desc},</if>
-			<if test="userId != null">user_id= #{userId},</if>
 			<if test="status != null">status= #{status},</if>
 			<if test="roleCode != null">role_code= #{roleCode},</if>
 			create_time= getdate()
@@ -70,19 +67,15 @@
 		insert into 
 		system_role
 		(
-			
 			role_name,
 			[desc],
-			user_id,
 			status,
 			role_code
 		)
 		values
 		(
-			
 			#{roleName},
 			#{desc},
-			#{userId},
 			#{status},
 			#{roleCode}
 		)

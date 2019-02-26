@@ -25,7 +25,7 @@ public class CorsFilter implements Filter {
         res.setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.setHeader("XDomainRequestAllowed","1");
-        chain.doFilter(request, response);
+        chain.doFilter((ServletRequest) res, response);
     }
 
     @Override

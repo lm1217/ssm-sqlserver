@@ -17,6 +17,10 @@ public interface BdStockInvWriteDao {
 
 	List<GetStockInvSkuListBean> getStockInvSkuListByStoreNo(String storeNo) throws Exception;
 
+	List<GetStockInvSkuListBean> getStockInvSkuList(@Param("queryMap") Map<String, Object> queryMap) throws Exception;
+
+    List<GetStockInvSkuListBean> getStockInvExceptionSkuList(@Param("queryMap") Map<String, Object> queryMap) throws Exception;
+
 	List<GetStockInvReportListBean> getStockInvReportList(@Param("queryMap") Map<String, Object> queryMap,
 												  @Param("start") Integer start,
 												  @Param("size") Integer size) throws Exception;

@@ -17,8 +17,19 @@ public interface MdStoreWriteDao {
 	List<GetStoreListBean> getStoreList() throws Exception;
 
 	List<GetStoreListBean> getStoreListByBrandNo(@Param("brandNo") String brandNo) throws Exception;
-	
+
+	List<GetStoreListBean> getBrandStoreListByBrandNo(@Param("brandNo") String brandNo) throws Exception;
+
 	Integer insert(MdStore mdStore) throws Exception;
 	
 	Integer update(MdStore mdStore) throws Exception;
+
+	Integer updateStore(@Param("brandCode") String brandCode,
+						@Param("storeId") String storeId,
+						@Param("region") String region,
+						@Param("city") String city,
+						@Param("channel") String channel,
+						@Param("doorType") String doorType,
+						@Param("asm") String asm,
+						@Param("ac") String ac) throws Exception;
 }

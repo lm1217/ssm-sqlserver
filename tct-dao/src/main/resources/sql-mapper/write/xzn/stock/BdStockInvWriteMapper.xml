@@ -7,6 +7,9 @@
 			<result property="storeName" column="store_name" />
 			<result property="skuCode" column="sku_code" />
 			<result property="skuName" column="sku_name" />
+			<result property="brandNo" column="brand_no" />
+			<result property="userNo" column="user_no" />
+			<result property="userType" column="user_type" />
 			<result property="stockDepot" column="stock_depot" />
 			<result property="stockDepotEnabled" column="stock_depot_enabled" />
 			<result property="stockCounter" column="stock_counter" />
@@ -29,12 +32,14 @@
 	</resultMap>
 
 	<resultMap id="BdStockInvReportResult" type="com.iyeed.core.entity.stock.vo.GetStockInvReportListBean">
-		<result property="id" column="id" />
+		<result property="storeId" column="store_id" />
 		<result property="storeNo" column="store_no" />
 		<result property="storeName" column="store_name" />
+		<result property="storeAttr" column="store_attr" />
 		<result property="brandName" column="brand_name" />
 		<result property="skuCode" column="sku_code" />
 		<result property="skuName" column="sku_name" />
+		<result property="userNo" column="user_no" />
 		<result property="stockDepot" column="stock_depot" />
 		<result property="stockDepotEnabled" column="stock_depot_enabled" />
 		<result property="stockDepotFreeze" column="stock_depot_freeze" />
@@ -42,6 +47,15 @@
 		<result property="stockCounterEnabled" column="stock_counter_enabled" />
 		<result property="stockCounterFreeze" column="stock_counter_freeze" />
 		<result property="total" column="total" />
+		<result property="enabledTotal" column="enabledTotal" />
+		<result property="freezeTotal" column="freezeTotal" />
+		<result property="total" column="total" />
+		<result property="region" column="region" />
+		<result property="city" column="city" />
+		<result property="doorType" column="door_type" />
+		<result property="ac" column="ac" />
+		<result property="asm" column="asm" />
+		<result property="channel" column="channel" />
 	</resultMap>
 	
 	<select id="get" parameterType="Integer" resultMap="BdStockInvResult">
@@ -58,24 +72,59 @@
 		where store_no = #{storeNo}
 	</select>
 
+	<select id="getStockInvSkuList" parameterType="java.util.Map" resultMap="BdStockInvSkuResult">
+		select
+		*
+		from bd_stock_inv
+		<include refid="whereConditions_store_sku" />
+	</select>
+
+	<select id="getStockInvExceptionSkuList" parameterType="java.util.Map" resultMap="BdStockInvSkuResult">
+		select a.id,a.sku_code,a.sku_name,
+		(case when b.stock_depot is null then 0 else b.stock_depot end) stock_depot,
+		(case when b.stock_depot_enabled is null then 0 else b.stock_depot_enabled end) stock_depot_enabled,
+		(case when b.stock_counter is null then 0 else b.stock_counter end) stock_counter,
+		(case when b.stock_counter_enabled is null then 0 else b.stock_counter_enabled end) stock_counter_enabled,
+		(case when b.stock_depot_freeze is null then 0 else b.stock_depot_freeze end) stock_depot_freeze,
+		(case when b.stock_counter_freeze is null then 0 else b.stock_counter_freeze end) stock_counter_freeze from
+		(select * from md_sku where brand_no = #{queryMap.q_brandNo}) a left join
+		(select * from bd_stock_inv
+		where store_no = #{queryMap.q_storeNo}
+		<if test="queryMap.q_userNo != null and queryMap.q_userNo !=''"  >
+			and user_no = #{queryMap.q_userNo}
+		</if>
+		) b on a.sku_code = b.sku_code order by b.stock_depot desc
+	</select>
+
 	<select id="getStockInvReportList" parameterType="java.util.Map" resultMap="BdStockInvReportResult">
 		SELECT
+		bsi.id,
+		ms.store_id,
 		bsi.store_no,
 		bsi.store_name,
+		case when CHARINDEX('MR',bsi.user_no) > 1 then '美容坊' when CHARINDEX('AR',bsi.user_no) > 1 then 'Aerin' else '正常店铺' end store_attr,
+		ms.brand_name,
 		bsi.sku_code,
 		bsi.sku_name,
-		ms.brand_name,
+		bsi.user_no,
 		bsi.stock_depot,
 		bsi.stock_depot_enabled,
+		bsi.stock_depot_freeze,
 		bsi.stock_counter,
 		bsi.stock_counter_enabled,
-		bsi.stock_depot_freeze,
 		bsi.stock_counter_freeze,
-		bsi.id,
-		(bsi.stock_depot + bsi.stock_counter) total
+		(bsi.stock_depot + bsi.stock_counter) total,
+		(bsi.stock_depot_enabled + bsi.stock_counter_enabled) enabledTotal,
+		(bsi.stock_depot_freeze + bsi.stock_counter_freeze) freezeTotal,
+		ms.region,
+		ms.city,
+		ms.door_type,
+		ms.ac,
+		ms.asm,
+		ms.channel
 		FROM
-		dbo.bd_stock_inv AS bsi ,
-		dbo.md_store AS ms
+		bd_stock_inv AS bsi ,
+		md_store AS ms
 		<include refid="whereConditions" />
 		ORDER BY
 		bsi.update_date DESC
@@ -86,29 +135,40 @@
 		select
 		count(1)
 		FROM
-		dbo.bd_stock_inv AS bsi ,
-		dbo.md_store AS ms
+		bd_stock_inv AS bsi ,
+		md_store AS ms
 		<include refid="whereConditions" />
 	</select>
 
 	<select id="exportStockInvReportExcel" parameterType="java.util.Map" resultMap="BdStockInvReportResult">
 		SELECT
 		bsi.id,
+		ms.store_id,
 		bsi.store_no,
 		bsi.store_name,
+		case when CHARINDEX('MR',bsi.user_no) > 1 then '美容坊' when CHARINDEX('AR',bsi.user_no) > 1 then 'Aerin' else '正常店铺' end store_attr,
 		ms.brand_name,
 		bsi.sku_code,
 		bsi.sku_name,
+		bsi.user_no,
 		bsi.stock_depot,
 		bsi.stock_depot_enabled,
 		bsi.stock_depot_freeze,
 		bsi.stock_counter,
 		bsi.stock_counter_enabled,
 		bsi.stock_counter_freeze,
-		(bsi.stock_depot + bsi.stock_counter) total
+		(bsi.stock_depot + bsi.stock_counter) total,
+		(bsi.stock_depot_enabled + bsi.stock_counter_enabled) enabledTotal,
+		(bsi.stock_depot_freeze + bsi.stock_counter_freeze) freezeTotal,
+		ms.region,
+		ms.city,
+		ms.door_type,
+		ms.ac,
+		ms.asm,
+		ms.channel
 		FROM
-		dbo.bd_stock_inv AS bsi ,
-		dbo.md_store AS ms
+		bd_stock_inv AS bsi ,
+		md_store AS ms
 		<include refid="whereConditions" />
 		ORDER BY
 		bsi.update_date DESC
@@ -118,7 +178,10 @@
 	<sql id="whereConditions">
 		<where>
 			bsi.store_no = ms.store_no
-			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''"  > and bsi.store_no = #{queryMap.storeNo}</if>
+			<if test="queryMap.q_brandNo != null and queryMap.q_brandNo !=''">
+				and ms.brand_code = (select brand_code from md_brand where brand_no = #{queryMap.q_brandNo})
+			</if>
+			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''"  > and bsi.store_no = #{queryMap.q_storeNo}</if>
 			<if test="queryMap.q_skuCode != null and queryMap.q_skuCode !=''"  > and upper(bsi.sku_code) like CONCAT('%',#{queryMap.q_skuCode},'%')</if>
 			<if test="queryMap.q_skuName != null and queryMap.q_skuName !=''"  > and bsi.sku_name like CONCAT('%',#{queryMap.q_skuName},'%')</if>
 			<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
@@ -126,6 +189,18 @@
 				<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
 					#{storeNo}
 				</foreach>
+			</if>
+			<if test="queryMap.q_userNo != null and queryMap.q_userNo !=''"  >
+				and bsi.user_no = #{queryMap.q_userNo}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="whereConditions_store_sku">
+		<where>
+			store_no = #{queryMap.q_storeNo}
+			<if test="queryMap.q_userNo != null and queryMap.q_userNo !=''"  >
+				and user_no = #{queryMap.q_userNo}
 			</if>
 		</where>
 	</sql>
@@ -180,6 +255,9 @@
 			store_name,
 			sku_code,
 			sku_name,
+			brand_no,
+			user_no,
+			user_type,
 			stock_depot,
 			stock_depot_enabled,
 			stock_counter,
@@ -194,6 +272,9 @@
 			#{storeName},
 			#{skuCode},
 			#{skuName},
+			#{brandNo},
+			#{userNo},
+			#{userType},
 			#{stockDepot},
 			#{stockDepotEnabled},
 			#{stockCounter},
@@ -213,6 +294,8 @@
 		WHERE
 		store_no = #{storeNo}
 		AND sku_code = #{skuCode}
+		AND brand_no = #{brandNo}
+		AND user_no = #{userNo}
 		)
 		BEGIN
 		UPDATE bd_stock_inv
@@ -227,6 +310,8 @@
 		WHERE
 		store_no = #{storeNo}
 		AND sku_code = #{skuCode}
+		AND brand_no = #{brandNo}
+		AND user_no = #{userNo}
 		END
 		ELSE
 		BEGIN
@@ -237,6 +322,9 @@
 			store_name,
 			sku_code,
 			sku_name,
+			brand_no,
+			user_no,
+			user_type,
 			stock_depot,
 			stock_depot_enabled,
 			stock_counter,
@@ -250,6 +338,9 @@
 			#{storeName},
 			#{skuCode},
 			#{skuName},
+			#{brandNo},
+			#{userNo},
+			#{userType},
 			ABS(#{stockDepot}),
 			ABS(#{stockDepotEnabled}),
 			ABS(#{stockCounter}),

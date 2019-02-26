@@ -5,6 +5,7 @@
 			<result property="id" column="id" />
 			<result property="erpNo" column="erp_no" />
 			<result property="orderNo" column="order_no" />
+			<result property="brandNo" column="brand_no" />
 			<result property="expressCode" column="express_code" />
 			<result property="sendType" column="send_type" />
 			<result property="sendStoreNo" column="send_store_no" />
@@ -18,44 +19,294 @@
 			<result property="expectReceiveDate" column="expect_receive_date" />
 			<result property="receiveDate" column="receive_date" />
 			<result property="inputDate" column="input_date" />
+			<result property="receiveUserNo" column="receive_user_no" />
+			<result property="pkgNo" column="pkg_no" />
+			<result property="receiveType" column="receive_type" />
+	</resultMap>
+
+	<resultMap id="ReceiveTesterResult" type="com.iyeed.core.entity.receive.vo.ReceiveTesterBean">
+		<result property="brandName" column="brand_name" />
+		<result property="storeId" column="store_id" />
+		<result property="storeNo" column="receive_store_no" />
+		<result property="storeName" column="store_name" />
+		<result property="storeAttr" column="store_attr" />
+		<result property="skuCode" column="sku_code" />
+		<result property="skuName" column="sku_name" />
+		<result property="rcTotal" column="rcTotal" />
+		<result property="vmTotal" column="vmTotal" />
+		<result property="newTotal" column="newTotal" />
+		<result property="hdTotal" column="hdTotal" />
+		<result property="mrTotal" column="mrTotal" />
+		<result property="arTotal" column="arTotal" />
+		<result property="total" column="total" />
+		<result property="region" column="region" />
+		<result property="city" column="city" />
+		<result property="channel" column="channel" />
+		<result property="doorType" column="door_type" />
+		<result property="asm" column="asm" />
+		<result property="ac" column="ac" />
+	</resultMap>
+
+	<resultMap id="WaitReceiveTesterResult" type="com.iyeed.core.entity.receive.vo.WaitReceiveTesterBean">
+		<result property="pkgNo" column="pkg_no" />
+		<result property="brandName" column="brand_name" />
+		<result property="sendType" column="send_type" />
+		<result property="sendStoreNo" column="send_store_no" />
+		<result property="sendStoreName" column="send_store_name" />
+		<result property="receiveStoreId" column="store_id" />
+		<result property="receiveStoreNo" column="receive_store_no" />
+		<result property="receiveStoreName" column="store_name" />
+		<result property="storeAttr" column="store_attr" />
+		<result property="sendTotal" column="send_total" />
+		<result property="sendDate" column="send_date" />
 	</resultMap>
 	
 	<select id="get" parameterType="Integer" resultMap="BdReceivingResult">
 		SELECT br.*, a.send_store_name, b.receive_store_name
 		FROM bd_receiving br,
-		( SELECT br.erp_no erp_no, CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.send_store_no = ms.store_no ) a,
-		( SELECT br.erp_no erp_no, ms.store_name  receive_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.receive_store_no = ms.store_no ) b
+		(
+			SELECT br.erp_no erp_no,
+			CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name
+			FROM bd_receiving br
+			LEFT JOIN md_store ms
+			ON br.send_store_no = ms.store_no
+		) a,
+		(
+			SELECT br.erp_no erp_no,
+			case when CHARINDEX('MR',br.receive_store_no) > 1 then concat(ms.store_name,'-美容坊') when CHARINDEX('AR',br.receive_store_no) > 1 then concat(ms.store_name,'-Aerin') else ms.store_name end receive_store_name
+			FROM bd_receiving br
+			LEFT JOIN md_store ms
+			ON left(br.receive_store_no, 5) = ms.store_no
+		) b
 		WHERE br.erp_no = a.erp_no AND a.erp_no = b.erp_no AND br.id = #{id}
 	</select>
 
 	<select id="getBdReceivingList" parameterType="java.util.Map" resultMap="BdReceivingResult">
-		SELECT br.*, a.send_store_name, b.receive_store_name
-		FROM bd_receiving br,
-		( SELECT br.erp_no erp_no, CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.send_store_no = ms.store_no ) a,
-		( SELECT br.erp_no erp_no, ms.store_name  receive_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.receive_store_no = ms.store_no ) b
-		<include refid="getCondition"/>
+		select *
+		from
+		(
+			SELECT br.*, a.send_store_name, b.receive_store_name
+			FROM bd_receiving br, md_store ms,
+			(
+				SELECT br.erp_no erp_no,
+				CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name
+				FROM bd_receiving br
+				LEFT JOIN md_store ms
+				ON br.send_store_no = ms.store_no
+			) a,
+			(
+				SELECT br.erp_no erp_no,
+				case when CHARINDEX('MR',br.receive_store_no) > 1 then concat(ms.store_name,'-美容坊') when CHARINDEX('AR',br.receive_store_no) > 1 then concat(ms.store_name,'-Aerin') else ms.store_name end receive_store_name
+				FROM bd_receiving br
+				LEFT JOIN md_store ms
+				ON left(br.receive_store_no, 5) = ms.store_no
+			) b
+			<include refid="getCondition"/>
+			union
+			SELECT br.*, a.send_store_name, b.receive_store_name
+			FROM bd_receiving br, md_store ms,
+			(
+			SELECT br.erp_no erp_no,
+			CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name
+			FROM bd_receiving br
+			LEFT JOIN md_store ms
+			ON br.send_store_no = ms.store_no
+			) a,
+			(
+			SELECT br.erp_no erp_no,
+			case when CHARINDEX('MR',br.receive_store_no) > 1 then concat(ms.store_name,'-美容坊') when CHARINDEX('AR',br.receive_store_no) > 1 then concat(ms.store_name,'-Aerin') else ms.store_name end receive_store_name
+			FROM bd_receiving br
+			LEFT JOIN md_store ms
+			ON left(br.receive_store_no, 5) = ms.store_no
+			) b
+			<include refid="getCondition1"/>
+		) temp
 		<if test="queryMap.q_status != null and queryMap.q_status !='' and queryMap.q_status == 1">
-			order by br.input_date desc
+			order by temp.input_date desc
 		</if>
 		<if test="queryMap.q_status != null and queryMap.q_status !='' and queryMap.q_status == 2">
-			order by br.receive_date desc
+			order by temp.receive_date desc
 		</if>
 		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
 	</select>
 
 	<select id="getBdReceivingListCount" parameterType="java.util.Map" resultType="Integer">
-		SELECT count(*)
-		FROM bd_receiving br,
-		( SELECT br.erp_no erp_no, CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.send_store_no = ms.store_no ) a,
-		( SELECT br.erp_no erp_no, ms.store_name  receive_store_name FROM bd_receiving br LEFT JOIN md_store ms ON br.receive_store_no = ms.store_no ) b
-		<include refid="getCondition"/>
+		SELECT count(1)
+		from
+		(
+			SELECT br.*, a.send_store_name, b.receive_store_name
+			FROM bd_receiving br, md_store ms,
+			(
+				SELECT br.erp_no erp_no,
+				CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name
+				FROM bd_receiving br
+				LEFT JOIN md_store ms
+				ON br.send_store_no = ms.store_no
+			) a,
+			(
+				SELECT br.erp_no erp_no,
+				case when CHARINDEX('MR',br.receive_store_no) > 1 then concat(ms.store_name,'-美容坊') when CHARINDEX('AR',br.receive_store_no) > 1 then concat(ms.store_name,'-Aerin') else ms.store_name end receive_store_name
+				FROM bd_receiving br
+				LEFT JOIN md_store ms
+				ON left(br.receive_store_no, 5) = ms.store_no
+			) b
+			<include refid="getCondition"/>
+			union
+			SELECT br.*, a.send_store_name, b.receive_store_name
+			FROM bd_receiving br, md_store ms,
+			(
+				SELECT br.erp_no erp_no,
+				CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name
+				FROM bd_receiving br
+				LEFT JOIN md_store ms
+				ON br.send_store_no = ms.store_no
+			) a,
+			(
+				SELECT br.erp_no erp_no,
+				case when CHARINDEX('MR',br.receive_store_no) > 1 then concat(ms.store_name,'-美容坊') when CHARINDEX('AR',br.receive_store_no) > 1 then concat(ms.store_name,'-Aerin') else ms.store_name end receive_store_name
+				FROM bd_receiving br
+				LEFT JOIN md_store ms
+				ON left(br.receive_store_no, 5) = ms.store_no
+			) b
+			<include refid="getCondition1"/>
+		) temp
 	</select>
+
+	<select id="getReceiveTesterList" parameterType="java.util.Map" resultMap="ReceiveTesterResult">
+		select ms.brand_name,ms.store_id,case when CHARINDEX('MR',a.receive_user_no) > 1 then '美容坊' when CHARINDEX('AR',a.receive_user_no) > 1 then 'Aerin' else '正常店铺' end store_attr,
+		a.*,(a.rcTotal + a.vmTotal + a.newTotal + a.hdTotal + a.mrTotal + a.arTotal) total,ms.store_name,ms.region,ms.city,ms.channel,ms.door_type,ms.asm,ms.ac
+		from md_store ms,
+		(select br.receive_store_no,brs.sku_code,brs.sku_name,br.receive_user_no,
+		sum(case when (br.receive_type = 'VM' and br.receive_store_no = br.receive_user_no) then brs.act_send_total else 0 end) vmTotal,
+		sum(case when (br.receive_store_no = br.receive_user_no and (br.receive_type = br.receive_store_no  or br.receive_type is null)) then brs.act_send_total else 0 end) rcTotal,
+		sum(case when (br.receive_type = 'NEW' and br.receive_store_no = br.receive_user_no) then brs.act_send_total else 0 end) newTotal,
+		sum(case when (br.receive_type = 'RNWS' and br.receive_store_no = br.receive_user_no) then brs.act_send_total else 0 end) hdTotal,
+		sum(case when (br.receive_user_no = CONCAT(br.receive_store_no, 'MR') and br.receive_store_no != br.receive_user_no) then brs.act_send_total else 0 end) mrTotal,
+		sum(case when (br.receive_user_no = CONCAT(br.receive_store_no, 'AR') and br.receive_store_no != br.receive_user_no) then brs.act_send_total else 0 end) arTotal
+		from bd_receiving br, bd_receiving_sku brs
+		where br.status = 2 and br.erp_no = brs.erp_no
+		<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
+			and br.receive_store_no = #{queryMap.q_storeNo}
+		</if>
+		<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
+			and br.receive_store_no in
+			<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
+				#{storeNo}
+			</foreach>
+		</if>
+		<if test="queryMap.q_starttime != null and queryMap.q_starttime != '' and queryMap.q_status == 2">
+			and br.receive_date &gt;= #{queryMap.q_starttime}
+		</if>
+		<if test="queryMap.q_endtime != null and queryMap.q_endtime != '' and queryMap.q_status == 2">
+			and br.receive_date &lt;= #{queryMap.q_endtime}
+		</if>
+		group by br.receive_store_no,brs.sku_code,brs.sku_name,br.receive_user_no) a
+		where ms.store_no = a.receive_store_no
+		<if test="queryMap.q_brandNo != null and queryMap.q_brandNo !=''">
+			and ms.brand_no = #{queryMap.q_brandNo}
+		</if>
+		order by ms.store_no
+		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
+	</select>
+
+	<select id="getReceiveTesterListCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT count(*)
+		from md_store ms,
+		(select br.receive_store_no,brs.sku_code,brs.sku_name,br.receive_user_no,
+		sum(case when (br.receive_type = 'VM' and br.receive_store_no = br.receive_user_no) then brs.act_send_total else 0 end) vmTotal,
+		sum(case when (br.receive_store_no = br.receive_user_no and (br.receive_type = br.receive_store_no  or br.receive_type is null)) then brs.act_send_total else 0 end) rcTotal,
+		sum(case when (br.receive_type = 'NEW' and br.receive_store_no = br.receive_user_no) then brs.act_send_total else 0 end) newTotal,
+		sum(case when (br.receive_type = 'RNWS' and br.receive_store_no = br.receive_user_no) then brs.act_send_total else 0 end) hdTotal,
+		sum(case when (br.receive_user_no = CONCAT(br.receive_store_no, 'MR') and br.receive_store_no != br.receive_user_no) then brs.act_send_total else 0 end) mrTotal,
+		sum(case when (br.receive_user_no = CONCAT(br.receive_store_no, 'AR') and br.receive_store_no != br.receive_user_no) then brs.act_send_total else 0 end) arTotal
+		from bd_receiving br, bd_receiving_sku brs
+		where br.status = 2 and br.erp_no = brs.erp_no
+		<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
+			and br.receive_store_no = #{queryMap.q_storeNo}
+		</if>
+		<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
+			and br.receive_store_no in
+			<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
+				#{storeNo}
+			</foreach>
+		</if>
+		<if test="queryMap.q_starttime != null and queryMap.q_starttime != '' and queryMap.q_status == 2">
+			and br.receive_date &gt;= #{queryMap.q_starttime}
+		</if>
+		<if test="queryMap.q_endtime != null and queryMap.q_endtime != '' and queryMap.q_status == 2">
+			and br.receive_date &lt;= #{queryMap.q_endtime}
+		</if>
+		group by br.receive_store_no,brs.sku_code,brs.sku_name,br.receive_user_no) a
+		where ms.store_no = a.receive_store_no
+		<if test="queryMap.q_brandNo != null and queryMap.q_brandNo !=''">
+			and ms.brand_no = #{queryMap.q_brandNo}
+		</if>
+	</select>
+
+	<select id="getWaitReceiveTesterReport" parameterType="java.util.Map" resultMap="WaitReceiveTesterResult">
+		select br.pkg_no,br.send_store_no,br.receive_store_no,br.send_total,br.send_date,
+		case when br.send_type = 1 then '门店调拨' else '仓库发货' end send_type,
+		case when CHARINDEX('MR',br.receive_store_no) > 1 then '美容坊' when CHARINDEX('AR',br.receive_store_no) > 1 then 'Aerin' else '正常店铺' end store_attr,
+		br.send_store_name,ms.store_id,ms.store_name,ms.brand_name
+		from md_store ms,
+		(
+			select br.*,a.send_store_name
+			from bd_receiving br,
+			(
+				SELECT br.erp_no erp_no,
+				CASE br.send_store_no WHEN 'DC' THEN '仓库DC' ELSE ms.store_name END send_store_name
+				FROM bd_receiving br
+				LEFT JOIN md_store ms
+				ON br.send_store_no = ms.store_no
+			) a
+			where br.erp_no = a.erp_no
+		) br
+		where br.status = 1 and left(br.receive_store_no,5) = ms.store_no
+		<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
+			and br.receive_store_no = #{queryMap.q_storeNo}
+		</if>
+		<if test="queryMap.q_brandNo != null and queryMap.q_brandNo !=''">
+			and ms.brand_code = (select brand_code from md_brand where brand_no = #{queryMap.q_brandNo})
+		</if>
+		<if test="queryMap.q_erpNo != null and queryMap.q_erpNo !=''">
+			and br.erp_no = #{queryMap.q_erpNo}
+		</if>
+		<if test="queryMap.q_orderNo != null and queryMap.q_orderNo !=''">
+			and br.order_no = #{queryMap.q_orderNo}
+		</if>
+		<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
+			and left(br.receive_store_no,5) in
+			<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
+				#{storeNo}
+			</foreach>
+		</if>
+		<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+			and br.send_date &gt;= #{queryMap.q_starttime}
+		</if>
+		<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+			and br.send_date &lt;= #{queryMap.q_endtime}
+		</if>
+		order by br.receive_store_no
+	</select>
+
+	<update id="updateByPkgNo" parameterType="String">
+		update bd_receiving
+		set status = 3, receive_user_no = #{userNo}, receive_date = getdate()
+		where pkg_no = #{pkgNo} and status = 1
+	</update>
+
+	<update id="updateTypeByPkgNo" parameterType="String">
+		update bd_receiving
+		set receive_type = #{receiveType}
+		where pkg_no = #{pkgNo}
+	</update>
 	
 	<update id="update" parameterType="com.iyeed.core.entity.receive.BdReceiving">
         update bd_receiving
     	<set>
 			<if test="erpNo != null">erp_no= #{erpNo},</if>
 			<if test="orderNo != null">order_no= #{orderNo},</if>
+			<if test="brandNo != null">brand_no= #{brandNo},</if>
 			<if test="expressCode != null">express_code= #{expressCode},</if>
 			<if test="sendType != null">send_type= #{sendType},</if>
 			<if test="sendStoreNo != null">send_store_no= #{sendStoreNo},</if>
@@ -63,6 +314,7 @@
 			<if test="sendTotal != null">send_total= #{sendTotal},</if>
 			<if test="actSendTotal != null">act_send_total= #{actSendTotal},</if>
 			<if test="status != null">status= #{status},</if>
+			<if test="receiveUserNo != null">receive_user_no= #{receiveUserNo},</if>
 			<if test="sendDate != null">send_date= #{sendDate},</if>
 			<if test="expectReceiveDate != null">expect_receive_date= #{expectReceiveDate},</if>
 			<if test="receiveDate != null">receive_date= #{receiveDate},</if>
@@ -75,9 +327,10 @@
 		insert into 
 		bd_receiving
 		(
-			
+			pkg_no,
 			erp_no,
 			order_no,
+			brand_no,
 			express_code,
 			send_type,
 			send_store_no,
@@ -91,9 +344,10 @@
 		)
 		values
 		(
-			
+			#{pkgNo},
 			#{erpNo},
 			#{orderNo},
+			#{brandNo},
 			#{expressCode},
 			#{sendType},
 			#{sendStoreNo},
@@ -109,18 +363,75 @@
 
 	<sql id="getCondition">
 		<where>
-				br.erp_no = a.erp_no AND a.erp_no = b.erp_no
+				left(br.receive_store_no, 5) = ms.store_no AND br.erp_no = a.erp_no AND a.erp_no = b.erp_no and br.send_type = 2
+			<if test="queryMap.q_brandNo != null and queryMap.q_brandNo !=''">
+				and ms.brand_code = (select brand_code from md_brand where brand_no = #{queryMap.q_brandNo})
+			</if>
 			<if test="queryMap.q_erpNo != null and queryMap.q_erpNo !=''">
 				and br.erp_no = #{queryMap.q_erpNo}
+			</if>
+			<if test="queryMap.q_pkgNo != null and queryMap.q_pkgNo !=''">
+				and br.pkg_no = #{queryMap.q_pkgNo}
 			</if>
 			<if test="queryMap.q_orderNo != null and queryMap.q_orderNo !=''">
 				and br.order_no = #{queryMap.q_orderNo}
 			</if>
 			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
-				and br.receive_store_no = #{queryMap.q_storeNo}
+				and (br.receive_store_no = #{queryMap.q_storeNo} or br.receive_store_no = #{queryMap.q_storeNoTS})
+			</if>
+			<if test="queryMap.q_userNo != null and queryMap.q_userNo !=''">
+				and br.receive_user_no = #{queryMap.q_userNo}
 			</if>
 			<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
-				and br.receive_store_no in
+				and left(br.receive_store_no, 5) in
+				<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
+					#{storeNo}
+				</foreach>
+			</if>
+			<if test="queryMap.q_status != null and queryMap.q_status !=''">
+				and br.status = #{queryMap.q_status}
+			</if>
+			<if test="queryMap.q_starttime != null and queryMap.q_starttime != '' and queryMap.q_status == 1">
+				and br.send_date &gt;= #{queryMap.q_starttime}
+			</if>
+			<if test="queryMap.q_endtime != null and queryMap.q_endtime != '' and queryMap.q_status == 1">
+				and br.send_date &lt;= #{queryMap.q_endtime}
+			</if>
+			<if test="queryMap.q_starttime != null and queryMap.q_starttime != '' and queryMap.q_status == 2">
+				and br.receive_date &gt;= #{queryMap.q_starttime}
+			</if>
+			<if test="queryMap.q_endtime != null and queryMap.q_endtime != '' and queryMap.q_status == 2">
+				and br.receive_date &lt;= #{queryMap.q_endtime}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="getCondition1">
+		<where>
+			left(br.receive_store_no, 5) = ms.store_no AND br.erp_no = a.erp_no AND a.erp_no = b.erp_no and br.send_type = 1
+			<if test="queryMap.q_brandNo != null and queryMap.q_brandNo !=''">
+				and ms.brand_code = (select brand_code from md_brand where brand_no = #{queryMap.q_brandNo})
+			</if>
+			<if test="queryMap.q_erpNo != null and queryMap.q_erpNo !=''">
+				and br.erp_no = #{queryMap.q_erpNo}
+			</if>
+			<if test="queryMap.q_pkgNo != null and queryMap.q_pkgNo !=''">
+				and br.pkg_no = #{queryMap.q_pkgNo}
+			</if>
+			<if test="queryMap.q_orderNo != null and queryMap.q_orderNo !=''">
+				and br.order_no = #{queryMap.q_orderNo}
+			</if>
+			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !='' and queryMap.q_storeNoTS != null and queryMap.q_storeNoTS !=''">
+				and br.receive_store_no = #{queryMap.q_storeNoTS}
+			</if>
+			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !='' and queryMap.q_storeNoTS == null">
+				and br.receive_store_no = #{queryMap.q_storeNo}
+			</if>
+			<if test="queryMap.q_userNo != null and queryMap.q_userNo !=''">
+				and br.receive_user_no = #{queryMap.q_userNo}
+			</if>
+			<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
+				and left(br.receive_store_no, 5) in
 				<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
 					#{storeNo}
 				</foreach>

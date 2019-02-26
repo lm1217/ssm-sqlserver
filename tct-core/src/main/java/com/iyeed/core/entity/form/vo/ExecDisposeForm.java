@@ -13,10 +13,37 @@ import java.util.List;
  */
 public class ExecDisposeForm implements Serializable {
     private Integer id;
+    private String idStr;
     private String userNo;
     private Integer type;
     private String remark;
     private List<BdFormImage> formImageList;
+    private Integer userType;
+    private Integer isBrandAdmin;
+
+    public String getIdStr() {
+        return idStr;
+    }
+
+    public void setIdStr(String idStr) {
+        this.idStr = idStr;
+    }
+
+    public Integer getIsBrandAdmin() {
+        return isBrandAdmin;
+    }
+
+    public void setIsBrandAdmin(Integer isBrandAdmin) {
+        this.isBrandAdmin = isBrandAdmin;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
 
     public List<BdFormImage> getFormImageList() {
         return formImageList;

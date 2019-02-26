@@ -10,17 +10,17 @@ import java.util.Map;
 @Repository
 public interface SystemRoleWriteDao {
 
-    SystemRole get(Integer id);
+    SystemRole get(Integer id) throws Exception;
 
-    Integer save(SystemRole systemRole);
+    Integer save(SystemRole systemRole) throws Exception;
 
-    Integer update(SystemRole systemRole);
+    Integer update(SystemRole systemRole) throws Exception;
 
-    Integer getCount(@Param("queryMap") Map<String, String> queryMap);
+    Integer getCount(@Param("queryMap") Map<String, String> queryMap) throws Exception;
 
     List<SystemRole> page(@Param("queryMap") Map<String, String> queryMap,
-                           @Param("start") Integer start, @Param("size") Integer size);
+                           @Param("start") Integer start, @Param("size") Integer size) throws Exception;
 
-    Integer del(Integer id);
+    Integer del(Integer id) throws Exception;
 
 }

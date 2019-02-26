@@ -18,6 +18,24 @@ public class GetReceivingListForm implements Serializable {
     private String erpNo;
     private String orderNo;
     private String storeNo;
+    private String brandNo;
+    private String receiveUserNo;
+
+    public String getBrandNo() {
+        return brandNo;
+    }
+
+    public void setBrandNo(String brandNo) {
+        this.brandNo = brandNo;
+    }
+
+    public String getReceiveUserNo() {
+        return receiveUserNo;
+    }
+
+    public void setReceiveUserNo(String receiveUserNo) {
+        this.receiveUserNo = receiveUserNo;
+    }
 
     public Integer getPageIndex() {
         return pageIndex;

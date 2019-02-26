@@ -1,11 +1,7 @@
 package com.iyeed.core;
 
-import io.netty.channel.ChannelHandlerContext;
-
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ConstantsEJS {
 
@@ -83,19 +79,6 @@ public class ConstantsEJS {
     public static final String ALIDAYU_SMS_SIGNNAME = "易时租";
     public static final String ALIDAYU_SMS_EXPIRE_MINUTE = "5";
 
-    //  *********************** netty socket ************************** //
-    /**
-     * key:用户id  value:ChannelHandlerContext  用于聊天
-     */
-    public static final Map<Long, ChannelHandlerContext> CTXMAP = new ConcurrentHashMap<>(256);
-
-    public static final int WEBSOCKET_PORT = 8091;
-
-    /**
-     * 用于咨询列表  未读数
-     */
-    public static final Map<Long, ChannelHandlerContext> CTXMAP_CONSULT = new ConcurrentHashMap<>(256);
-
     /**
      * 图片验证码 session key
      */
@@ -111,10 +94,29 @@ public class ConstantsEJS {
     /**
      * 邮箱发送配置
      */
-    public static final String MAIL_HOST = "smtp.qq.com";
-    public static final String MAIL_PORT = "465";
-    public static final String MAIL_USERNAME = "237509918@qq.com";
-    public static final String MAIL_PASSWORD = "xuzoidklgdxxbjgh";
+//    public static final String MAIL_HOST = "smtp.qq.com";
+//    public static final String MAIL_PORT = "465";
+//    public static final String MAIL_USERNAME = "237509918@qq.com";
+//    public static final String MAIL_PASSWORD = "xuzoidklgdxxbjgh";
+//    public static final String MAIL_SENDER_MAIL = "237509918@qq.com";
+
+    public static final String MAIL_HOST = "mailrelay.eu.elcompanies.net";
+    public static final String MAIL_PORT = "25";
+    public static final String MAIL_USERNAME = "sa-cn-sha-elcnotifi";
+    public static final String MAIL_PASSWORD = "HlD4lQLsadRlxu3E";
+    public static final String MAIL_SENDER_MAIL = "elcnotification@estee.com";
+    // Exchange 方式发送邮件
+    public static final String MAIL_DOMAIN = "mailrelay.eu.elcompanies.net";
+
+//    public static final String MAIL_HOST = "smtp.ym.163.com";
+//    public static final String MAIL_PORT = "25";
+//    public static final String MAIL_USERNAME = "guanghua.deng@iyeed.com";
+//    public static final String MAIL_PASSWORD = "ziqi1217";
+//    public static final String MAIL_SENDER_MAIL = "guanghua.deng@iyeed.com";
+
+//    public static final String WEB_HOST = "http://demo.iyeed.com.cn:8260/tct/";
+
+    public static final String WEB_HOST = "http://10.86.10.170/tct/";
 
     /**
      * FTP链接配置

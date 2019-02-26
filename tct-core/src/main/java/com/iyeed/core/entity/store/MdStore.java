@@ -29,18 +29,9 @@ public class MdStore implements Serializable {
  	private String brandNo;
  	private String brandCode;
  	private String brandName;
- 	private String brandLogo;
  	private String userNo;
  	private String userName;
  	private java.util.Date inputDate;
-
-    public String getBrandLogo() {
-        return brandLogo;
-    }
-
-    public void setBrandLogo(String brandLogo) {
-        this.brandLogo = brandLogo;
-    }
 
     public String getStoreId() {
 		return storeId;

@@ -15,6 +15,24 @@ public class FormReportForm implements Serializable {
     private String skuName;
     private Integer disposeStatus;
     private Integer changeType;
+    private String erpNo;
+    private String orderNo;
+
+    public String getErpNo() {
+        return erpNo;
+    }
+
+    public void setErpNo(String erpNo) {
+        this.erpNo = erpNo;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
 
     public String getSkuName() {
         return skuName;

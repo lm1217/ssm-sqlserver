@@ -1,6 +1,8 @@
 package com.iyeed.service;
 
+import com.iyeed.model.excel.ExcelModel;
 import com.iyeed.model.express.MdExpressModel;
+import com.iyeed.model.file.FileModel;
 import com.iyeed.model.form.BdFormDisposeModel;
 import com.iyeed.model.form.BdFormImageModel;
 import com.iyeed.model.form.BdFormModel;
@@ -8,6 +10,7 @@ import com.iyeed.model.form.BdFormSkuModel;
 import com.iyeed.model.receive.BdReceivingModel;
 import com.iyeed.model.receive.BdReceivingSkuModel;
 import com.iyeed.model.sku.MdSkuModel;
+import com.iyeed.model.stock.BdStockInvDataModel;
 import com.iyeed.model.stock.BdStockInvLogModel;
 import com.iyeed.model.stock.BdStockInvModel;
 import com.iyeed.model.store.MdBrandModel;
@@ -59,4 +62,12 @@ public class BaseService {
     protected SystemRoleModel systemRoleModel;
     @Resource
     protected SystemUserModel systemUserModel;
+    @Resource
+    protected SystemUserStoreModel systemUserStoreModel;
+    @Resource
+    protected FileModel fileModel;
+    @Resource
+    protected ExcelModel excelModel;
+    @Resource
+    protected BdStockInvDataModel bdStockInvDataModel;
 }

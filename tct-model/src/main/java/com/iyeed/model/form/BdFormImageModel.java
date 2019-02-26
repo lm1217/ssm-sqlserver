@@ -32,6 +32,10 @@ public class BdFormImageModel extends BaseModel {
      	this.dbConstrains(bdFormImage);
      	return bdFormImageWriteDao.insert(bdFormImage);
     }
+
+    public Integer saveBdFormImageList(List<BdFormImage> list) throws Exception {
+        return bdFormImageWriteDao.insertList(list);
+    }
      
     /**
      * 更新表单-图片子表

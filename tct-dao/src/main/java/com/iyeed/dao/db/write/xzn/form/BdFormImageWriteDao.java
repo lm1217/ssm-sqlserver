@@ -15,6 +15,8 @@ public interface BdFormImageWriteDao {
 									   @Param("type") Integer type) throws Exception;
 	
 	Integer insert(BdFormImage bdFormImage) throws Exception;
+
+	Integer insertList(List<BdFormImage> list) throws Exception;
 	
 	Integer update(BdFormImage bdFormImage) throws Exception;
 

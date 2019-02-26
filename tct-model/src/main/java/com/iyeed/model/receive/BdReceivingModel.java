@@ -3,9 +3,12 @@ package com.iyeed.model.receive;
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.receive.BdReceiving;
 import com.iyeed.core.entity.receive.BdReceivingSku;
+import com.iyeed.core.entity.receive.vo.ReceiveTesterBean;
 import com.iyeed.core.entity.receive.vo.UpdateReceiveForm;
+import com.iyeed.core.entity.receive.vo.WaitReceiveTesterBean;
 import com.iyeed.core.entity.stock.BdStockInv;
 import com.iyeed.core.entity.store.MdStore;
+import com.iyeed.core.exception.BusinessException;
 import com.iyeed.model.BaseModel;
 import com.iyeed.model.form.BdFormModel;
 import org.springframework.stereotype.Component;
@@ -47,6 +50,19 @@ public class BdReceivingModel extends BaseModel {
     public Integer getBdReceivingListCount(Map<String, Object> queryMap) throws Exception{
         return bdReceivingWriteDao.getBdReceivingListCount(queryMap);
     }
+
+    public List<ReceiveTesterBean> getReceiveTesterList(Map<String, Object> queryMap,
+                                                        Integer start, Integer size) throws Exception {
+        return bdReceivingWriteDao.getReceiveTesterList(queryMap, start, size);
+    }
+
+    public Integer getReceiveTesterListCount(Map<String, Object> queryMap) throws Exception{
+        return bdReceivingWriteDao.getReceiveTesterListCount(queryMap);
+    }
+
+    public List<WaitReceiveTesterBean> getWaitReceiveTesterReport(Map<String, Object> queryMap) throws Exception {
+        return bdReceivingWriteDao.getWaitReceiveTesterReport(queryMap);
+    }
     
     /**
      * 保存收货表-总表
@@ -67,7 +83,10 @@ public class BdReceivingModel extends BaseModel {
     public Integer updateBdReceiving(UpdateReceiveForm form) throws Exception {
         BdReceiving bdReceiving = new BdReceiving();
         bdReceiving = bdReceivingWriteDao.get(form.getId());
-        MdStore store = mdStoreWriteDao.getStoreByStoreNo(bdReceiving.getReceiveStoreNo());
+        if (bdReceiving.getStatus() != 1 && form.getStatus() == 2) {//待收货
+            throw new BusinessException("已收货，勿重复操作");
+        }
+        MdStore store = mdStoreWriteDao.getStoreByStoreNo(bdReceiving.getReceiveStoreNo().substring(0,5));
         for (int i = 0; i < form.getBdReceivingSkuList().size(); i++) {
             BdReceivingSku sku = form.getBdReceivingSkuList().get(i);
             BdReceivingSku bdReceivingSku = bdReceivingSkuWriteDao.get(sku.getId());
@@ -83,6 +102,9 @@ public class BdReceivingModel extends BaseModel {
             stockInv.setStoreName(store.getStoreName());
             stockInv.setSkuCode(bdReceivingSku.getSkuCode());
             stockInv.setSkuName(bdReceivingSku.getSkuName());
+            stockInv.setBrandNo(bdReceiving.getBrandNo());
+            stockInv.setUserNo(form.getUserNo());
+            stockInv.setUserType(form.getUserType());
             stockInv.setStockDepot(sku.getActSendTotal());
             stockInv.setStockDepotEnabled(sku.getActSendTotal());
             changeData(stockInv);
@@ -90,6 +112,7 @@ public class BdReceivingModel extends BaseModel {
         }
         bdReceiving.setReceiveDate(new Date());
         bdReceiving.setStatus(form.getStatus());
+        bdReceiving.setReceiveUserNo(form.getUserNo());
      	return bdReceivingWriteDao.update(bdReceiving);
     }
 

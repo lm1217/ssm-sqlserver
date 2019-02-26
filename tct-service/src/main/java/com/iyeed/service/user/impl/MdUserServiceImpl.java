@@ -3,6 +3,7 @@ package com.iyeed.service.user.impl;
 import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.user.MdUser;
+import com.iyeed.core.entity.user.MdUserData;
 import com.iyeed.core.exception.BusinessException;
 import com.iyeed.service.BaseService;
 import com.iyeed.service.user.IMdUserService;
@@ -34,6 +35,23 @@ public class MdUserServiceImpl extends BaseService implements IMdUserService {
             result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
             log.error("[IMdUserService][getMdUserById]根据id["+mdUserId+"]取得md_user对象时出现未知异常：",
                 e);
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<MdUserData> getMdUserDataByUserId(String userId) {
+        ServiceResult<MdUserData> result = new ServiceResult<>();
+        try {
+            result.setResult(mdUserModel.getUserDataByUserId(userId));
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error("[IMdUserService][getMdUserById]根据id["+userId+"]取得md_user对象时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[IMdUserService][getMdUserById]根据id["+userId+"]取得md_user对象时出现未知异常：",
+                    e);
         }
         return result;
     }

@@ -29,6 +29,14 @@ public class BdStockInvModel extends BaseModel {
         return bdStockInvWriteDao.getStockInvSkuListByStoreNo(storeNo);
     }
 
+    public List<GetStockInvSkuListBean> getStockInvSkuList(Map<String, Object> queryMap) throws Exception {
+        return bdStockInvWriteDao.getStockInvSkuList(queryMap);
+    }
+
+    public List<GetStockInvSkuListBean> getStockInvExceptionSkuList(Map<String, Object> queryMap) throws Exception {
+        return bdStockInvWriteDao.getStockInvExceptionSkuList(queryMap);
+    }
+
     /**
      * 获取库存报表列表
      * @param  queryMap

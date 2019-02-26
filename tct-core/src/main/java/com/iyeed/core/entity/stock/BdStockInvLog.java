@@ -34,7 +34,33 @@ public class BdStockInvLog implements Serializable {
  	private Integer stockTotalAfter;
  	private Integer moveNumber;
  	private java.util.Date inputDate;
+	private String brandNo;
+	private String userNo;
+	private Integer userType;
 
+	public String getBrandNo() {
+		return brandNo;
+	}
+
+	public void setBrandNo(String brandNo) {
+		this.brandNo = brandNo;
+	}
+
+	public String getUserNo() {
+		return userNo;
+	}
+
+	public void setUserNo(String userNo) {
+		this.userNo = userNo;
+	}
+
+	public Integer getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Integer userType) {
+		this.userType = userType;
+	}
 
 	/**
      * 获取主键自增长

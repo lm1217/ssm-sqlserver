@@ -11,7 +11,6 @@ import java.util.Date;
  */
 public class SystemRole implements Serializable {
     private Integer id;
-    private Integer userId;
     private String roleName;
     private String desc;
     private String roleCode;
@@ -24,14 +23,6 @@ public class SystemRole implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Integer getStatus() {
@@ -78,7 +69,6 @@ public class SystemRole implements Serializable {
     public String toString() {
         return "SystemRole{" +
                 "id=" + id +
-                ", userId=" + userId +
                 ", roleName='" + roleName + '\'' +
                 ", desc='" + desc + '\'' +
                 ", roleCode='" + roleCode + '\'' +

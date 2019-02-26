@@ -1,5 +1,6 @@
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.oss.common.utils.DateUtil;
+import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.form.BdForm;
 import com.iyeed.core.entity.form.BdFormImage;
 import com.iyeed.core.entity.form.BdFormSku;
@@ -10,6 +11,9 @@ import com.iyeed.core.mail.MailInfo;
 import com.iyeed.core.mail.MailSender;
 import org.junit.Test;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,24 +68,30 @@ public class CoreTest {
 
     @Test
     public void testEntity() {
-        BdStockInv stockInv = new BdStockInv();
-        System.out.println(stockInv.toString());
+        String str = "asdf001AM";
+        if (str.contains("AM")) {
+            System.out.println("b");
+        } else {
+            System.out.println("a");
+        }
     }
 
     @Test
     public void testAAAA() {
-        List<BdFormImage> imageList = new ArrayList<>();
-        BdFormImage image = new BdFormImage();
-        image.setImageUrl("asdf");
-        imageList.add(image);
-        image = new BdFormImage();
-        imageList.add(image);
-        if (imageList != null) {
-            for (BdFormImage img : imageList) {
-                if (img.getImageUrl() == null) continue;
-                System.out.println("url = " + img.getImageUrl());
-            }
+        String fileDir = "D:\\TCT\\HRDATA\\received.xlsx";
+        File file = new File(fileDir);
+        String backupFileDir = file.getParent() + "\\" + "BUCKUP" + "\\" + StringUtil.formatDate("yyyyMMdd", new Date());
+        File backupDir = new File(backupFileDir);
+        if (!backupDir.exists()) {
+            backupDir.mkdirs();
         }
+
+        File backupFile = new File(backupFileDir + "\\" + file.getName());
+        if (backupFile.exists() && backupFile.isFile()) {
+            backupFile.delete();
+        }
+        file.renameTo(new File(backupFile.getPath()));
+
     }
 
     @Test
@@ -121,7 +131,7 @@ public class CoreTest {
         try {
             mailSender.sendHtmlMail(mailInfo, 3);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
     }
@@ -132,5 +142,15 @@ public class CoreTest {
         idArr[0] = 1;
         idArr[1] = 2;
         System.out.println("aaaaaaa=" + idArr.toString());
+    }
+
+    @Test
+    public void testTime() throws ParseException {
+        Long l = new Long(1550827309000L);
+        Date d = new Date(l);
+        System.out.println("T = " + d.toString());
+        DateFormat formatWithTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date dd = formatWithTime.parse(d.toString());
+        System.out.println("T = " + dd.toString());
     }
 }

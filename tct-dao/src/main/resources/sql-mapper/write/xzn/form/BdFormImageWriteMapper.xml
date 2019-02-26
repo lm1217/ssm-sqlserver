@@ -60,5 +60,26 @@
 			#{upfileName}
 		)
 	</insert>
+
+	<insert id="insertList" parameterType="java.util.ArrayList" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into
+		bd_form_image
+		(
+			apply_no,
+			image_url,
+			[type],
+			upfile_name
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+				#{item.applyNo},
+				#{item.imageUrl},
+				#{item.type},
+				#{item.upfileName}
+			)
+		</foreach>
+
+	</insert>
 	
 </mapper>

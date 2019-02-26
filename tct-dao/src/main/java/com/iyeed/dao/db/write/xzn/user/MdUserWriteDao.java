@@ -1,6 +1,7 @@
 package com.iyeed.dao.db.write.xzn.user;
 
 import com.iyeed.core.entity.user.MdUser;
+import com.iyeed.core.entity.user.MdUserData;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,6 +12,8 @@ public interface MdUserWriteDao {
 	MdUser get(Integer id) throws Exception;
 
 	MdUser getUserByUserId(String userId) throws Exception;
+
+	MdUserData getUserDataByUserId(String userId) throws Exception;
 
 	MdUser getUserByUserNo(String userNo) throws Exception;
 

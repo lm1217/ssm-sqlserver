@@ -36,6 +36,10 @@ public class BdFormSkuModel extends BaseModel {
      	this.dbConstrains(bdFormSku);
      	return bdFormSkuWriteDao.insert(bdFormSku);
     }
+
+    public Integer saveBdFormSkuList(List<BdFormSku> list) throws Exception {
+        return bdFormSkuWriteDao.insertList(list);
+    }
      
     /**
      * 更新表单-SKU子表 

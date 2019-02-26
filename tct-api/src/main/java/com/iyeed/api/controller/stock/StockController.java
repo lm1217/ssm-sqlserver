@@ -10,6 +10,7 @@ import com.iyeed.core.entity.stock.BdStockInvLog;
 import com.iyeed.core.entity.stock.vo.GetBdStockInvLogListForm;
 import com.iyeed.core.entity.stock.vo.GetStockInvSkuListBean;
 import com.iyeed.core.entity.stock.vo.StockInvSkuForm;
+import com.iyeed.core.entity.store.MdStore;
 import com.iyeed.core.entity.system.SystemUser;
 import com.iyeed.service.stock.IBdStockInvLogService;
 import com.iyeed.service.stock.IBdStockInvService;
@@ -30,6 +31,7 @@ import java.util.Map;
  * @Date 2018/8/16 14:54
  */
 @Controller
+@CrossOrigin(origins = "*", maxAge = 3600) //解决跨域问题
 @RequestMapping(value = "api/stock")
 public class StockController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(StockController.class);
@@ -38,8 +40,36 @@ public class StockController extends BaseController {
     @RequestMapping(value = "getSkuListByStoreNo.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse getSkuListByStoreNo(@RequestParam String storeNo) {
+        SystemUser systemUser = this.getSystemUser();
+        Map<String, Object> queryMap = new HashMap<>();
+        queryMap.put("q_storeNo", storeNo);
+        if (systemUser.getUserType() == 1 || systemUser.getUserType() == 3 || systemUser.getUserType() == 4) {
+            queryMap.put("q_userNo", systemUser.getUserNo());
+        }
+        ServiceResult<List<GetStockInvSkuListBean>> serviceResult = bdStockInvService.getStockInvSkuList(queryMap);
 
-        ServiceResult<List<GetStockInvSkuListBean>> serviceResult = bdStockInvService.getStockInvSkuListByStoreNo(storeNo);
+        if (!serviceResult.getSuccess()) {
+            return AjaxResponse.failure(RespCode.FAILED, serviceResult.getMessage());
+        }
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("stockInvSkuList", serviceResult.getResult());
+        return AjaxResponse.success(dataMap);
+    }
+
+    @SystemControllerLog(module = "库存管理", businessDesc = "异常单根据门店号获取库存SKU列表")
+    @RequestMapping(value = "getExceptionSkuListByStoreNo.json", method = { RequestMethod.POST })
+    @ResponseBody
+    public AjaxResponse getExceptionSkuListByStoreNo(@RequestParam String storeNo) {
+        SystemUser systemUser = this.getSystemUser();
+        Map<String, Object> queryMap = new HashMap<>();
+        queryMap.put("q_storeNo", storeNo);
+        MdStore store = mdStoreService.getMdStoreByStoreNo(storeNo).getResult();
+        queryMap.put("q_brandNo", store.getBrandNo());
+        if (systemUser.getUserType() == 1 || systemUser.getUserType() == 3 || systemUser.getUserType() == 4) {
+            queryMap.put("q_userNo", systemUser.getUserNo());
+        }
+        ServiceResult<List<GetStockInvSkuListBean>> serviceResult = bdStockInvService.getStockInvExceptionSkuList(queryMap);
 
         if (!serviceResult.getSuccess()) {
             return AjaxResponse.failure(RespCode.FAILED, serviceResult.getMessage());
@@ -55,10 +85,18 @@ public class StockController extends BaseController {
     @ResponseBody
     public AjaxResponse getBdStockInvLogList(@RequestBody GetBdStockInvLogListForm form) {
         PagerInfo pagerInfo = new PagerInfo(form.getPageSize(), form.getPageIndex());
+        SystemUser systemUser = this.getSystemUser();
         Map<String, Object> queryMap = new HashMap<>();
+        if (systemUser.getUserType() != 0 && systemUser.getUserType() != 2 && systemUser.getUserType() != 5) {
+            queryMap.put("q_userNo", systemUser.getUserNo());
+        }
         queryMap.put("q_storeNo", form.getStoreNo());//搜索门店号
         queryMap.put("q_skuCode", form.getSkuCode().toUpperCase());//搜索skuCode
         queryMap.put("q_type", form.getType());//搜索类型（1.店仓转柜面  2.柜面转店仓）
+        String brandNo = this.getBrandNo();
+        queryMap.put("q_brandNo", brandNo);
+        String[] storeNoArr = getStoreNoArr();
+        queryMap.put("q_storeNoArr", storeNoArr);
         ServiceResult<List<BdStockInvLog>> serviceResult = bdStockInvLogService.getBdStockInvLogList(queryMap, pagerInfo);
 
         if (!serviceResult.getSuccess()) {
@@ -77,7 +115,7 @@ public class StockController extends BaseController {
     @ResponseBody
     public AjaxResponse updateDepotToCounter(@RequestBody StockInvSkuForm skuForm) {
         SystemUser systemUser = this.getSystemUser();
-        if (systemUser.getUserType() != 1) {
+        if (systemUser.getUserType() == 0 || systemUser.getUserType() == 2 || systemUser.getUserType() == 5) {
             return AjaxResponse.failure("非门店帐号不能进行此操作");
         }
         ServiceResult<Integer> serviceResult = bdStockInvService.updateDepotToCounter(skuForm);
@@ -94,7 +132,7 @@ public class StockController extends BaseController {
     @ResponseBody
     public AjaxResponse updateCounterToDepot(@RequestBody StockInvSkuForm skuForm) {
         SystemUser systemUser = this.getSystemUser();
-        if (systemUser.getUserType() != 1) {
+        if (systemUser.getUserType() == 0 || systemUser.getUserType() == 2 || systemUser.getUserType() == 5) {
             return AjaxResponse.failure("非门店帐号不能进行此操作");
         }
         ServiceResult<Integer> serviceResult = bdStockInvService.updateCounterToDepot(skuForm);

@@ -31,7 +31,11 @@ public class MdStoreModel extends BaseModel {
     public List<GetStoreListBean> getStoreListByBrandNo(String brandNo) throws Exception {
         return mdStoreWriteDao.getStoreListByBrandNo(brandNo);
     }
-    
+
+    public List<GetStoreListBean> getBrandStoreListByBrandNo(String brandNo) throws Exception {
+        return mdStoreWriteDao.getBrandStoreListByBrandNo(brandNo);
+    }
+
     /**
      * 保存门店表
      * @param  mdStore

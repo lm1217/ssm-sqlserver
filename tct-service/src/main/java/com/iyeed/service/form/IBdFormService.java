@@ -30,9 +30,32 @@ public interface IBdFormService {
 
     ServiceResult<Integer> getBdFormListCount(Map<String, Object> queryMap);
 
+    ServiceResult<List<GetDestroyFormListBean>> getDestroyFormList(Map<String, Object> queryMap, PagerInfo pagerInfo);
+
+    ServiceResult<Integer> getDestroyFormListCount(Map<String, Object> queryMap);
+
+    ServiceResult<List<GetDestroyTheftFormListBean>> getDestroyTheftFormList(Map<String, Object> queryMap, PagerInfo pagerInfo);
+
+    ServiceResult<Integer> getDestroyTheftFormListCount(Map<String, Object> queryMap);
+
+    ServiceResult<List<GetDSIFormListBean>> getDSIFormList(Map<String, Object> queryMap, PagerInfo pagerInfo);
+
+    ServiceResult<Integer> getDSIFormListCount(Map<String, Object> queryMap);
+
     ServiceResult<List<ExceptionReportBean>> getExceptionReportList(Map<String, Object> queryMap, PagerInfo pagerInfo);
 
     ServiceResult<List<ExceptionReportBean>> exportExceptionReportExcel(Map<String, Object> queryMap);
+
+    ServiceResult<List<GetDestroyFormListBean>> exportDestroyReportExcel(Map<String, Object> queryMap);
+
+    ServiceResult<List<GetDestroyTheftFormListBean>> exportDestroyTheftReportExcel(Map<String, Object> queryMap);
+
+    ServiceResult<List<GetDSIFormListBean>> exportDSIReportExcel(Map<String, Object> queryMap);
+
+    ServiceResult<List<StockReportBean>> getStockReportList(Map<String, Object> queryMap, PagerInfo pagerInfo);
+
+    ServiceResult<List<StockReportBean>> exportStockReportExcel(Map<String, Object> queryMap);
+
     /**
      * 保存表单-总表
      * @param  bdForm
@@ -57,7 +80,7 @@ public interface IBdFormService {
      */
     ServiceResult<Integer> updateBdForm(BdForm bdForm);
 
-    ServiceResult<Integer> backFormDestroy(BdForm bdForm, ExecDisposeForm form);
+    ServiceResult<Integer> backFormDispose(BdForm bdForm, ExecDisposeForm form);
 
     ServiceResult<Integer> delBdForm(BdForm bdForm);
 }

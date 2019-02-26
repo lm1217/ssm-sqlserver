@@ -4,7 +4,9 @@ import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.receive.BdReceiving;
+import com.iyeed.core.entity.receive.vo.ReceiveTesterBean;
 import com.iyeed.core.entity.receive.vo.UpdateReceiveForm;
+import com.iyeed.core.entity.receive.vo.WaitReceiveTesterBean;
 import com.iyeed.core.exception.BusinessException;
 import com.iyeed.service.BaseService;
 import com.iyeed.service.receive.IBdReceivingService;
@@ -77,6 +79,77 @@ public class BdReceivingServiceImpl extends BaseService implements IBdReceivingS
         } catch (Exception e) {
             serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
             log.error("[IBdReceivingService][getBdReceivingListCount]获取总数时出现未知异常：", e);
+        }
+        return serviceResult;
+    }
+
+    @Override
+    public ServiceResult<List<ReceiveTesterBean>> getReceiveTesterList(Map<String, Object> queryMap, PagerInfo pagerInfo) {
+        ServiceResult<List<ReceiveTesterBean>> serviceResult = new ServiceResult<>();
+        serviceResult.setPager(pagerInfo);
+        try {
+            Integer start = 0, size = 0;
+            if (pagerInfo != null) {
+                pagerInfo.setRowsCount(bdReceivingModel.getReceiveTesterListCount(queryMap));
+                start = pagerInfo.getStart();
+                size = pagerInfo.getPageSize();
+            }
+            serviceResult.setResult(bdReceivingModel.getReceiveTesterList(queryMap, start, size));
+        } catch (BusinessException e) {
+            serviceResult.setSuccess(false);
+            serviceResult.setMessage(e.getMessage());
+            log.error("[IBdReceivingService][getBdReceivingList]根据queryMap[" + queryMap.toString() + "]取得收货表时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[IBdReceivingService][getBdReceivingList]根据queryMap[" + queryMap.toString() + "]取得收货表时出现未知异常：", e);
+        }
+        return serviceResult;
+    }
+
+    @Override
+    public ServiceResult<Integer> getReceiveTesterListCount(Map<String, Object> queryMap) {
+        ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
+        try {
+            serviceResult.setResult(bdReceivingModel.getReceiveTesterListCount(queryMap));
+        } catch (BusinessException e) {
+            serviceResult.setSuccess(false);
+            serviceResult.setMessage(e.getMessage());
+            log.error("[IBdReceivingService][getBdReceivingListCount]获取总数时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[IBdReceivingService][getBdReceivingListCount]获取总数时出现未知异常：", e);
+        }
+        return serviceResult;
+    }
+
+    @Override
+    public ServiceResult<List<ReceiveTesterBean>> exportReceiveTesterReportExcel(Map<String, Object> queryMap) {
+        ServiceResult<List<ReceiveTesterBean>> serviceResult = new ServiceResult<>();
+        try {
+            serviceResult.setResult(bdReceivingModel.getReceiveTesterList(queryMap, null, null));
+        } catch (BusinessException e) {
+            serviceResult.setSuccess(false);
+            serviceResult.setMessage(e.getMessage());
+            log.error("[IBdReceivingService][getBdFormList]根据queryMap[" + queryMap.toString() + "]取得收货表时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[IBdReceivingService][getBdFormList]根据queryMap[" + queryMap.toString() + "]取得收货表时出现未知异常：", e);
+        }
+        return serviceResult;
+    }
+
+    @Override
+    public ServiceResult<List<WaitReceiveTesterBean>> exportWaitReceiveTesterReportExcel(Map<String, Object> queryMap) {
+        ServiceResult<List<WaitReceiveTesterBean>> serviceResult = new ServiceResult<>();
+        try {
+            serviceResult.setResult(bdReceivingModel.getWaitReceiveTesterReport(queryMap));
+        } catch (BusinessException e) {
+            serviceResult.setSuccess(false);
+            serviceResult.setMessage(e.getMessage());
+            log.error("[IBdReceivingService][getBdFormList]根据queryMap[" + queryMap.toString() + "]取得收货表时出现未知异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[IBdReceivingService][getBdFormList]根据queryMap[" + queryMap.toString() + "]取得收货表时出现未知异常：", e);
         }
         return serviceResult;
     }

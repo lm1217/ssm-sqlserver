@@ -2,6 +2,7 @@ package com.iyeed.model.user;
 
 import com.iyeed.core.StringUtil;
 import com.iyeed.core.entity.user.MdUser;
+import com.iyeed.core.entity.user.MdUserData;
 import com.iyeed.model.BaseModel;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,10 @@ public class MdUserModel extends BaseModel {
      */
     public MdUser getMdUserById(Integer mdUserId) throws Exception {
     	return mdUserWriteDao.get(mdUserId);
+    }
+
+    public MdUserData getUserDataByUserId(String userId) throws Exception {
+        return mdUserWriteDao.getUserDataByUserId(userId);
     }
 
     public MdUser getMdUserByUserNo(String userNo) throws Exception {
@@ -53,6 +58,6 @@ public class MdUserModel extends BaseModel {
 		mdUser.setUserNo(StringUtil.dbSafeString(mdUser.getUserNo(), true, 40));
 		mdUser.setUserName(StringUtil.dbSafeString(mdUser.getUserName(), true, 40));
 		mdUser.setUserPid(StringUtil.dbSafeString(mdUser.getUserPid(), true, 40));
-		mdUser.setEmail(StringUtil.dbSafeString(mdUser.getEmail(), true, 100));
+		mdUser.setUserEmail(StringUtil.dbSafeString(mdUser.getUserEmail(), true, 100));
     }
 }

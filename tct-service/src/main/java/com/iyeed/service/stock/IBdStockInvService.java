@@ -21,6 +21,10 @@ public interface IBdStockInvService {
 
     ServiceResult<List<GetStockInvSkuListBean>> getStockInvSkuListByStoreNo(String storeNo);
 
+    ServiceResult<List<GetStockInvSkuListBean>> getStockInvSkuList(Map<String, Object> queryMap);
+
+    ServiceResult<List<GetStockInvSkuListBean>> getStockInvExceptionSkuList(Map<String, Object> queryMap);
+
     ServiceResult<List<GetStockInvReportListBean>> getStockInvReportList(Map<String, Object> queryMap, PagerInfo pagerInfo);
 
     ServiceResult<List<GetStockInvReportListBean>> exportStockInvReportExcel(Map<String, Object> queryMap);

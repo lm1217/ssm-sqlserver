@@ -1,10 +1,7 @@
 package com.iyeed.dao.db.write.xzn.form;
 
 import com.iyeed.core.entity.form.BdForm;
-import com.iyeed.core.entity.form.vo.ExceptionReportBean;
-import com.iyeed.core.entity.form.vo.FormJobBean;
-import com.iyeed.core.entity.form.vo.FormJobForm;
-import com.iyeed.core.entity.form.vo.GetDisposeFormListBean;
+import com.iyeed.core.entity.form.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +19,10 @@ public interface BdFormWriteDao {
 
 	List<FormJobBean> getBdFormListForChangeAudit() throws Exception;
 
+	List<FormJobBean> getBdFormListForDestroySendFormMail() throws Exception;
+
+	List<FormJobBean> getBdFormListForDestroyChangeAudit() throws Exception;
+
 	List<GetDisposeFormListBean> getBdFormList(@Param("queryMap") Map<String, Object> queryMap,
 											   @Param("start") Integer start,
 											   @Param("size") Integer size) throws Exception;
@@ -33,6 +34,30 @@ public interface BdFormWriteDao {
 													 @Param("size") Integer size) throws Exception;
 
 	Integer getExceptionReportListCount(@Param("queryMap") Map<String, Object> queryMap);
+
+	List<GetDestroyFormListBean> getDestroyFormList(@Param("queryMap") Map<String, Object> queryMap,
+													@Param("start") Integer start,
+													@Param("size") Integer size) throws Exception;
+
+	Integer getDestroyFormListCount(@Param("queryMap") Map<String, Object> queryMap);
+
+    List<GetDestroyTheftFormListBean> getDestroyTheftFormList(@Param("queryMap") Map<String, Object> queryMap,
+                                                    @Param("start") Integer start,
+                                                    @Param("size") Integer size) throws Exception;
+
+    Integer getDestroyTheftFormListCount(@Param("queryMap") Map<String, Object> queryMap);
+
+	List<GetDSIFormListBean> getDSIFormList(@Param("queryMap") Map<String, Object> queryMap,
+													@Param("start") Integer start,
+													@Param("size") Integer size) throws Exception;
+
+	Integer getDSIFormListCount(@Param("queryMap") Map<String, Object> queryMap);
+
+	List<StockReportBean> getStockReportList(@Param("queryMap") Map<String, Object> queryMap,
+													 @Param("start") Integer start,
+													 @Param("size") Integer size) throws Exception;
+
+	Integer getStockReportListCount(@Param("queryMap") Map<String, Object> queryMap);
 
 	Integer insert(BdForm bdForm) throws Exception;
 	

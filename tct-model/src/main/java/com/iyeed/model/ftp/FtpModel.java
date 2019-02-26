@@ -37,7 +37,7 @@ public class FtpModel extends BaseModel {
                 user.setUserNo(cellValue.get(1));
                 user.setUserName(cellValue.get(2));
                 user.setUserPid(cellValue.get(3));
-                user.setEmail(cellValue.get(5));
+                user.setUserEmail(cellValue.get(5));
                 mdUserWriteDao.insert(user);
             }
         }

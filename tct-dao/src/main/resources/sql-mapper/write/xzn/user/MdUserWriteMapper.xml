@@ -8,9 +8,20 @@
 			<result property="userName" column="user_name" />
 			<result property="userNameEn" column="user_name_en" />
 			<result property="userPid" column="user_pid" />
-			<result property="email" column="email" />
+			<result property="userEmail" column="user_email" />
+			<result property="userNtaccount" column="user_ntaccount" />
 			<result property="inputDate" column="input_date" />
 	</resultMap>
+
+	<resultMap id="MdUserDataResult" type="com.iyeed.core.entity.user.MdUserData">
+		<result property="username" column="username" />
+		<result property="userId" column="user_id" />
+		<result property="userName" column="user_name" />
+	</resultMap>
+    <!-- 判断是否为审批人 -->
+	<select id="getUserDataByUserId" parameterType="String" resultMap="MdUserDataResult">
+		select * from md_user_data where user_id = #{userId}
+	</select>
 	
 	<select id="get" parameterType="Integer" resultMap="MdUserResult">
 		select
@@ -55,7 +66,8 @@
 			<if test="userName != null">user_name= #{userName},</if>
 			<if test="userPid != null">user_pid= #{userPid},</if>
 			<if test="userNameEn != null">user_name_en= #{userNameEn},</if>
-			<if test="email != null">email= #{email},</if>
+			<if test="userEmail != null">user_email= #{userEmail},</if>
+			<if test="userNtaccount != null">user_ntaccount= #{userNtaccount}</if>
 			<if test="inputDate != null">input_date= #{inputDate}</if>
 	    </set>
         where id = #{id}
@@ -63,7 +75,7 @@
 	
 	<insert id="insert" parameterType="com.iyeed.core.entity.user.MdUser" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into 
-		md_user_copy1
+		md_user
 		(
 			
 			user_id,
@@ -71,7 +83,8 @@
 			user_name,
 			user_name_en,
 			user_pid,
-			email
+			user_email,
+			user_ntaccount
 		)
 		values
 		(
@@ -81,7 +94,8 @@
 			#{userName},
 			#{userNameEn},
 			#{userPid},
-			#{email}
+			#{userEmail},
+			#{userNtaccount}
 		)
 	</insert>
 	

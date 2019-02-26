@@ -1,12 +1,14 @@
 package com.iyeed.api.controller;
 
 import com.iyeed.core.StringUtil;
-import com.iyeed.core.common.emuns.RespCode;
 import com.iyeed.core.common.model.AjaxResponse;
 import com.iyeed.core.entity.form.BdFormSku;
 import com.iyeed.core.entity.system.SystemUser;
+import com.iyeed.core.entity.system.SystemUserBrand;
+import com.iyeed.core.entity.system.SystemUserStore;
 import com.iyeed.core.entity.user.MdUser;
 import com.iyeed.core.entity.user.MdUserStore;
+import com.iyeed.service.excel.IImportExcelService;
 import com.iyeed.service.express.IMdExpressService;
 import com.iyeed.service.form.IBdFormDisposeService;
 import com.iyeed.service.form.IBdFormImageService;
@@ -19,22 +21,20 @@ import com.iyeed.service.stock.IBdStockInvLogService;
 import com.iyeed.service.stock.IBdStockInvService;
 import com.iyeed.service.store.IMdBrandService;
 import com.iyeed.service.store.IMdStoreService;
-import com.iyeed.service.system.ISystemResourceService;
-import com.iyeed.service.system.ISystemRoleResourceService;
-import com.iyeed.service.system.ISystemRoleService;
-import com.iyeed.service.system.ISystemUserService;
+import com.iyeed.service.system.*;
 import com.iyeed.service.user.IMdUserService;
 import com.iyeed.service.user.IMdUserStoreService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import java.beans.PropertyEditorSupport;
@@ -46,6 +46,7 @@ import java.util.*;
  * 控制层基类， 所有controller类都需要继承此类        
  */
 @Controller
+@CrossOrigin(origins = "*", maxAge = 3600) //解决跨域问题
 public class BaseController {
     private static Logger log = LoggerFactory.getLogger(BaseController.class);
 
@@ -57,6 +58,8 @@ public class BaseController {
     protected ISystemResourceService systemResourceService;
     @Resource
     protected ISystemRoleResourceService systemRoleResourceService;
+    @Resource
+    protected ISystemUserStoreService systemUserStoreService;
     @Resource
     protected IMdUserService mdUserService;
     @Resource
@@ -85,6 +88,8 @@ public class BaseController {
     protected IBdStockInvService bdStockInvService;
     @Resource
     protected IBdStockInvLogService bdStockInvLogService;
+    @Resource
+    protected IImportExcelService importExcelService;
 
     protected boolean isNull(Object... argumets) {
         for (Object obj : argumets) {
@@ -101,12 +106,29 @@ public class BaseController {
         return systemUser;
     }
 
+    protected String getBrandNo() {
+        String brandNo = null;
+        SystemUser systemUser = getSystemUser();
+        if (systemUser.getUserType() == 5) {
+            SystemUserBrand systemUserBrand = systemUserService.getSystemUserBrandByUsername(systemUser.getUsername()).getResult();
+            if (!isNull(systemUserBrand)) {
+                brandNo = systemUserBrand.getBrandNo();
+            }
+        }
+        return brandNo;
+    }
+
     protected String[] getStoreNoArr() {
         SystemUser systemUser = getSystemUser();
         String[] storeNoArr = null;
         String[] userNoArr = null;
         if (systemUser.getUserType() == 1) {
             storeNoArr = new String[]{systemUser.getUserNo()};
+        } else if (systemUser.getUserType() == 3 || systemUser.getUserType() == 4) {
+            SystemUserStore userStore = systemUserStoreService.getSystemUserStoreByUserNo(systemUser.getUserNo()).getResult();
+            if (!isNull(userStore)) {
+                storeNoArr = new String[]{userStore.getStoreNo()};
+            }
         } else if (systemUser.getUserType() == 2) {
             List<MdUser> userList = mdUserService.getUserListByUserNo(systemUser.getUserNo()).getResult();
             List<MdUserStore> userStoreList = null;

@@ -63,6 +63,15 @@ public class BdForm implements Serializable {
  	private java.util.Date sendMailDate;
  	private Integer isBack;
  	private Integer disposeResult;
+ 	private String brandNo;
+
+	public String getBrandNo() {
+		return brandNo;
+	}
+
+	public void setBrandNo(String brandNo) {
+		this.brandNo = brandNo;
+	}
 
 	public Integer getDisposeResult() {
 		return disposeResult;

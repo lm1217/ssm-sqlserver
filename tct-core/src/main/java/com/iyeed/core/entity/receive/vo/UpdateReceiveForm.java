@@ -16,6 +16,24 @@ public class UpdateReceiveForm implements Serializable {
     private Integer actSendTotal;
     private Integer status;
     private List<BdReceivingSku> bdReceivingSkuList;
+    private String userNo;
+    private Integer userType;
+
+    public String getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(String userNo) {
+        this.userNo = userNo;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
 
     public Integer getId() {
         return id;

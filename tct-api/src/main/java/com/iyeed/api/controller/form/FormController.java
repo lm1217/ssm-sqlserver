@@ -1,6 +1,7 @@
 package com.iyeed.api.controller.form;
 
 import com.iyeed.api.controller.BaseController;
+import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.annotation.SystemControllerLog;
@@ -12,9 +13,14 @@ import com.iyeed.core.entity.form.BdFormImage;
 import com.iyeed.core.entity.form.BdFormSku;
 import com.iyeed.core.entity.form.vo.*;
 import com.iyeed.core.entity.sku.MdSku;
+import com.iyeed.core.entity.store.MdStore;
 import com.iyeed.core.entity.system.SystemUser;
+import com.iyeed.core.entity.system.SystemUserBrand;
+import com.iyeed.core.entity.system.SystemUserStore;
 import com.iyeed.core.entity.user.MdUser;
 import com.iyeed.core.entity.user.MdUserStore;
+import com.iyeed.core.mail.MailInfo;
+import com.iyeed.core.mail.MailSender;
 import com.iyeed.core.utils.CommonUtil;
 import com.iyeed.service.express.IMdExpressService;
 import com.iyeed.service.form.IBdFormDisposeService;
@@ -51,6 +57,7 @@ import java.util.Map;
  * @Date 2018/8/15 16:04
  */
 @Controller
+@CrossOrigin(origins = "*", maxAge = 3600) //解决跨域问题
 @RequestMapping(value = "api/form")
 public class FormController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(FormController.class);
@@ -99,12 +106,14 @@ public class FormController extends BaseController {
             return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
         }
 
-        if (form.getFormImageList().isEmpty()) {
-            return AjaxResponse.failure("上传图片列表为空");
-        } else {
-            for (BdFormImage image : form.getFormImageList()) {
-                if (image.getImageUrl().isEmpty()) {
-                    return AjaxResponse.failure("上传图片Url为空");
+        if (form.getDestroyType() != 4) {//销毁单原因不为失窃的要检查是否有上传图片
+            if (form.getFormImageList().isEmpty()) {
+                return AjaxResponse.failure("上传图片列表为空");
+            } else {
+                for (BdFormImage image : form.getFormImageList()) {
+                    if (image.getImageUrl().isEmpty()) {
+                        return AjaxResponse.failure("上传图片Url为空");
+                    }
                 }
             }
         }
@@ -178,23 +187,98 @@ public class FormController extends BaseController {
 
     private AjaxResponse saveForm(SaveApplyForm form) {
         SystemUser systemUser = this.getSystemUser();
-        if (systemUser.getUserType() != 1) {
+        //0-admin 2-审批人 5-品牌帐号
+        if (systemUser.getUserType() == 0 || systemUser.getUserType() == 2 || systemUser.getUserType() == 5) {
             return AjaxResponse.failure("非门店帐号不能进行此操作");
         }
         form.setUserName(systemUser.getUserNo());
         form.setUserNo(systemUser.getUserNo());
+        ServiceResult<BdForm> formResult = bdFormService.getBdFormByApplyNo(form.getApplyNo());
+        if (!isNull(formResult.getResult())) {
+            BdForm bdForm = formResult.getResult();
+            if (bdForm.getDisposeStatus() > 0 && bdForm.getDisposeStatus() != 3 && bdForm.getDisposeResult() != 3) {
+                return AjaxResponse.failure("非法操作，不得重复提交");
+            }
+        }
         ServiceResult<Integer> serviceResult = bdFormService.saveForm(form);
 
         if (!serviceResult.getSuccess()) {
             return AjaxResponse.failure(RespCode.FAILED, serviceResult.getMessage());
         }
+
+        // 多线程解决邮件发送超时阻塞主线程执行时间慢的问题
+        Thread thread = new Thread() {
+            public void run() {
+                // 邮箱发送
+                String storeNo = null;
+                if (systemUser.getUserType() == 1) {
+                    storeNo = systemUser.getUserNo();
+                } else if (systemUser.getUserType() == 3 || systemUser.getUserType() == 4) {
+                    SystemUserStore userStore = systemUserStoreService.getSystemUserStoreByUserNo(systemUser.getUserNo()).getResult();
+                    if (!isNull(userStore)) {
+                        storeNo = userStore.getStoreNo();
+                    }
+                }
+                ServiceResult<MdStore> storeResult = mdStoreService.getMdStoreByStoreNo(storeNo);
+                if (!storeResult.getSuccess() || isNull(storeResult.getResult())) {
+                    log.error("邮件发送失败");
+                }
+                MdStore store = storeResult.getResult();
+                ServiceResult<MdUser> userResult = mdUserService.getMdUserByUserNo(store.getUserNo());
+                if (!userResult.getSuccess() || isNull(userResult.getResult())) {
+                    log.error("邮件发送失败");
+                }
+                MdUser user = userResult.getResult();
+
+                try {
+                    MailSender mailSender = MailSender.getInstance();
+                    MailInfo mailInfo = new MailInfo();
+                    mailInfo.setNotifyTo(user.getUserEmail());
+//                    mailInfo.setNotifyCc("112538201@qq.com");
+                    String strHtml = "";
+                    if (form.getFormType() == 1) {
+                        //发送邮件-审批提醒-初始化
+                        mailInfo.setSubject("[Tester Control Tower]库存初始化\"" + form.getApplyNo() + "\"审批");
+                        strHtml = "尊敬的用户您好：<br/>" +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;门店“" + store.getStoreName() + "”，店号：" + store.getStoreNo() + "，品牌：" + store.getBrandName() + " 正在做tester库存初始化，需要您审批，" +
+                                "请登录<a href=\"" + ConstantsEJS.WEB_HOST + "\" target=\"_blank\">" + ConstantsEJS.WEB_HOST + "</a>  审批。";
+                    } else if (form.getFormType() == 2) {
+                        //发送邮件-审批提醒-销毁单
+                        mailInfo.setSubject("[Tester Control Tower]销毁申请单\"" + form.getApplyNo() + "\"审批");
+                        strHtml = "尊敬的用户您好：<br/>" +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;门店“" + store.getStoreName() + "”，店号：" + store.getStoreNo() + "，品牌：" + store.getBrandName() + " 提交了tester销毁申请，需要您审批，" +
+                                "请登录<a href=\"" + ConstantsEJS.WEB_HOST + "\" target=\"_blank\">" + ConstantsEJS.WEB_HOST + "</a>  审批。";
+                    } else if (form.getFormType() == 3) {
+                        //发送邮件-审批提醒-调拨单
+                        mailInfo.setSubject("[Tester Control Tower]调拨申请单\"" + form.getApplyNo() + "\"审批");
+                        strHtml = "尊敬的用户您好：<br/>" +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;门店“" + store.getStoreName() + "”，店号：" + store.getStoreNo() + "，品牌：" + store.getBrandName() + " 提交了tester调拨申请，需要您审批，" +
+                                "请登录<a href=\"" + ConstantsEJS.WEB_HOST + "\" target=\"_blank\">" + ConstantsEJS.WEB_HOST + "</a>  审批。";
+                    } else if (form.getFormType() == 4) {
+                        //发送邮件-审批提醒-异常单
+                        mailInfo.setSubject("[Tester Control Tower]异常申请单\"" + form.getApplyNo() + "\"审批");
+                        strHtml = "尊敬的用户您好：<br/>" +
+                                "&nbsp;&nbsp;&nbsp;&nbsp;门店“" + store.getStoreName() + "”，店号：" + store.getStoreNo() + "，品牌：" + store.getBrandName() + " 提交了tester异常申请，需要您审批，" +
+                                "请登录<a href=\"" + ConstantsEJS.WEB_HOST + "\" target=\"_blank\">" + ConstantsEJS.WEB_HOST + "</a>  审批。";
+                    }
+                    mailInfo.setContent(strHtml);
+                    mailInfo.setAttachFileNames(new String[]{});//添加附件
+                    mailSender.sendHtmlMail(mailInfo, 3);
+                } catch (Exception e) {
+                    log.error("邮件发送失败", e.getMessage());
+                }
+            }
+        };
+        thread.start();
+
         return AjaxResponse.success("提交表单成功,等待门店主管审批");
     }
 
     @SystemControllerLog(module = "表单管理", businessDesc = "审批退回")
-    @RequestMapping(value = "backFormDestroy.json", method = { RequestMethod.POST })
+    @RequestMapping(value = "backFormDispose.json", method = { RequestMethod.POST })
     @ResponseBody
-    public AjaxResponse backFormDestroy(@RequestBody ExecDisposeForm form) {
+    public AjaxResponse backFormDispose(@RequestBody ExecDisposeForm form) {
+        SystemUser systemUser = this.getSystemUser();
         ServiceResult<BdForm> serviceResult = bdFormService.getBdFormById(form.getId());
 
         if (!serviceResult.getSuccess()) {
@@ -206,14 +290,18 @@ public class FormController extends BaseController {
         if (bdForm.getIsBack() == 1) {
             return AjaxResponse.failure("该处理流程不能退回");
         }
-        if (!form.getUserNo().equals(bdForm.getDisposeUserNo())) {
+        if (systemUser.getUserType() != 5 && !form.getUserNo().equals(bdForm.getDisposeUserNo())) {
             return AjaxResponse.failure("操作人与指定人员不相符");
         }
         if (form.getType() != 3) {
             return AjaxResponse.failure("错误的操作");
         }
 
-        ServiceResult<Integer> result = bdFormService.backFormDestroy(bdForm, form);
+        if (systemUser.getUserType() == 5) {
+            form.setIsBrandAdmin(1);//品牌管理帐号标识
+        }
+
+        ServiceResult<Integer> result = bdFormService.backFormDispose(bdForm, form);
         if (!result.getSuccess()) {
             return AjaxResponse.failure(RespCode.FAILED, result.getMessage());
         }
@@ -259,6 +347,7 @@ public class FormController extends BaseController {
         if (isNull(form)) {
             return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
         }
+        SystemUser systemUser = this.getSystemUser();
         String[] storeNoArr = getStoreNoArr();
         PagerInfo pagerInfo = new PagerInfo(form.getPageSize(), form.getPageIndex());
 
@@ -272,14 +361,20 @@ public class FormController extends BaseController {
         queryMap.put("q_starttime", CommonUtil.startTime(form.getStarttime()));//搜索开始时间
         queryMap.put("q_endtime", CommonUtil.endTime(form.getEndtime()));//搜索结束时间
 
-        if (form.getDisposeStatus() == 1) {
+
+        if (form.getDisposeStatus() == 1 && systemUser.getUserType() != 5) {
             queryMap.put("q_disposeUserNo", form.getUserNo());
-        } else {
-            queryMap.put("q_storeNoArr", storeNoArr);
         }
 
+        if (systemUser.getUserType() != 0 && systemUser.getUserType() != 2 && systemUser.getUserType() != 5) {
+            queryMap.put("q_userNo", systemUser.getUserNo());
+        }
+
+        queryMap.put("q_storeNoArr", storeNoArr);
         queryMap.put("q_disposeStatus", String.valueOf(form.getDisposeStatus()));
 
+        String brandNo = this.getBrandNo();
+        queryMap.put("q_brandNo", brandNo);
 
         ServiceResult<List<GetDisposeFormListBean>> serviceResult = bdFormService.getBdFormList(queryMap, pagerInfo);
 
@@ -355,6 +450,7 @@ public class FormController extends BaseController {
     @RequestMapping(value = "execDisposeFormDetails.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse execDisposeFormDetails(@RequestBody ExecDisposeForm form) {
+        SystemUser systemUser = this.getSystemUser();
         ServiceResult<BdForm> serviceResult = bdFormService.getBdFormById(form.getId());
 
         if (!serviceResult.getSuccess()) {
@@ -366,11 +462,17 @@ public class FormController extends BaseController {
         if (bdForm.getDisposeStatus() == 0) {
             return AjaxResponse.failure("处理流程已经结束");
         }
-        if (!form.getUserNo().equals(bdForm.getDisposeUserNo())) {
+
+        if (systemUser.getUserType() != 5 && !form.getUserNo().equals(bdForm.getDisposeUserNo())) {
             return AjaxResponse.failure("操作人与指定人员不相符");
         }
+
         if (form.getType() != 1 && form.getType() != 2) {
             return AjaxResponse.failure("错误的操作");
+        }
+
+        if (systemUser.getUserType() == 5) {
+            form.setIsBrandAdmin(1);//品牌管理帐号标识
         }
 
         ServiceResult<Integer> result = bdFormService.execDisposeFormDetails(bdForm, form);
@@ -381,15 +483,47 @@ public class FormController extends BaseController {
         return AjaxResponse.success();
     }
 
+    /**
+     * 方法描述:批量处理申请表单（同意 or 拒绝）
+     *
+     * @param
+     * @Author guanghua.deng
+     * @Date 2018/8/22 9:57
+     */
+    @SystemControllerLog(module = "表单管理", businessDesc = "批量处理申请表单(同意/拒绝)")
+    @RequestMapping(value = "execDisposeBatchForm.json", method = { RequestMethod.POST })
+    @ResponseBody
+    public AjaxResponse execDisposeBatchForm(@RequestBody ExecDisposeForm form) {
+        SystemUser systemUser = this.getSystemUser();
+        if (form.getType() != 1 && form.getType() != 2) {
+            return AjaxResponse.failure("错误的操作");
+        }
+        String[] idArr = form.getIdStr().split(",");
+        if (!isNull(idArr)) {
+            for (String str : idArr) {
+                form.setId(Integer.parseInt(str));
+                execDisposeFormDetails(form);
+            }
+        }
+        return AjaxResponse.success();
+    }
+
     @SystemControllerLog(module = "表单管理", businessDesc = "根据门店号获取待处理与处理中的角标总数")
     @RequestMapping(value = "getDisposeCount.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse getDisposeCount(@RequestParam String storeNo, @RequestParam String userNo) {
         String[] storeNoArr = getStoreNoArr();
-
+        SystemUser systemUser = this.getSystemUser();
         Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("q_disposeStatus", "2");//处理中
         queryMap.put("q_storeNoArr", storeNoArr);
+
+        if (systemUser.getUserType() != 0 && systemUser.getUserType() != 2 && systemUser.getUserType() != 5) {
+            queryMap.put("q_userNo", systemUser.getUserNo());
+        }
+
+        String brandNo = this.getBrandNo();
+        queryMap.put("q_brandNo", brandNo);
 
         //获取处理中的数量
         ServiceResult<Integer> disposeIngResult = bdFormService.getBdFormListCount(queryMap);
@@ -398,7 +532,10 @@ public class FormController extends BaseController {
         }
 
         queryMap.put("q_disposeStatus", "1");//待处理
-        queryMap.put("q_disposeUserNo", userNo);//用户编号
+
+        if (systemUser.getUserType() != 5) {
+            queryMap.put("q_disposeUserNo", userNo);//用户编号
+        }
 
         ServiceResult<Integer> disposeWaitResult = bdFormService.getBdFormListCount(queryMap);
         if (!disposeWaitResult.getSuccess()) {
@@ -436,7 +573,7 @@ public class FormController extends BaseController {
             return AjaxResponse.failure(RespCode.ILLEGAL_ARGUMENT);
         }
         SystemUser systemUser = this.getSystemUser();
-        if (systemUser.getUserType() != 1) {
+        if (systemUser.getUserType() == 0 || systemUser.getUserType() == 2 || systemUser.getUserType() == 5) {
             return AjaxResponse.failure("非门店帐号不能进行此操作");
         }
 
@@ -525,7 +662,7 @@ public class FormController extends BaseController {
 
     private AjaxResponse saveLocalForm(SaveApplyForm form) {
         SystemUser systemUser = this.getSystemUser();
-        if (systemUser.getUserType() != 1) {
+        if (systemUser.getUserType() == 0 || systemUser.getUserType() == 2 || systemUser.getUserType() == 5) {
             return AjaxResponse.failure("非门店帐号不能进行此操作");
         }
 

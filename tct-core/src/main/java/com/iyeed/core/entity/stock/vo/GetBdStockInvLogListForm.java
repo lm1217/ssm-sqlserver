@@ -9,6 +9,24 @@ public class GetBdStockInvLogListForm implements Serializable {
     private String storeNo;
     private String skuCode;
     private Integer type;
+    private String userNo;
+    private String brandNo;
+
+    public String getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(String userNo) {
+        this.userNo = userNo;
+    }
+
+    public String getBrandNo() {
+        return brandNo;
+    }
+
+    public void setBrandNo(String brandNo) {
+        this.brandNo = brandNo;
+    }
 
     public Integer getPageIndex() {
         return pageIndex;

@@ -9,18 +9,18 @@ import java.util.Map;
 @Repository
 public interface SystemResourceWriteDao {
 
-    SystemResource get(Integer id);
+    SystemResource get(Integer id) throws Exception;
 
-    Integer save(SystemResource systemResource);
+    Integer save(SystemResource systemResource) throws Exception;
 
-    Integer update(SystemResource systemResource);
+    Integer update(SystemResource systemResource) throws Exception;
 
-    Integer getCount(Map<String, String> queryMap);
+    Integer getCount(Map<String, String> queryMap) throws Exception;
 
-    List<SystemResource> page(Map<String, String> queryMap);
+    List<SystemResource> page(Map<String, String> queryMap) throws Exception;
 
-    List<SystemResource> list(Map<String, Object> queryMap);
+    List<SystemResource> list(Map<String, Object> queryMap) throws Exception;
 
-    Integer del(Integer id);
+    Integer del(Integer id) throws Exception;
 
 }

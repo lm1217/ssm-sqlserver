@@ -3,6 +3,8 @@ package com.iyeed.service.system;
 import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.system.SystemUser;
+import com.iyeed.core.entity.system.SystemUserBrand;
+import com.iyeed.core.entity.system.vo.SystemBrandUserBean;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,8 @@ public interface ISystemUserService {
     */
     ServiceResult<Integer> updateSystemUser(SystemUser systemUser);
 
+    ServiceResult<Integer> updateLogins(Integer id);
+
     /**
     * 分页查询
     * @param queryMap
@@ -59,4 +63,16 @@ public interface ISystemUserService {
      * @return
      */
     ServiceResult<List<SystemUser>> getSystemUserByName(String name);
+
+    ServiceResult<SystemUserBrand> getSystemUserBrandByUsername(String username);
+
+    ServiceResult<Integer> saveSystemUserBrand(SystemUserBrand systemUserBrand);
+
+    /**
+     * 分页查询
+     * @param queryMap
+     * @param pager
+     * @return
+     */
+    ServiceResult<List<SystemBrandUserBean>> getBrandUserList(Map<String, Object> queryMap, PagerInfo pager);
 }

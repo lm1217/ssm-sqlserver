@@ -11,37 +11,37 @@ import java.util.Map;
 @Repository
 public interface SystemRoleResourceWriteDao {
 
-    SystemRoleResource get(Integer id);
+    SystemRoleResource get(Integer id) throws Exception;
 
-    Integer save(SystemRoleResource systemRolesResource);
+    Integer save(SystemRoleResource systemRolesResource) throws Exception;
 
-    Integer update(SystemRoleResource systemRolesResource);
+    Integer update(SystemRoleResource systemRolesResource) throws Exception;
 
-    Integer getCount(Map<String, String> queryMap);
+    Integer getCount(Map<String, String> queryMap) throws Exception;
 
-    List<SystemRoleResource> page(Map<String, String> queryMap);
+    List<SystemRoleResource> page(Map<String, String> queryMap) throws Exception;
 
-    Integer del(Integer id);
+    Integer del(Integer id) throws Exception;
 
     /**
      * 此角色下的资源
      * @param roleId
      * @return
      */
-    List<SystemResource> getResourceByRoleId(@Param("roleId") Integer roleId);
+    List<SystemResource> getResourceByRoleId(@Param("roleId") Integer roleId) throws Exception;
 
     /**
      * 此资源下的有权限的子资源
      * @param queryMap
      * @return
      */
-    List<SystemResource> getResourceByPid(Map<String, Object> queryMap);
+    List<SystemResource> getResourceByPid(Map<String, Object> queryMap) throws Exception;
 
     /**
      * 删除该角色下的资源关联
      * @param roleId
      * @return
      */
-    Integer delByRole(String roleId);
+    Integer delByRole(String roleId) throws Exception;
 
 }

@@ -146,20 +146,13 @@
             <properties>
                 <xzn.system.env>local</xzn.system.env>
 
-                <xzn.write.url>jdbc:mysql://localhost:3306/tct</xzn.write.url>
-                <xzn.write.username>root</xzn.write.username>
-                <xzn.write.password>123456</xzn.write.password>
+                <xzn.write.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCTTEST</xzn.write.url>
+                <xzn.write.username>sa</xzn.write.username>
+                <xzn.write.password>TRansluckAw8</xzn.write.password>
 
-                <xzn.read.url>jdbc:mysql://localhost:3306/tct</xzn.read.url>
-                <xzn.read.username>root</xzn.read.username>
-                <xzn.read.password>123456</xzn.read.password>
-
-                <xzn.redis.host>192.168.1.47</xzn.redis.host>
-                <xzn.redis.port>6379</xzn.redis.port>
-                <xzn.redis.password>redis@cnjnb</xzn.redis.password>
-                <xzn.redis.custom.db>3</xzn.redis.custom.db>
-                <xzn.redis.springcache.db>4</xzn.redis.springcache.db>
-                <xzn.redis.shiro.session.db>5</xzn.redis.shiro.session.db>
+                <xzn.read.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCTTEST</xzn.read.url>
+                <xzn.read.username>sa</xzn.read.username>
+                <xzn.read.password>TRansluckAw8</xzn.read.password>
 
                 <log.moduleName>tct-api</log.moduleName>
                 <log.base>logs</log.base>
@@ -173,20 +166,13 @@
             <properties>
                 <xzn.system.env>dev</xzn.system.env>
 
-                <xzn.write.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCT</xzn.write.url>
-                <xzn.write.username>sa</xzn.write.username>
-                <xzn.write.password>TRansluckAw8</xzn.write.password>
+                <xzn.write.url>jdbc:sqlserver://CN-SHA-RPROP04;databaseName=TCT</xzn.write.url>
+                <xzn.write.username>tct</xzn.write.username>
+                <xzn.write.password>evs.1412</xzn.write.password>
 
-                <xzn.read.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCT</xzn.read.url>
-                <xzn.read.username>sa</xzn.read.username>
-                <xzn.read.password>TRansluckAw8</xzn.read.password>
-
-                <xzn.redis.host>192.168.1.47</xzn.redis.host>
-                <xzn.redis.port>6379</xzn.redis.port>
-                <xzn.redis.password>redis@cnjnb</xzn.redis.password>
-                <xzn.redis.custom.db>3</xzn.redis.custom.db>
-                <xzn.redis.springcache.db>4</xzn.redis.springcache.db>
-                <xzn.redis.shiro.session.db>5</xzn.redis.shiro.session.db>
+                <xzn.read.url>jdbc:sqlserver://CN-SHA-RPROP04;databaseName=TCT</xzn.read.url>
+                <xzn.read.username>tct</xzn.read.username>
+                <xzn.read.password>evs.1412</xzn.read.password>
 
                 <log.moduleName>tct-api</log.moduleName>
                 <log.base>logs</log.base>
@@ -200,20 +186,13 @@
             <properties>
                 <xzn.system.env>test</xzn.system.env>
 
-                <xzn.write.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCT</xzn.write.url>
+                <xzn.write.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCTTEST</xzn.write.url>
                 <xzn.write.username>sa</xzn.write.username>
                 <xzn.write.password>TRansluckAw8</xzn.write.password>
 
-                <xzn.read.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCT</xzn.read.url>
+                <xzn.read.url>jdbc:sqlserver://118.25.45.113:1433;databaseName=TCTTEST</xzn.read.url>
                 <xzn.read.username>sa</xzn.read.username>
                 <xzn.read.password>TRansluckAw8</xzn.read.password>
-
-                <xzn.redis.host>192.168.1.47</xzn.redis.host>
-                <xzn.redis.port>6379</xzn.redis.port>
-                <xzn.redis.password>redis@cnjnb</xzn.redis.password>
-                <xzn.redis.custom.db>3</xzn.redis.custom.db>
-                <xzn.redis.springcache.db>4</xzn.redis.springcache.db>
-                <xzn.redis.shiro.session.db>5</xzn.redis.shiro.session.db>
 
                 <log.moduleName>tct-api</log.moduleName>
                 <log.base>logs</log.base>
@@ -227,25 +206,18 @@
             <properties>
                 <xzn.system.env>pro</xzn.system.env>
 
-                <xzn.write.url>jdbc:mysql://localhost:3306/tct</xzn.write.url>
-                <xzn.write.username>root</xzn.write.username>
-                <xzn.write.password>123456</xzn.write.password>
+                <xzn.write.url>jdbc:sqlserver://CN-SHA-RPROP04;databaseName=TCT</xzn.write.url>
+                <xzn.write.username>tct</xzn.write.username>
+                <xzn.write.password>evs.1412</xzn.write.password>
 
-                <xzn.read.url>jdbc:mysql://localhost:3306/tct</xzn.read.url>
-                <xzn.read.username>root</xzn.read.username>
-                <xzn.read.password>123456</xzn.read.password>
-
-                <xzn.redis.host>192.168.1.47</xzn.redis.host>
-                <xzn.redis.port>6379</xzn.redis.port>
-                <xzn.redis.password>redis@cnjnb</xzn.redis.password>
-                <xzn.redis.custom.db>3</xzn.redis.custom.db>
-                <xzn.redis.springcache.db>4</xzn.redis.springcache.db>
-                <xzn.redis.shiro.session.db>5</xzn.redis.shiro.session.db>
+                <xzn.read.url>jdbc:sqlserver://CN-SHA-RPROP04;databaseName=TCT</xzn.read.url>
+                <xzn.read.username>tct</xzn.read.username>
+                <xzn.read.password>evs.1412</xzn.read.password>
 
                 <log.moduleName>tct-api</log.moduleName>
-                <log.base>logs</log.base>
-                <log.other.level>DEBUG</log.other.level>
-                <log.root.level>DEBUG</log.root.level>
+                <log.base>D:\apache-tomcat-7.0.70\logs</log.base>
+                <log.other.level>ERROR</log.other.level>
+                <log.root.level>ERROR</log.root.level>
             </properties>
         </profile>
     </profiles>

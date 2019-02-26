@@ -32,6 +32,7 @@ import java.util.Map;
  * @Date 2018/8/3 17:39
  */
 @Controller
+@CrossOrigin(origins = "*", maxAge = 3600) //解决跨域问题
 @RequestMapping(value = "api/system/resource")
 @Scope("prototype")
 public class SystemResourceController extends BaseController {

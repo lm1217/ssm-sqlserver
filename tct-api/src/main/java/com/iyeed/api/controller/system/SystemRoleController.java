@@ -27,6 +27,7 @@ import java.util.Map;
  * @Date 2018/8/3 17:39
  */
 @Controller
+@CrossOrigin(origins = "*", maxAge = 3600) //解决跨域问题
 @RequestMapping(value = "api/system/role")
 public class SystemRoleController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(SystemRoleController.class);
@@ -110,9 +111,6 @@ public class SystemRoleController extends BaseController {
     @RequestMapping(value = "saveRole.json", method = { RequestMethod.POST })
     @ResponseBody
     public AjaxResponse saveRole(@RequestBody SystemRole role) {
-        if (isNull(role.getUserId())) {
-            role.setUserId(1);//操作人默认为1、超级管理员
-        }
         role.setStatus(1);//初始状态 默认为正常
         ServiceResult<Integer> serviceResult = null;
         if (role.getId() != null && role.getId() != 0) {

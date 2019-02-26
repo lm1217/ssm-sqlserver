@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class CsvFileUtil {  
     // CSV文件编码  
-    public static final String ENCODE = "UTF-8";
+    public static final String ENCODE = "GB18030";
   
     private FileInputStream fis = null;  
     private InputStreamReader isw = null;  
@@ -45,13 +45,17 @@ public class CsvFileUtil {
                 List<String> cells = new ArrayList<String>();// 每行记录一个list  
                 // 读取每个单元格  
                 while (mCells.find()) {  
-                    str = mCells.group();  
+                    str = mCells.group();
+                    str = str.replaceAll("\u0000\"", "\"");
                     str = str.replaceAll("(?sm)\"?([^\"]*(\"{2})*[^\"]*)\"?.*,", "$1");  
                     str = str.replaceAll("(?sm)(\"(\"))", "$2");  
                     cells.add(str);  
                     index = mCells.end();  
-                }  
-                cells.add(rec.substring(index).equals("\"\"")? "":rec.substring(index));
+                }
+                str = rec.substring(index).concat(",");
+                str = str.replaceAll("(?sm)\"?([^\"]*(\"{2})*[^\"]*)\"?.*,", "$1");
+                str = str.replaceAll("(?sm)(\"(\"))", "$2");
+                cells.add(str);
                 listFile.add(cells);  
             }  
         } catch (Exception e) {  

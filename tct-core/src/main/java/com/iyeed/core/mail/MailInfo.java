@@ -2,8 +2,6 @@ package com.iyeed.core.mail;
 
 import com.iyeed.core.ConstantsEJS;
 import com.sun.mail.util.MailSSLSocketFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 
 import java.security.GeneralSecurityException;
 import java.util.Properties;
@@ -17,6 +15,8 @@ public class MailInfo {
     private String username = ConstantsEJS.MAIL_USERNAME;
     /** 发送邮件的密码 */
     private String password = ConstantsEJS.MAIL_PASSWORD;
+    /** 发送方邮箱账号 */
+    private String senderMail = ConstantsEJS.MAIL_SENDER_MAIL;
 
     /** 错误信息发送地址（多个邮件地址以";"分隔） */
     private String errorTo;
@@ -48,18 +48,30 @@ public class MailInfo {
         Properties props = new Properties();
         props.put("mail.smtp.host", getMailHost());
         props.put("mail.smtp.port", getMailPort());
-        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.auth", "false");
         props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth.mechanisms", "NTLM");
+        props.put("mail.debug", "false");
+        // Exchange邮件发送配置
+        props.put("mail.smtp.auth.ntlm.domain", ConstantsEJS.MAIL_DOMAIN);
 
         MailSSLSocketFactory sslSF = new MailSSLSocketFactory();
         sslSF.setTrustAllHosts(true);
-        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.ssl.enable", "false");
         props.put("mail.smtp.ssl.socketFactory", sslSF);
         props.put("mail.transport.protocol", "smtp");
 
         props.put("mail.user", getUsername());
         props.put("mail.password", getPassword());
         return props;
+    }
+
+    public String getSenderMail() {
+        return senderMail;
+    }
+
+    public void setSenderMail(String senderMail) {
+        this.senderMail = senderMail;
     }
 
     /**

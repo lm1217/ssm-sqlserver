@@ -29,6 +29,7 @@
 			<result property="updateDate" column="update_date" />
 			<result property="sendMailDate" column="send_mail_date" />
 			<result property="isBack" column="is_back" />
+			<result property="brandNo" column="brand_no" />
 	</resultMap>
 
 	<resultMap id="GetDisposeFormListBeanResult" type="com.iyeed.core.entity.form.vo.GetDisposeFormListBean">
@@ -49,12 +50,15 @@
 		<result property="id" column="id" />
 		<result property="storeNo" column="store_no" />
 		<result property="storeName" column="store_name" />
+		<result property="brandNo" column="brand_no" />
+		<result property="brandName" column="brand_name" />
 		<result property="applyNo" column="apply_no" />
 		<result property="formType" column="form_type" />
 		<result property="disposeUserNo" column="dispose_user_no" />
 		<result property="disposeStatus" column="dispose_status" />
 		<result property="disposeGrade" column="dispose_grade" />
-		<result property="email" column="email" />
+		<result property="destroyType" column="destroy_type" />
+		<result property="userEmail" column="user_email" />
 		<result property="isBack" column="is_back" />
 	</resultMap>
 
@@ -72,7 +76,96 @@
 		<result property="changeType" column="change_type" />
 		<result property="changeTotal" column="change_total" />
 	</resultMap>
-	
+
+	<resultMap id="GetDestroyFormListBeanResult" type="com.iyeed.core.entity.form.vo.GetDestroyFormListBean">
+		<result property="brandName" column="brand_name" />
+		<result property="storeId" column="store_id" />
+		<result property="storeNo" column="store_no" />
+		<result property="storeName" column="store_name" />
+		<result property="storeAttr" column="store_attr" />
+		<result property="skuCode" column="sku_code" />
+		<result property="skuName" column="sku_name" />
+		<result property="qtl" column="qtl" />
+		<result property="cytdQtl" column="cytdQtl" />
+		<result property="fytdQtl" column="fytdQtl" />
+		<result property="hz" column="hz" />
+		<result property="cytdHz" column="cytdHz" />
+		<result property="fytdHz" column="fytdHz" />
+		<result property="region" column="region" />
+		<result property="city" column="city" />
+		<result property="channel" column="channel" />
+		<result property="doorType" column="door_type" />
+		<result property="asm" column="asm" />
+		<result property="ac" column="ac" />
+	</resultMap>
+
+    <resultMap id="GetDestroyTheftFormListBeanResult" type="com.iyeed.core.entity.form.vo.GetDestroyTheftFormListBean">
+		<result property="brandName" column="brand_name" />
+		<result property="storeId" column="store_id" />
+		<result property="storeNo" column="store_no" />
+        <result property="storeName" column="store_name" />
+		<result property="storeAttr" column="store_attr" />
+		<result property="skuCode" column="sku_code" />
+		<result property="skuName" column="sku_name" />
+        <result property="qtl" column="qtl" />
+		<result property="stockQtl" column="stockQtl" />
+		<result property="cytdQtl" column="cytdQtl" />
+		<result property="cytdStockQtl" column="cytdStockQtl" />
+		<result property="fytdQtl" column="fytdQtl" />
+		<result property="fytdStockQtl" column="fytdStockQtl" />
+		<result property="rate" column="rate" />
+		<result property="cytdRate" column="cytdRate" />
+		<result property="fytdRate" column="fytdRate" />
+        <result property="region" column="region" />
+        <result property="city" column="city" />
+		<result property="channel" column="channel" />
+        <result property="doorType" column="door_type" />
+		<result property="asm" column="asm" />
+        <result property="ac" column="ac" />
+    </resultMap>
+
+	<resultMap id="GetDSIFormListBeanResult" type="com.iyeed.core.entity.form.vo.GetDSIFormListBean">
+		<result property="brandName" column="brand_name" />
+		<result property="applyNo" column="apply_no" />
+		<result property="storeId" column="store_id" />
+		<result property="storeNo" column="store_no" />
+		<result property="storeName" column="store_name" />
+		<result property="storeAttr" column="store_attr" />
+		<result property="skuCode" column="sku_code" />
+		<result property="skuName" column="sku_name" />
+		<result property="qtl" column="qtl" />
+		<result property="dsi" column="dsi" />
+		<result property="region" column="region" />
+		<result property="city" column="city" />
+		<result property="channel" column="channel" />
+		<result property="doorType" column="door_type" />
+		<result property="asm" column="asm" />
+		<result property="ac" column="ac" />
+	</resultMap>
+
+	<resultMap id="StockReportBeanResult" type="com.iyeed.core.entity.form.vo.StockReportBean">
+		<result property="storeNo" column="user_no" />
+		<result property="shDc" column="e_act_send_total" />
+		<result property="shDb" column="d_act_send_total" />
+		<result property="wshDc" column="c_send_total" />
+		<result property="wshDb" column="b_send_total" />
+		<result property="xhZc" column="f_change_total" />
+		<result property="xhPs" column="g_change_total" />
+		<result property="xhGq" column="h_change_total" />
+		<result property="xhSq" column="i_change_total" />
+		<result property="allot" column="j_change_total" />
+		<result property="exceptionA" column="k_change_total" />
+		<result property="exceptionB" column="l_change_total" />
+		<result property="stockStart" column="stock_total_a" />
+		<result property="stockEnd" column="stock_total" />
+		<result property="region" column="region" />
+		<result property="city" column="city" />
+		<result property="channel" column="channel" />
+		<result property="doorType" column="door_type" />
+		<result property="asm" column="asm" />
+		<result property="ac" column="ac" />
+	</resultMap>
+
 	<select id="get" parameterType="Integer" resultMap="BdFormResult">
 		select
 		   *
@@ -89,31 +182,514 @@
 
 	<select id="getBdFormList" parameterType="java.util.Map" resultMap="GetDisposeFormListBeanResult">
 		SELECT
-		*
-		FROM bd_form
+		bf.*
+		FROM bd_form bf, md_store ms
 		<include refid="getCondition"/>
-		order by input_date desc
+		order by bf.input_date desc
 		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
 	</select>
 
 	<select id="getBdFormListCount" parameterType="java.util.Map" resultType="Integer">
-		SELECT count(*)
-		FROM bd_form
+		SELECT count(1)
+		FROM bd_form bf, md_store ms
 		<include refid="getCondition"/>
 	</select>
 
 	<select id="getBdFormListForSendFormMail" parameterType="java.util.Map" resultMap="FormJobBeanResult">
 		SELECT
-		bf.*, mu.email
-		FROM bd_form bf, md_user mu
-		WHERE bf.dispose_user_no = mu.user_no and datediff([hour], bf.send_mail_date, getdate()) > 48 and bf.dispose_status != 0
+		bf.*, mu.user_email, ms.brand_name, ms.brand_no
+		FROM bd_form bf, md_user mu, md_store ms
+		WHERE bf.dispose_user_no = mu.user_no and bf.store_no = ms.store_no
+		and datediff(dd, bf.send_mail_date, getdate()) > 3
+		and bf.dispose_status != 0 and bf.dispose_result = 0 and bf.form_type != 2
+		union
+		SELECT
+		bf.*, mu.user_email, ms.brand_name, ms.brand_no
+		FROM bd_form bf, md_user mu, md_store ms
+		WHERE bf.dispose_user_no = mu.user_no and bf.store_no = ms.store_no
+		and datediff(dd, bf.send_mail_date, getdate()) > 3
+		and bf.dispose_status != 0 and bf.dispose_result = 0 and bf.form_type = 2 and bf.dispose_grade > 0
+	</select>
+
+	<select id="getBdFormListForDestroySendFormMail" parameterType="java.util.Map" resultMap="FormJobBeanResult">
+		SELECT
+		bf.*, mu.user_email, ms.brand_name, ms.brand_no
+		FROM bd_form bf, md_user mu, md_store ms
+		WHERE bf.dispose_user_no = mu.user_no and bf.store_no = ms.store_no
+		and datediff(dd, bf.send_mail_date, getdate()) > 7
+		and bf.dispose_status != 0 and bf.dispose_result = 0 and bf.form_type = 2
+		and bf.dispose_grade = 0
 	</select>
 
 	<select id="getBdFormListForChangeAudit" parameterType="java.util.Map" resultMap="FormJobBeanResult">
 		SELECT
-		bf.*, mu.email
-		FROM bd_form bf, md_user mu
-		WHERE bf.dispose_user_no = mu.user_no and datediff([hour], bf.update_date, getdate()) > 168 and bf.dispose_status != 0
+		bf.*, mu.user_email, ms.brand_name, ms.brand_no
+		FROM bd_form bf, md_user mu, md_store ms
+		WHERE bf.dispose_user_no = mu.user_no and bf.store_no = ms.store_no
+		and datediff(dd, bf.update_date, getdate()) > 7
+		and bf.dispose_status != 0 and bf.dispose_result = 0 and bf.form_type != 2
+		union
+		SELECT
+		bf.*, mu.user_email, ms.brand_name, ms.brand_no
+		FROM bd_form bf, md_user mu, md_store ms
+		WHERE bf.dispose_user_no = mu.user_no and bf.store_no = ms.store_no
+		and datediff(dd, bf.update_date, getdate()) > 7
+		and bf.dispose_status != 0 and bf.dispose_result = 0 and bf.form_type = 2
+		and bf.dispose_grade > 0
+	</select>
+
+	<select id="getBdFormListForDestroyChangeAudit" parameterType="java.util.Map" resultMap="FormJobBeanResult">
+		SELECT
+		bf.*, mu.user_email, ms.brand_name, ms.brand_no
+		FROM bd_form bf, md_user mu, md_store ms
+		WHERE bf.dispose_user_no = mu.user_no and bf.store_no = ms.store_no
+		and datediff(dd, bf.update_date, getdate()) > 45
+		and bf.dispose_status != 0 and bf.dispose_result = 0 and bf.form_type = 2
+		and bf.dispose_grade = 0
+	</select>
+
+	<select id="getDestroyFormList" parameterType="java.util.Map" resultMap="GetDestroyFormListBeanResult">
+		select a.*,ms.brand_name,ms.store_name,ms.store_id,
+		case when CHARINDEX('MR',a.apply_user_no) > 1 then '美容坊' when CHARINDEX('AR',a.apply_user_no) > 1 then 'Aerin' else '正常店铺' end store_attr,
+		ms.region,ms.city,ms.channel,ms.door_type,ms.asm,ms.ac
+		from md_store ms,
+		(
+		select temp.*,cytd.qtl cytdQtl,cytd.hz cytdHz,fytd.qtl fytdQtl,fytd.hz fytdHz  from
+		(
+		select a.store_no,a.sku_code,a.sku_name,a.apply_user_no,sum(a.qtl) qtl,count(a.update_date) hz
+		from
+		(
+		select bf.store_no,bfs.sku_code,bfs.sku_name,bf.apply_user_no, sum(bfs.change_total) qtl, format(bf.update_date,'yyyy-MM') update_date
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.dispose_status = 0 and bf.dispose_result = 1
+		<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+			and bf.update_date >= #{queryMap.q_starttime}
+		</if>
+		<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+			and bf.update_date &lt;= #{queryMap.q_endtime}
+		</if>
+		group by bf.store_no,bfs.sku_code,bfs.sku_name,bf.apply_user_no,format(bf.update_date,'yyyy-MM')
+		) a group by a.store_no,a.sku_code,a.sku_name,a.apply_user_no
+		) temp
+		left join
+		-- CYTD
+		(
+		select a.store_no,a.sku_code,a.apply_user_no,sum(a.qtl) qtl,
+		CONCAT(ROUND(COALESCE(CAST(count(a.update_date) AS FLOAT), 0)*100/(datediff(mm,dateadd(yy,datediff(yy,0,getdate()),0),getdate()) + 1), 2),'%') hz
+		from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) qtl, format(bf.update_date,'yyyy-MM') update_date
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >= dateadd(yy,datediff(yy,0,getdate()),0)
+		and bf.update_date &lt;= getdate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no,format(bf.update_date,'yyyy-MM')
+		) a group by a.store_no,a.sku_code,a.apply_user_no
+		) cytd
+		on temp.store_no = cytd.store_no and temp.sku_code = cytd.sku_code and temp.apply_user_no = cytd.apply_user_no
+		left join
+		-- FYTD
+		(
+		select a.store_no,a.sku_code,a.apply_user_no,sum(a.qtl) qtl,
+		CONCAT(ROUND(COALESCE(CAST(count(a.update_date) AS FLOAT), 0)*100/(datediff(mm,(case when datediff(hh, concat(DateName(year,GetDate()),'-07-01 00:00:00'), GetDate()) > 0 then concat(DateName(year,GetDate()),'-07-01 00:00:00') else dateadd(yy, -1, concat(DateName(year,GetDate()),'-07-01 00:00:00')) end),getdate()) + 1), 2),'%') hz
+		from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) qtl, format(bf.update_date,'yyyy-MM') update_date
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >=  (case when datediff(hh, concat(DateName(year,GetDate()),'-07-01 00:00:00'), GetDate()) > 0 then concat(DateName(year,GetDate()),'-07-01 00:00:00') else dateadd(yy, -1, concat(DateName(year,GetDate()),'-07-01 00:00:00')) end)
+		and bf.update_date &lt;= GetDate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no,format(bf.update_date,'yyyy-MM')
+		) a group by a.store_no,a.sku_code,a.apply_user_no
+		) fytd
+		on temp.store_no = fytd.store_no and temp.sku_code = fytd.sku_code and temp.apply_user_no = fytd.apply_user_no
+		) a
+		<include refid="getConditionForDestroy"/>
+		order by ms.store_no desc
+		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
+	</select>
+
+	<select id="getDestroyFormListCount" parameterType="java.util.Map" resultType="Integer">
+		select count(1)
+		from md_store ms,
+		(
+		select temp.*,cytd.qtl cytdQtl,cytd.hz cytdHz,fytd.qtl fytdQtl,fytd.hz fytdHz  from
+		(
+		select a.store_no,a.sku_code,a.sku_name,a.apply_user_no,sum(a.qtl) qtl,count(a.update_date) hz
+		from
+		(
+		select bf.store_no,bfs.sku_code,bfs.sku_name,bf.apply_user_no, sum(bfs.change_total) qtl, format(bf.update_date,'yyyy-MM') update_date
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.dispose_status = 0 and bf.dispose_result = 1
+		<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+			and bf.update_date >= #{queryMap.q_starttime}
+		</if>
+		<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+			and bf.update_date &lt;= #{queryMap.q_endtime}
+		</if>
+		group by bf.store_no,bfs.sku_code,bfs.sku_name,bf.apply_user_no,format(bf.update_date,'yyyy-MM')
+		) a group by a.store_no,a.sku_code,a.sku_name,a.apply_user_no
+		) temp
+		left join
+		-- CYTD
+		(
+		select a.store_no,a.sku_code,a.apply_user_no,sum(a.qtl) qtl,
+		CONCAT(ROUND(COALESCE(CAST(count(a.update_date) AS FLOAT), 0)*100/(datediff(mm,dateadd(yy,datediff(yy,0,getdate()),0),getdate()) + 1), 2),'%') hz
+		from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) qtl, format(bf.update_date,'yyyy-MM') update_date
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >= dateadd(yy,datediff(yy,0,getdate()),0)
+		and bf.update_date &lt;= getdate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no,format(bf.update_date,'yyyy-MM')
+		) a group by a.store_no,a.sku_code,a.apply_user_no
+		) cytd
+		on temp.store_no = cytd.store_no and temp.sku_code = cytd.sku_code and temp.apply_user_no = cytd.apply_user_no
+		left join
+		-- FYTD
+		(
+		select a.store_no,a.sku_code,a.apply_user_no,sum(a.qtl) qtl,
+		CONCAT(ROUND(COALESCE(CAST(count(a.update_date) AS FLOAT), 0)*100/(datediff(mm,(case when datediff(hh, concat(DateName(year,GetDate()),'-07-01 00:00:00'), GetDate()) > 0 then concat(DateName(year,GetDate()),'-07-01 00:00:00') else dateadd(yy, -1, concat(DateName(year,GetDate()),'-07-01 00:00:00')) end),getdate()) + 1), 2),'%') hz
+		from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) qtl, format(bf.update_date,'yyyy-MM') update_date
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >=  (case when datediff(hh, concat(DateName(year,GetDate()),'-07-01 00:00:00'), GetDate()) > 0 then concat(DateName(year,GetDate()),'-07-01 00:00:00') else dateadd(yy, -1, concat(DateName(year,GetDate()),'-07-01 00:00:00')) end)
+		and bf.update_date &lt;= GetDate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no,format(bf.update_date,'yyyy-MM')
+		) a group by a.store_no,a.sku_code,a.apply_user_no
+		) fytd
+		on temp.store_no = fytd.store_no and temp.sku_code = fytd.sku_code and temp.apply_user_no = fytd.apply_user_no
+		) a
+		<include refid="getConditionForDestroy"/>
+	</select>
+
+    <select id="getDestroyTheftFormList" parameterType="java.util.Map" resultMap="GetDestroyTheftFormListBeanResult">
+		select a.store_no,a.sku_code,a.sku_name,a.apply_user_no,a.qtl,a.cytdQtl,a.fytdQtl,(a.xQtl + a.dQtl) stockQtl,(a.cytdXqtl + a.cytdDqtl) cytdStockQtl,(a.fytdXqtl + a.fytdDqtl) fytdStockQtl,
+		(case when (a.xQtl + a.dQtl) > 0 then CONCAT(ROUND(COALESCE(CAST(a.qtl AS FLOAT), 0)*100/(a.xQtl + a.dQtl), 2),'%') else '0%' end) rate,
+		(case when (a.cytdXqtl + a.cytdDqtl) > 0 then CONCAT(ROUND(COALESCE(CAST(a.cytdQtl AS FLOAT), 0)*100/(a.cytdXqtl + a.cytdDqtl), 2),'%') else '0%'  end) cytdRate,
+		(case when (a.fytdXqtl + a.fytdDqtl) > 0 then CONCAT(ROUND(COALESCE(CAST(a.fytdQtl AS FLOAT), 0)*100/(a.fytdXqtl + a.fytdDqtl), 2),'%') else '0%'  end) fytdRate,
+		case when CHARINDEX('MR',a.apply_user_no) > 1 then '美容坊' when CHARINDEX('AR',a.apply_user_no) > 1 then 'Aerin' else '正常店铺' end store_attr,
+		ms.brand_name,ms.store_name,ms.store_id,ms.region,ms.city,ms.channel,ms.door_type,ms.asm,ms.ac
+		from md_store ms,
+		(
+		select temp.*,cytd.cytdQtl,cytd.cytdXqtl,cytd.cytdDqtl,fytd.fytdQtl,fytd.fytdXqtl,fytd.fytdDqtl from
+		-- 当月库存总盗损件数
+		(
+		select a.*,b.xQtl,b.dQtl from
+		(
+		select bf.store_no,bfs.sku_code,bfs.sku_name,bf.apply_user_no, sum(bfs.change_total) qtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 4 and bf.dispose_status = 0 and bf.dispose_result = 1
+		<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+			and bf.update_date >= #{queryMap.q_starttime}
+		</if>
+		<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+			and bf.update_date &lt;= #{queryMap.q_endtime}
+		</if>
+		group by bf.store_no,bfs.sku_code,bfs.sku_name,bf.apply_user_no
+		) a
+		left join
+		-- 当月库存总消耗件数
+		(
+		select a.store_no,a.sku_code,a.apply_user_no,a.qtl xQtl,b.qtl dQtl from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) qtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type in (2,3) and bf.dispose_status = 0 and bf.dispose_result = 1
+		<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+			and bf.update_date >= #{queryMap.q_starttime}
+		</if>
+		<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+			and bf.update_date &lt;= #{queryMap.q_endtime}
+		</if>
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no
+		) a
+		left join
+		-- 当前总库存
+		(
+		select bsi.store_no,bsi.sku_code,bsi.user_no, sum(bsi.stock_depot + bsi.stock_counter) qtl
+		from bd_stock_inv bsi
+		group by bsi.store_no,bsi.sku_code,bsi.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.apply_user_no
+		) temp
+		left join
+		-- CYTD财年库存总盗损件数
+		(
+		select a.*,b.cytdXqtl, b.cytdDqtl from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) cytdQtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 4 and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >= dateadd(yy,datediff(yy,0,getdate()),0)
+		and bf.update_date &lt;= getdate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no
+		) a
+		left join
+		-- CYTD财年库存消耗总件数
+		(
+		select a.store_no,a.sku_code,a.apply_user_no,a.qtl cytdXqtl,b.qtl cytdDqtl from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) qtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type in (2,3) and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >= dateadd(yy,datediff(yy,0,getdate()),0)
+		and bf.update_date &lt;= getdate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no
+		) a
+		left join
+		-- 当前库存总数
+		(
+		select bsi.store_no,bsi.sku_code,bsi.user_no, sum(bsi.stock_depot + bsi.stock_counter) qtl
+		from bd_stock_inv bsi
+		group by bsi.store_no,bsi.sku_code,bsi.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.apply_user_no
+		) cytd
+		on temp.store_no = cytd.store_no and temp.sku_code = cytd.sku_code and temp.apply_user_no = cytd.apply_user_no
+		left join
+		-- FYTD财年库存总盗损件数
+		(
+		select a.*,b.fytdXqtl, b.fytdDqtl from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) fytdQtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 4 and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >=  (case when datediff(hh, concat(DateName(year,GetDate()),'-07-01 00:00:00'), GetDate()) > 0 then concat(DateName(year,GetDate()),'-07-01 00:00:00') else dateadd(yy, -1, concat(DateName(year,GetDate()),'-07-01 00:00:00')) end)
+		and bf.update_date &lt;= GetDate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no
+		) a
+		left join
+		-- FYTD财年库存消耗总件数
+		(
+		select a.store_no,a.sku_code,a.apply_user_no,a.qtl fytdXqtl,b.qtl fytdDqtl from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) qtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type in (2,3) and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >=  (case when datediff(hh, concat(DateName(year,GetDate()),'-07-01 00:00:00'), GetDate()) > 0 then concat(DateName(year,GetDate()),'-07-01 00:00:00') else dateadd(yy, -1, concat(DateName(year,GetDate()),'-07-01 00:00:00')) end)
+		and bf.update_date &lt;= GetDate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no
+		) a
+		left join
+		-- 当前库存总数
+		(
+		select bsi.store_no,bsi.sku_code,bsi.user_no, sum(bsi.stock_depot + bsi.stock_counter) qtl
+		from bd_stock_inv bsi
+		group by bsi.store_no,bsi.sku_code,bsi.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.apply_user_no
+		) fytd
+		on temp.store_no = fytd.store_no and temp.sku_code = fytd.sku_code and temp.apply_user_no = fytd.apply_user_no
+		) a
+        <include refid="getConditionForDestroy"/>
+        order by ms.store_no desc
+        <if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
+    </select>
+
+    <select id="getDestroyTheftFormListCount" parameterType="java.util.Map" resultType="Integer">
+        select count(1)
+		from md_store ms,
+		(
+		select temp.*,cytd.cytdQtl,cytd.cytdXqtl,cytd.cytdDqtl,fytd.fytdQtl,fytd.fytdXqtl,fytd.fytdDqtl from
+		-- 当月库存总盗损件数
+		(
+		select a.*,b.xQtl,b.dQtl from
+		(
+		select bf.store_no,bfs.sku_code,bfs.sku_name,bf.apply_user_no, sum(bfs.change_total) qtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 4 and bf.dispose_status = 0 and bf.dispose_result = 1
+		<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+			and bf.update_date >= #{queryMap.q_starttime}
+		</if>
+		<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+			and bf.update_date &lt;= #{queryMap.q_endtime}
+		</if>
+		group by bf.store_no,bfs.sku_code,bfs.sku_name,bf.apply_user_no
+		) a
+		left join
+		-- 当月库存总消耗件数
+		(
+		select a.store_no,a.sku_code,a.apply_user_no,a.qtl xQtl,b.qtl dQtl from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) qtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type in (2,3) and bf.dispose_status = 0 and bf.dispose_result = 1
+		<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+			and bf.update_date >= #{queryMap.q_starttime}
+		</if>
+		<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+			and bf.update_date &lt;= #{queryMap.q_endtime}
+		</if>
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no
+		) a
+		left join
+		-- 当前总库存
+		(
+		select bsi.store_no,bsi.sku_code,bsi.user_no, sum(bsi.stock_depot + bsi.stock_counter) qtl
+		from bd_stock_inv bsi
+		group by bsi.store_no,bsi.sku_code,bsi.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.apply_user_no
+		) temp
+		left join
+		-- CYTD财年库存总盗损件数
+		(
+		select a.*,b.cytdXqtl, b.cytdDqtl from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) cytdQtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 4 and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >= dateadd(yy,datediff(yy,0,getdate()),0)
+		and bf.update_date &lt;= getdate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no
+		) a
+		left join
+		-- CYTD财年库存消耗总件数
+		(
+		select a.store_no,a.sku_code,a.apply_user_no,a.qtl cytdXqtl,b.qtl cytdDqtl from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) qtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type in (2,3) and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >= dateadd(yy,datediff(yy,0,getdate()),0)
+		and bf.update_date &lt;= getdate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no
+		) a
+		left join
+		-- 当前库存总数
+		(
+		select bsi.store_no,bsi.sku_code,bsi.user_no, sum(bsi.stock_depot + bsi.stock_counter) qtl
+		from bd_stock_inv bsi
+		group by bsi.store_no,bsi.sku_code,bsi.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.apply_user_no
+		) cytd
+		on temp.store_no = cytd.store_no and temp.sku_code = cytd.sku_code and temp.apply_user_no = cytd.apply_user_no
+		left join
+		-- FYTD财年库存总盗损件数
+		(
+		select a.*,b.fytdXqtl, b.fytdDqtl from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) fytdQtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 4 and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >=  (case when datediff(hh, concat(DateName(year,GetDate()),'-07-01 00:00:00'), GetDate()) > 0 then concat(DateName(year,GetDate()),'-07-01 00:00:00') else dateadd(yy, -1, concat(DateName(year,GetDate()),'-07-01 00:00:00')) end)
+		and bf.update_date &lt;= GetDate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no
+		) a
+		left join
+		-- FYTD财年库存消耗总件数
+		(
+		select a.store_no,a.sku_code,a.apply_user_no,a.qtl fytdXqtl,b.qtl fytdDqtl from
+		(
+		select bf.store_no,bfs.sku_code,bf.apply_user_no, sum(bfs.change_total) qtl
+		from bd_form bf,bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type in (2,3) and bf.dispose_status = 0 and bf.dispose_result = 1
+		and bf.update_date >=  (case when datediff(hh, concat(DateName(year,GetDate()),'-07-01 00:00:00'), GetDate()) > 0 then concat(DateName(year,GetDate()),'-07-01 00:00:00') else dateadd(yy, -1, concat(DateName(year,GetDate()),'-07-01 00:00:00')) end)
+		and bf.update_date &lt;= GetDate()
+		group by bf.store_no,bfs.sku_code,bf.apply_user_no
+		) a
+		left join
+		-- 当前库存总数
+		(
+		select bsi.store_no,bsi.sku_code,bsi.user_no, sum(bsi.stock_depot + bsi.stock_counter) qtl
+		from bd_stock_inv bsi
+		group by bsi.store_no,bsi.sku_code,bsi.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.user_no
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.apply_user_no
+		) fytd
+		on temp.store_no = fytd.store_no and temp.sku_code = fytd.sku_code and temp.apply_user_no = fytd.apply_user_no
+		) a
+        <include refid="getConditionForDestroy"/>
+    </select>
+
+	<select id="getDSIFormList" parameterType="java.util.Map" resultMap="GetDSIFormListBeanResult">
+		select a.*,case when CHARINDEX('MR',a.apply_user_no) > 1 then '美容坊' when CHARINDEX('AR',a.apply_user_no) > 1 then 'Aerin' else '正常店铺' end store_attr,
+		ms.brand_name,ms.store_name,ms.store_id,ms.region,ms.city,ms.channel,ms.door_type,ms.asm,ms.ac
+		from md_store ms,
+		(
+		select a.*,b.move_number,b.input_date b_input_date,c.stock_counter,c.update_date c_update_date,
+		(abs(datediff(day,case when b.input_date is null then c.update_date else b.input_date end,a.input_date)) + 1) dsi
+		from
+		(
+		select bf.store_no,bf.apply_no,bf.input_date,bf.apply_user_no,bfs.sku_code,bfs.sku_name,bfs.change_total qtl
+		from bd_form bf, bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.dispose_result = 1
+		<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+			and bf.update_date >= #{queryMap.q_starttime}
+		</if>
+		<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+			and bf.update_date &lt;= #{queryMap.q_endtime}
+		</if>
+		) a
+		left join
+		(
+		select bsil.store_no,bsil.sku_code,bsil.move_number,bsil.user_no,bsil.input_date
+		from bd_stock_inv_log bsil
+		where bsil.type = 1
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.user_no
+		left join
+		(
+		select bsi.store_no,bsi.sku_code,bsi.user_no,bsi.stock_counter,bsi.update_date
+		from bd_stock_inv bsi
+		) c
+		on a.store_no = c.store_no and a.sku_code = c.sku_code and a.apply_user_no = c.user_no
+		) a
+		<include refid="getConditionForDestroy"/>
+		order by a.apply_no desc
+		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
+	</select>
+
+	<select id="getDSIFormListCount" parameterType="java.util.Map" resultType="Integer">
+		select count(1)
+		from md_store ms,
+		(
+		select a.*,b.move_number,b.input_date b_input_date,c.stock_counter,c.update_date c_update_date,
+		(abs(datediff(day,case when b.input_date is null then c.update_date else b.input_date end,a.input_date)) + 1) dsi
+		from
+		(
+		select bf.store_no,bf.apply_no,bf.input_date,bf.apply_user_no,bfs.sku_code,bfs.sku_name,bfs.change_total qtl
+		from bd_form bf, bd_form_sku bfs
+		where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.dispose_result = 1
+		<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+			and bf.update_date >= #{queryMap.q_starttime}
+		</if>
+		<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+			and bf.update_date &lt;= #{queryMap.q_endtime}
+		</if>
+		) a
+		left join
+		(
+		select bsil.store_no,bsil.sku_code,bsil.move_number,bsil.user_no,bsil.input_date
+		from bd_stock_inv_log bsil
+		where bsil.type = 1
+		) b
+		on a.store_no = b.store_no and a.sku_code = b.sku_code and a.apply_user_no = b.user_no
+		left join
+		(
+		select bsi.store_no,bsi.sku_code,bsi.user_no,bsi.stock_counter,bsi.update_date
+		from bd_stock_inv bsi
+		) c
+		on a.store_no = c.store_no and a.sku_code = c.sku_code and a.apply_user_no = c.user_no
+		) a
+		<include refid="getConditionForDestroy"/>
 	</select>
 	
 	<update id="update" parameterType="com.iyeed.core.entity.form.BdForm">
@@ -207,7 +783,8 @@
 			dispose_status_desc,
 			dispose_grade,
 			apply_user_no,
-			is_back
+			is_back,
+			brand_no
 		)
 		values
 		(
@@ -234,46 +811,72 @@
 			#{disposeStatusDesc},
 			#{disposeGrade},
 			#{applyUserNo},
-			#{isBack}
+			#{isBack},
+			#{brandNo}
 		)
 	</insert>
 
+	<sql id="getConditionForDestroy">
+		<where>
+			ms.store_no = a.store_no
+			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
+				and ms.store_no = #{queryMap.q_storeNo}
+			</if>
+			<if test="queryMap.q_brandNo != null and queryMap.q_brandNo !=''">
+				and ms.brand_code = (select brand_code from md_brand where brand_no = #{queryMap.q_brandNo})
+			</if>
+			<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
+				and ms.store_no in
+				<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
+					#{storeNo}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+
 	<sql id="getCondition">
 		<where>
+			bf.store_no = ms.store_no
 			<if test="queryMap.q_disposeUserNo != null and queryMap.q_disposeUserNo !=''">
-				and dispose_user_no = #{queryMap.q_disposeUserNo}
+				and bf.dispose_user_no = #{queryMap.q_disposeUserNo}
 			</if>
 			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
-				and store_no = #{queryMap.q_storeNo}
+				and bf.store_no = #{queryMap.q_storeNo}
+			</if>
+			<if test="queryMap.q_brandNo != null and queryMap.q_brandNo !=''">
+				and ms.brand_code = (select brand_code from md_brand where brand_no = #{queryMap.q_brandNo})
 			</if>
 			<if test="queryMap.q_applyNo != null and queryMap.q_applyNo !=''">
-				and apply_no = #{queryMap.q_applyNo}
+				and bf.apply_no = #{queryMap.q_applyNo}
+			</if>
+			<if test="queryMap.q_userNo != null and queryMap.q_userNo !=''">
+				and bf.apply_user_no = #{queryMap.q_userNo}
 			</if>
 			<if test="queryMap.q_disposeStatus != null and queryMap.q_disposeStatus !=''">
 				<if test="queryMap.q_disposeStatus == 1">
-					and dispose_status IN (1,2,3)
+					and bf.dispose_status IN (1,2,3)
 				</if>
 				<if test="queryMap.q_disposeStatus == 2">
-					and dispose_status IN (1,2)
+					and bf.dispose_status IN (1,2)
 				</if>
 				<if test="queryMap.q_disposeStatus == 0">
-					and dispose_status = #{queryMap.q_disposeStatus}
+					and bf.dispose_status = #{queryMap.q_disposeStatus}
 				</if>
 			</if>
 			<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
-				and store_no in
+				and bf.store_no in
 				<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
 					#{storeNo}
 				</foreach>
 			</if>
 			<if test="queryMap.q_formType != null and queryMap.q_formType !=''">
-				and form_type = #{queryMap.q_formType}
+				and bf.form_type = #{queryMap.q_formType}
 			</if>
 			<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
-				and apply_date &gt;= #{queryMap.q_starttime}
+				and bf.apply_date &gt;= #{queryMap.q_starttime}
 			</if>
 			<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
-				and apply_date &lt;= #{queryMap.q_endtime}
+				and bf.apply_date &lt;= #{queryMap.q_endtime}
 			</if>
 		</where>
 	</sql>
@@ -328,4 +931,459 @@
 		</where>
 	</sql>
 
+	<select id="getStockReportList" parameterType="java.util.Map" resultMap="StockReportBeanResult">
+		select temp.*, ms.brand_no,ms.region,ms.city,ms.channel,ms.door_type,ms.asm,ms.ac
+		from
+		(
+			select a.store_no, a.store_name, a.user_no, isnull(a.stock_total,0) stock_total, isnull(b.send_total,0) b_send_total,
+			isnull(c.send_total,0) c_send_total, isnull(d.act_send_total,0) d_act_send_total, isnull(e.act_send_total,0) e_act_send_total,
+			isnull(f.change_total,0) f_change_total, isnull(g.change_total,0) g_change_total, isnull(h.change_total,0) h_change_total,
+			isnull(i.change_total,0) i_change_total, isnull(j.change_total,0) j_change_total, isnull(k.change_total,0) k_change_total,
+			isnull(l.change_total,0) l_change_total,
+			-- 期初库存
+			(
+			isnull(a.stock_total,0) - isnull(d.act_send_total,0) - isnull(e.act_send_total,0) + isnull(f.change_total,0) + isnull(g.change_total,0)
+			+ isnull(h.change_total,0) + isnull(i.change_total,0) + isnull(j.change_total,0) - isnull(k.change_total,0) + isnull(l.change_total,0)
+			) stock_total_a
+			from
+			(
+				-- 期末库存
+				select store_no, store_name, user_no, sum(stock_depot) stock_depot, sum(stock_depot_enabled) stock_depot_enabled,
+				sum(stock_depot_freeze)  stock_depot_freeze, sum(stock_counter) stock_counter,
+				sum(stock_counter_enabled) stock_counter_enabled, sum(stock_counter_freeze) stock_counter_freeze,
+				(sum(stock_depot_enabled) + sum(stock_counter_enabled)) stock_total
+				from bd_stock_inv
+				group by store_no, store_name, user_no
+			) a
+			left join
+			(
+				-- 未收货，调拨
+				select br.send_type, br.send_store_no, br.receive_store_no, br.receive_user_no, br.status,
+				sum(brs.send_total) send_total, sum(brs.act_send_total) act_send_total
+				from bd_receiving br, bd_receiving_sku brs
+				where br.erp_no = brs.erp_no and br.status = 1 and br.send_type = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and br.send_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and br.send_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by br.send_type, br.send_store_no, br.receive_store_no, br.receive_user_no, br.status
+			) b
+			on a.user_no = b.receive_store_no
+			left join
+			(
+				-- 未收货，大仓
+				select br.send_type, br.send_store_no, br.receive_store_no, br.receive_user_no, br.status,
+				sum(brs.send_total) send_total, sum(brs.act_send_total) act_send_total
+				from bd_receiving br, bd_receiving_sku brs
+				where br.erp_no = brs.erp_no and br.status = 1 and br.send_type = 2
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and br.send_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and br.send_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by br.send_type, br.send_store_no, br.receive_store_no, br.receive_user_no, br.status
+			) c
+			on a.user_no = c.receive_store_no
+			left join
+			(
+				-- 已收货，调拨
+				select br.send_type, br.send_store_no, br.receive_user_no, br.status,
+				sum(brs.send_total) send_total, sum(brs.act_send_total) act_send_total
+				from bd_receiving br, bd_receiving_sku brs
+				where br.erp_no = brs.erp_no and br.status = 2 and br.send_type = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and br.receive_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and br.receive_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by br.send_type, br.send_store_no, br.receive_user_no, br.status
+			) d
+			on a.user_no = d.receive_user_no
+			left join
+			(
+				-- 已收货，大仓
+				select br.send_type, br.send_store_no, br.receive_user_no, br.status,
+				sum(brs.send_total) send_total, sum(brs.act_send_total) act_send_total
+				from bd_receiving br, bd_receiving_sku brs
+				where br.erp_no = brs.erp_no and br.status = 2 and br.send_type = 2
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and br.receive_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and br.receive_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by br.send_type, br.send_store_no, br.receive_user_no, br.status
+			) e
+			on a.user_no = e.receive_user_no
+			left join
+			(
+				-- 销毁，正常使用完毕
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 1
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) f
+			on a.user_no = f.apply_user_no
+			left join
+			(
+				-- 销毁，破损
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 2
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) g
+			on a.user_no = g.apply_user_no
+			left join
+			(
+				-- 销毁，过期
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 3
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) h
+			on a.user_no = h.apply_user_no
+			left join
+			(
+				-- 销毁，失窃
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 4
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) i
+			on a.user_no = i.apply_user_no
+			left join
+			(
+				-- 调出
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 3
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) j
+			on a.user_no = j.apply_user_no
+			left join
+			(
+				-- 异常调整-增加
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 4 and bfs.change_type = 1
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) k
+			on a.user_no = k.apply_user_no
+			left join
+			(
+				-- 异常调整-减少
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 4 and bfs.change_type = 2
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) l
+			on a.user_no = l.apply_user_no
+		) temp, md_store ms
+		<include refid="getStockReportCondition"/>
+		order by temp.user_no desc
+		<if test="size != null and size &gt; 0">offset #{start} row fetch next #{size} row only</if>
+	</select>
+
+	<select id="getStockReportListCount" parameterType="java.util.Map" resultType="Integer">
+		select count(1)
+		from
+		(
+			select a.store_no, a.store_name, a.user_no, isnull(a.stock_total,0) stock_total, isnull(b.send_total,0) b_send_total,
+			isnull(c.send_total,0) c_send_total, isnull(d.act_send_total,0) d_act_send_total, isnull(e.act_send_total,0) e_act_send_total,
+			isnull(f.change_total,0) f_change_total, isnull(g.change_total,0) g_change_total, isnull(h.change_total,0) h_change_total,
+			isnull(i.change_total,0) i_change_total, isnull(j.change_total,0) j_change_total, isnull(k.change_total,0) k_change_total,
+			isnull(l.change_total,0) l_change_total,
+			-- 期初库存
+			(
+			isnull(a.stock_total,0) - isnull(d.act_send_total,0) - isnull(e.act_send_total,0) + isnull(f.change_total,0) + isnull(g.change_total,0)
+			+ isnull(h.change_total,0) + isnull(i.change_total,0) + isnull(j.change_total,0) - isnull(k.change_total,0) + isnull(l.change_total,0)
+			) stock_total_a
+			from
+			(
+				-- 期末库存
+				select store_no, store_name, user_no, sum(stock_depot) stock_depot, sum(stock_depot_enabled) stock_depot_enabled,
+				sum(stock_depot_freeze)  stock_depot_freeze, sum(stock_counter) stock_counter,
+				sum(stock_counter_enabled) stock_counter_enabled, sum(stock_counter_freeze) stock_counter_freeze,
+				(sum(stock_depot) + sum(stock_counter)) stock_total
+				from bd_stock_inv
+				group by store_no, store_name, user_no
+			) a
+			left join
+			(
+				-- 未收货，调拨
+				select br.send_type, br.send_store_no, br.receive_store_no, br.receive_user_no, br.status,
+				sum(brs.send_total) send_total, sum(brs.act_send_total) act_send_total
+				from bd_receiving br, bd_receiving_sku brs
+				where br.erp_no = brs.erp_no and br.status = 1 and br.send_type = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and br.send_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and br.send_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by br.send_type, br.send_store_no, br.receive_store_no, br.receive_user_no, br.status
+			) b
+			on a.user_no = b.receive_store_no
+			left join
+			(
+				-- 未收货，大仓
+				select br.send_type, br.send_store_no, br.receive_store_no, br.receive_user_no, br.status,
+				sum(brs.send_total) send_total, sum(brs.act_send_total) act_send_total
+				from bd_receiving br, bd_receiving_sku brs
+				where br.erp_no = brs.erp_no and br.status = 1 and br.send_type = 2
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and br.send_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and br.send_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by br.send_type, br.send_store_no, br.receive_store_no, br.receive_user_no, br.status
+			) c
+			on a.user_no = c.receive_store_no
+			left join
+			(
+				-- 已收货，调拨
+				select br.send_type, br.send_store_no, br.receive_user_no, br.status,
+				sum(brs.send_total) send_total, sum(brs.act_send_total) act_send_total
+				from bd_receiving br, bd_receiving_sku brs
+				where br.erp_no = brs.erp_no and br.status = 2 and br.send_type = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and br.receive_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and br.receive_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by br.send_type, br.send_store_no, br.receive_user_no, br.status
+			) d
+			on a.user_no = d.receive_user_no
+			left join
+			(
+				-- 已收货，大仓
+				select br.send_type, br.send_store_no, br.receive_user_no, br.status,
+				sum(brs.send_total) send_total, sum(brs.act_send_total) act_send_total
+				from bd_receiving br, bd_receiving_sku brs
+				where br.erp_no = brs.erp_no and br.status = 2 and br.send_type = 2
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and br.receive_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and br.receive_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by br.send_type, br.send_store_no, br.receive_user_no, br.status
+			) e
+			on a.user_no = e.receive_user_no
+			left join
+			(
+				-- 销毁，正常使用完毕
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 1
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) f
+			on a.user_no = f.apply_user_no
+			left join
+			(
+				-- 销毁，破损
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 2
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) g
+			on a.user_no = g.apply_user_no
+			left join
+			(
+				-- 销毁，过期
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 3
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) h
+			on a.user_no = h.apply_user_no
+			left join
+			(
+				-- 销毁，失窃
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 2 and bf.destroy_type = 4
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) i
+			on a.user_no = i.apply_user_no
+			left join
+			(
+				-- 调出
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 3
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) j
+			on a.user_no = j.apply_user_no
+			left join
+			(
+				-- 异常调整-增加
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 4 and bfs.change_type = 1
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) k
+			on a.user_no = k.apply_user_no
+			left join
+			(
+				-- 异常调整-减少
+				select bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type,
+				sum(stock_depot_total) stock_depot_total, sum(stock_counter_total) stock_counter_total,
+				sum(change_total) change_total, change_type
+				from bd_form bf, bd_form_sku bfs
+				where bf.apply_no = bfs.apply_no and bf.form_type = 4 and bfs.change_type = 2
+                and bf.dispose_result = 1
+				<if test="queryMap.q_starttime != null and queryMap.q_starttime != ''">
+					and bf.apply_date &gt;= #{queryMap.q_starttime}
+				</if>
+				<if test="queryMap.q_endtime != null and queryMap.q_endtime != ''">
+					and bf.apply_date &lt;= #{queryMap.q_endtime}
+				</if>
+				group by bf.store_no, bf.store_name, bf.apply_user_no, bf.form_type, bf.destroy_type, bfs.change_type
+			) l
+			on a.user_no = l.apply_user_no
+		) temp, md_store ms
+		<include refid="getStockReportCondition"/>
+	</select>
+
+	<sql id="getStockReportCondition">
+		<where>
+			temp.store_no = ms.store_no
+			<if test="queryMap.q_storeNo != null and queryMap.q_storeNo !=''">
+				and temp.user_no = #{queryMap.q_storeNo}
+			</if>
+			<if test="queryMap.q_storeNoArr != null and queryMap.q_storeNoArr !=''">
+				and temp.user_no in
+				<foreach item="storeNo" index="index" collection="queryMap.q_storeNoArr" open="(" separator="," close=")">
+					#{storeNo}
+				</foreach>
+			</if>
+			<if test="queryMap.q_brandNo != null and queryMap.q_brandNo !=''">
+				and ms.brand_code = (select brand_code from md_brand where brand_no = #{queryMap.q_brandNo})
+			</if>
+		</where>
+	</sql>
 </mapper>

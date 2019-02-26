@@ -82,5 +82,32 @@
 			#{changeType}
 		)
 	</insert>
+
+	<insert id="insertList" parameterType="java.util.ArrayList" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into
+		bd_form_sku
+		(
+
+			apply_no,
+			sku_code,
+			sku_name,
+			stock_depot_total,
+			stock_counter_total,
+			change_total,
+			change_type
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+				#{item.applyNo},
+				#{item.skuCode},
+				#{item.skuName},
+				#{item.stockDepotTotal},
+				#{item.stockCounterTotal},
+				#{item.changeTotal},
+				#{item.changeType}
+			)
+		</foreach>
+	</insert>
 	
 </mapper>

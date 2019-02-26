@@ -2,6 +2,7 @@ package com.iyeed.service.user;
 
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.user.MdUser;
+import com.iyeed.core.entity.user.MdUserData;
 
 import java.util.List;
 
@@ -13,6 +14,8 @@ public interface IMdUserService {
      * @return
      */
     ServiceResult<MdUser> getMdUserById(Integer mdUserId);
+
+    ServiceResult<MdUserData> getMdUserDataByUserId(String userId);
 
     ServiceResult<MdUser> getMdUserByUserNo(String userNo);
 

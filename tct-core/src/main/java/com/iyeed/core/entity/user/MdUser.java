@@ -28,8 +28,17 @@ public class MdUser implements Serializable {
  	private String userName;
  	private String userPid;
  	private String userNameEn;
- 	private String email;
+ 	private String userEmail;
+ 	private String userNtaccount;
  	private java.util.Date inputDate;
+
+	public String getUserNtaccount() {
+		return userNtaccount;
+	}
+
+	public void setUserNtaccount(String userNtaccount) {
+		this.userNtaccount = userNtaccount;
+	}
 
 	public String getUserNameEn() {
 		return userNameEn;
@@ -109,21 +118,14 @@ public class MdUser implements Serializable {
 		this.userPid = userPid;
 	}
 
-
-	/**
-     * 获取邮箱
-     */
-	public String getEmail(){
-		return this.email;
+	public String getUserEmail() {
+		return userEmail;
 	}
 
-	/**
-     * 设置邮箱
-     */
-	public void setEmail(String email){
-		this.email = email;
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
- 		
+
 	/**
      * 获取放入时间
      */

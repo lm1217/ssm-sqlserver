@@ -3,7 +3,9 @@ package com.iyeed.service.receive;
 import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.receive.BdReceiving;
+import com.iyeed.core.entity.receive.vo.ReceiveTesterBean;
 import com.iyeed.core.entity.receive.vo.UpdateReceiveForm;
+import com.iyeed.core.entity.receive.vo.WaitReceiveTesterBean;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,13 @@ public interface IBdReceivingService {
      */
     ServiceResult<Integer> getBdReceivingListCount(Map<String, Object> queryMap);
 
+    ServiceResult<List<ReceiveTesterBean>> getReceiveTesterList(Map<String, Object> queryMap, PagerInfo pagerInfo);
+
+    ServiceResult<Integer> getReceiveTesterListCount(Map<String, Object> queryMap);
+
+    ServiceResult<List<ReceiveTesterBean>> exportReceiveTesterReportExcel(Map<String, Object> queryMap);
+
+    ServiceResult<List<WaitReceiveTesterBean>> exportWaitReceiveTesterReportExcel(Map<String, Object> queryMap);
     /**
      * 保存收货表-总表
      * @param  bdReceiving

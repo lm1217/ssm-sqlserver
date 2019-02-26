@@ -61,6 +61,38 @@ public class BdStockInvServiceImpl extends BaseService implements IBdStockInvSer
     }
 
     @Override
+    public ServiceResult<List<GetStockInvSkuListBean>> getStockInvSkuList(Map<String, Object> queryMap) {
+        ServiceResult<List<GetStockInvSkuListBean>> result = new ServiceResult<>();
+        try {
+            result.setResult(bdStockInvModel.getStockInvSkuList(queryMap));
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error(e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<List<GetStockInvSkuListBean>> getStockInvExceptionSkuList(Map<String, Object> queryMap) {
+        ServiceResult<List<GetStockInvSkuListBean>> result = new ServiceResult<>();
+        try {
+            result.setResult(bdStockInvModel.getStockInvExceptionSkuList(queryMap));
+        } catch (BusinessException e) {
+            result.setSuccess(false);
+            result.setMessage(e.getMessage());
+            log.error(e.getMessage());
+        } catch (Exception e) {
+            result.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error(e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
     public ServiceResult<List<GetStockInvReportListBean>> getStockInvReportList(Map<String, Object> queryMap, PagerInfo pagerInfo) {
         ServiceResult<List<GetStockInvReportListBean>> serviceResult = new ServiceResult<>();
         serviceResult.setPager(pagerInfo);

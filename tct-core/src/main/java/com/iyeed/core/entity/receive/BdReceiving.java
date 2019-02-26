@@ -31,6 +31,7 @@ public class BdReceiving implements Serializable {
  	private Integer id;
  	private String erpNo;
  	private String orderNo;
+ 	private String brandNo;
  	private String expressCode;
  	private Integer sendType;
  	private String sendStoreNo;
@@ -42,10 +43,29 @@ public class BdReceiving implements Serializable {
  	private java.util.Date expectReceiveDate;
  	private java.util.Date receiveDate;
  	private java.util.Date inputDate;
+ 	private String receiveUserNo;
+ 	private String pkgNo;
+ 	private String receiveType;
 
- 	/** vo额外参数 */
- 	private String sendStoreName;
- 	private String receiveStoreName;
+	/** vo额外参数 */
+	private String sendStoreName;
+	private String receiveStoreName;
+
+	public String getReceiveUserNo() {
+		return receiveUserNo;
+	}
+
+	public void setReceiveUserNo(String receiveUserNo) {
+		this.receiveUserNo = receiveUserNo;
+	}
+
+	public String getBrandNo() {
+		return brandNo;
+	}
+
+	public void setBrandNo(String brandNo) {
+		this.brandNo = brandNo;
+	}
 
 	/**
      * 获取主键自增长
@@ -257,5 +277,21 @@ public class BdReceiving implements Serializable {
 
 	public void setReceiveStoreName(String receiveStoreName) {
 		this.receiveStoreName = receiveStoreName;
+	}
+
+	public String getPkgNo() {
+		return pkgNo;
+	}
+
+	public void setPkgNo(String pkgNo) {
+		this.pkgNo = pkgNo;
+	}
+
+	public String getReceiveType() {
+		return receiveType;
+	}
+
+	public void setReceiveType(String receiveType) {
+		this.receiveType = receiveType;
 	}
 }

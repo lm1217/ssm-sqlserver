@@ -5,6 +5,8 @@ import com.iyeed.core.ConstantsEJS;
 import com.iyeed.core.PagerInfo;
 import com.iyeed.core.ServiceResult;
 import com.iyeed.core.entity.system.SystemUser;
+import com.iyeed.core.entity.system.SystemUserBrand;
+import com.iyeed.core.entity.system.vo.SystemBrandUserBean;
 import com.iyeed.core.exception.BusinessException;
 import com.iyeed.service.BaseService;
 import com.iyeed.service.system.ISystemUserService;
@@ -41,7 +43,7 @@ public class SystemUserServiceImpl extends BaseService implements ISystemUserSer
         } catch (Exception e) {
             log.error("保存系统管理员表时出现未知异常：" + e);
             result.setSuccess(false);
-            result.setMessage("保存系统管理员表时出现未知异常");
+            result.setMessage("保存帐号已存在或参数错误");
         }
         return result;
     }
@@ -51,6 +53,20 @@ public class SystemUserServiceImpl extends BaseService implements ISystemUserSer
         ServiceResult<Integer> result = new ServiceResult<>();
         try {
             result.setResult(systemUserModel.updateSystemUser(systemUser));
+            result.setMessage("更新成功");
+        } catch (Exception e) {
+            log.error("更新系统管理员表时出现未知异常：" + e);
+            result.setSuccess(false);
+            result.setMessage("更新系统管理员表时出现未知异常");
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<Integer> updateLogins(Integer id) {
+        ServiceResult<Integer> result = new ServiceResult<>();
+        try {
+            result.setResult(systemUserModel.updateLogins(id));
             result.setMessage("更新成功");
         } catch (Exception e) {
             log.error("更新系统管理员表时出现未知异常：" + e);
@@ -125,5 +141,55 @@ public class SystemUserServiceImpl extends BaseService implements ISystemUserSer
             result.setMessage(e.getMessage());
         }
         return result;
+    }
+
+    @Override
+    public ServiceResult<SystemUserBrand> getSystemUserBrandByUsername(String username) {
+        ServiceResult<SystemUserBrand> result = new ServiceResult<>();
+        try {
+            result.setResult(systemUserModel.getSystemUserBrandByUsername(username));
+        } catch (Exception e) {
+            log.error("[SystemUserServiceImpl][getSystemUserByNamePwd] exception:", e);
+            e.printStackTrace();
+            result.setSuccess(false);
+            result.setMessage("找不到所管理的品牌");
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<Integer> saveSystemUserBrand(SystemUserBrand systemUserBrand) {
+        ServiceResult<Integer> result = new ServiceResult<>();
+        try {
+            result.setResult(systemUserModel.saveSystemUserBrand(systemUserBrand));
+            result.setMessage("保存成功");
+        } catch (Exception e) {
+            log.error("保存系统管理员表时出现未知异常：" + e);
+            result.setSuccess(false);
+            result.setMessage("保存系统管理员表时出现未知异常");
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<List<SystemBrandUserBean>> getBrandUserList(Map<String, Object> queryMap, PagerInfo pager) {
+        ServiceResult<List<SystemBrandUserBean>> serviceResult = new ServiceResult<>();
+        try {
+            Integer start = 0, size = 0;
+            if (pager != null) {
+                pager.setRowsCount(systemUserModel.getBrandUserListCount(queryMap));
+                start = pager.getStart();
+                size = pager.getPageSize();
+            }
+            serviceResult.setResult(systemUserModel.getBrandUserList(queryMap, start, size));
+        } catch (BusinessException e) {
+            serviceResult.setMessage(e.getMessage());
+            serviceResult.setSuccess(Boolean.FALSE);
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[SystemUserServiceImpl][page] param1:" + JSON.toJSONString(queryMap) + " &param2:" + JSON.toJSONString(pager));
+            log.error("[SystemUserServiceImpl][page] exception:" + e.getMessage());
+        }
+        return serviceResult;
     }
 }

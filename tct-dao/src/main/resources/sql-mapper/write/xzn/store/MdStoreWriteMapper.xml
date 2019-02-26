@@ -41,11 +41,39 @@
 	</select>
 
 	<select id="getStoreListByBrandNo" parameterType="String" resultMap="MdStoreBeanResult">
+		select * from
+		(
+			select id,store_id,store_code,store_no,store_name,brand_no,brand_code,brand_name,user_no,user_name,input_date
+			from md_store
+			union
+			select ms.id,ms.store_id,ms.store_code,sus.user_no store_no,
+			case when CHARINDEX('MR',sus.user_no) > 1 then concat(ms.store_name,'-美容坊') when CHARINDEX('AR',sus.user_no) > 1 then concat(ms.store_name,'-Aerin') else ms.store_name end store_name,
+			ms.brand_no,ms.brand_code,ms.brand_name,ms.user_no,ms.user_name,ms.input_date
+			from md_store ms,system_user_store sus
+			where ms.store_no = sus.store_no
+		) temp
+		where temp.brand_code = (select brand_code from md_brand where brand_no = #{brandNo})
+	</select>
+
+	<select id="getBrandStoreListByBrandNo" parameterType="String" resultMap="MdStoreBeanResult">
 		select
 		*
 		from md_store
-		where brand_no = #{brandNo}
+		where brand_code = (select brand_code from md_brand where brand_no = #{brandNo})
 	</select>
+
+	<update id="updateStore" parameterType="String">
+		update md_store
+		<set>
+			<if test="region != null">region= #{region},</if>
+			<if test="city != null">city= #{city},</if>
+			<if test="channel != null">channel= #{channel},</if>
+			<if test="doorType != null">door_type= #{doorType},</if>
+			<if test="asm != null">asm= #{asm},</if>
+			<if test="ac != null">ac= #{ac}</if>
+		</set>
+		where store_id = #{storeId} and brand_code = #{brandCode}
+	</update>
 	
 	<update id="update" parameterType="com.iyeed.core.entity.store.MdStore">
         update md_store
